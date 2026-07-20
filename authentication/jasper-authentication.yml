@@ -1,0 +1,41 @@
+generated: '2026-07-19'
+method: searched
+source: >-
+  https://developers.jasper.ai/docs/authentication ;
+  https://api.jasper.ai/.well-known/openid-configuration ;
+  https://api.jasper.ai/.well-known/oauth-authorization-server
+docs: https://developers.jasper.ai/docs/authentication
+summary:
+  types: [apiKey, oauth2, openIdConnect]
+  api_key_in: [header]
+  oauth2_flows: [authorizationCode]
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter_name: X-API-KEY
+  description: >-
+    Workspace-scoped API token sent in the X-API-KEY request header. Token management is
+    restricted to users with the Admin or Developer role and is done at
+    https://app.jasper.ai/settings/dev-tools/tokens. API access requires the Jasper Business plan.
+- name: OAuth2
+  type: oauth2
+  description: >-
+    OAuth 2.0 authorization-code flow with PKCE (S256) and Dynamic Client Registration, used by
+    the hosted MCP server and agent integrations. Bearer access token sent as Authorization: Bearer.
+  flows:
+  - flow: authorizationCode
+    issuer: https://api.jasper.ai
+    authorizationUrl: https://api.jasper.ai/oauth2/authorize
+    tokenUrl: https://api.jasper.ai/oauth2/token
+    revocationUrl: https://api.jasper.ai/oauth2/revoke
+    introspectionUrl: https://api.jasper.ai/oauth2/introspect
+    registrationUrl: https://api.jasper.ai/oauth2/register
+    pkce: S256
+    grant_types: [authorization_code, refresh_token]
+    token_endpoint_auth_methods: [client_secret_post, client_secret_basic]
+    scopes: [mcp, user:read, user, openid, email, profile]
+- name: OpenIDConnect
+  type: openIdConnect
+  openIdConnectUrl: https://api.jasper.ai/.well-known/openid-configuration
+  description: OIDC discovery is published; response_types [code], scopes include openid/email/profile.
