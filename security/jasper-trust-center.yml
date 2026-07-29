@@ -1,0 +1,13 @@
+generated: '2026-07-19'
+method: searched
+probe: true
+source: https://security.jasper.ai/
+url: https://security.jasper.ai/
+certifications:
+- SOC 2
+- GDPR
+evidence:
+- source: https://security.jasper.ai/
+  keywords:
+  - soc 2
+  - gdpr

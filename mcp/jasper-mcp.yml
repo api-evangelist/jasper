@@ -1,0 +1,51 @@
+generated: '2026-07-19'
+method: searched
+status: published
+source: https://developers.jasper.ai/docs/jasper-mcp-server
+server:
+  name: jasper
+  transport: http
+  streaming: sse
+  url: https://mcp.jasper.ai
+  description: >-
+    Jasper's hosted, remote Model Context Protocol server. Lets AI agents in Claude (Web and
+    Desktop), ChatGPT, Microsoft Copilot Studio, OpenAI Agent Builder, and n8n create on-brand
+    content using the customer's Jasper brand voices, audiences, style guides, and agents.
+authentication:
+  methods:
+  - type: oauth2
+    grant: authorization_code
+    dynamic_client_registration: true
+    scopes: [mcp]
+    note: Users authorize through a Jasper consent form (OAuth 2.0 DCR).
+  - type: apiKey
+    in: header
+    name: X-API-KEY
+    note: For programmatic access.
+local:
+  npm_package: "@gojasper/mcp-server"
+  transport: stdio
+  install: npx -y @gojasper/mcp-server
+  desktop_extension: ".DXT one-click install"
+clients:
+- Claude (Web)
+- Claude (Desktop)
+- ChatGPT
+- Microsoft Copilot Studio
+- OpenAI Agent Builder
+- n8n
+tools:
+- name: get-jasper-brand-voices
+  description: List the workspace's Jasper brand voices.
+- name: get-jasper-audiences
+  description: List the workspace's Jasper audiences.
+- name: search-knowledge-base
+  description: Search the workspace Knowledge base for relevant context.
+- name: get-jasper-style-guides
+  description: List the workspace's Jasper style guides.
+- name: get-jasper-agents
+  description: List the available Jasper marketing agents.
+- name: run-jasper-agent
+  description: Run a Jasper agent to execute a marketing task.
+- name: generate-content
+  description: Generate on-brand content with Jasper.

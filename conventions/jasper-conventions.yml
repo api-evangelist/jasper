@@ -1,0 +1,39 @@
+generated: '2026-07-19'
+method: searched
+source: >-
+  https://developers.jasper.ai/docs/authentication ;
+  https://developers.jasper.ai/docs/rate-limits ;
+  https://developers.jasper.ai/reference
+conventions:
+  base_url: https://api.jasper.ai/v1
+  authentication:
+    styles: [api-key-header, oauth2-bearer]
+    api_key_header: X-API-KEY
+    oauth2: authorization_code + PKCE (see authentication/jasper-authentication.yml)
+    detail: authentication/jasper-authentication.yml
+  versioning:
+    scheme: uri-path
+    current: v1
+    detail: lifecycle/jasper-lifecycle.yml
+  idempotency:
+    supported: false
+    note: >-
+      Jasper does not document an idempotency-key header or contract for the REST API. No
+      Idempotency pointer is emitted.
+  rate_limiting:
+    style: per-workspace fixed windows (requests per minute)
+    detail: rate-limits/jasper-rate-limits.yml
+  errors:
+    detail: errors/jasper-problem-types.yml
+    note: >-
+      Documented per-operation HTTP status codes (400/404/500 etc.); the error-envelope schema
+      is not published in a machine-readable spec captured here.
+  content_types:
+    request: [application/json, multipart/form-data]
+    multipart_note: >-
+      multipart/form-data is used for temporary attachment upload (createAttachment) and image
+      manipulation endpoints.
+  streaming:
+    supported: true
+    note: >-
+      runTaskStream (POST /v1/tasks/{id}/run streamed) and the MCP server use Server-Sent Events.

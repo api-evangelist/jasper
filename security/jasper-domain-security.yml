@@ -1,0 +1,28 @@
+generated: '2026-07-19'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.jasper.ai
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 13 01:03:28 2026 GMT
+  hsts: true
+  hsts_max_age: 31536000
+- host: developers.jasper.ai
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  3 15:55:51 2026 GMT
+  hsts: true
+  hsts_max_age: 31536000
+- host: api.jasper.ai
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 16 13:49:10 2026 GMT
+  hsts: null
+domains:
+- domain: jasper.ai
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: reject

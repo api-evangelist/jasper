@@ -1,0 +1,68 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://jasper.ai",
+      "service-doc": [
+        {
+          "href": "https://developers.jasper.ai",
+          "title": "Jasper Developer Documentation"
+        }
+      ],
+      "service-desc": [
+        {
+          "href": "https://developers.jasper.ai/reference",
+          "type": "text/html",
+          "title": "Jasper API Reference"
+        }
+      ]
+    },
+    {
+      "anchor": "https://api.jasper.ai/v1/commands",
+      "service-doc": [
+        {
+          "href": "https://developers.jasper.ai/docs/using-commands",
+          "title": "Commands API — IQ-powered content generation"
+        }
+      ],
+      "describedby": [
+        {
+          "href": "https://jasper.ai/.well-known/agent-skills/generate-content.txt",
+          "type": "text/plain",
+          "title": "Agent Skill: Generate Content"
+        }
+      ]
+    },
+    {
+      "anchor": "https://api.jasper.ai/v1/tasks",
+      "service-doc": [
+        {
+          "href": "https://developers.jasper.ai/docs/using-agents",
+          "title": "Tasks API — Jasper agent task discovery and execution"
+        }
+      ],
+      "describedby": [
+        {
+          "href": "https://jasper.ai/.well-known/agent-skills/run-agent-task.txt",
+          "type": "text/plain",
+          "title": "Agent Skill: Run Agent Task"
+        }
+      ]
+    },
+    {
+      "anchor": "https://mcp.jasper.ai",
+      "service-doc": [
+        {
+          "href": "https://developers.jasper.ai/docs/jasper-mcp-server",
+          "title": "Jasper MCP Server Documentation"
+        }
+      ],
+      "describedby": [
+        {
+          "href": "https://jasper.ai/.well-known/mcp/server-card.json",
+          "type": "application/json",
+          "title": "Jasper MCP Server Card"
+        }
+      ]
+    }
+  ]
+}

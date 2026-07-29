@@ -1,0 +1,20 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.jasper.ai/reference ; https://developers.jasper.ai/docs
+versioning:
+  scheme: uri-path
+  current: v1
+  base_url: https://api.jasper.ai/v1
+  docs: https://developers.jasper.ai/reference
+deprecation:
+  policy_url: null
+  sunset_header: unknown
+  note: No published deprecation/sunset policy was found in the developer docs.
+sla:
+  url: null
+  uptime_target: null
+status_page: null
+notes: >-
+  Jasper publishes a single v1 REST API (uri-path versioned). No dedicated public status page,
+  SLA document, or formal deprecation policy was found on developers.jasper.ai at capture time,
+  so no StatusPage or Deprecation pointers are emitted.

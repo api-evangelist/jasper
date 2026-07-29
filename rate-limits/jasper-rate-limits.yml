@@ -1,0 +1,29 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.jasper.ai/docs/rate-limits
+scope: per-workspace
+docs: https://developers.jasper.ai/docs/rate-limits
+rate_limits:
+- group: content generation (POST)
+  endpoints: [commands, templates, keep-writing, tasks, knowledge search]
+  limit_count: 105
+  interval: minute
+  per_hour: 6300
+- group: resource management (GET/POST/PATCH/DELETE)
+  endpoints: [tasks, templates, knowledge, tones, usage]
+  limit_count: 200
+  interval: minute
+  per_hour: 12000
+- group: styles (GET /styles)
+  limit_count: 60
+  interval: minute
+  per_hour: 3600
+- group: image manipulation (POST)
+  endpoints: [cleanup, decompose, packshot-compositing, remove-background, remove-text, replace-background, uncrop, upscale]
+  limit_count: 30
+  interval: minute
+  per_hour: 1800
+notes: >-
+  Rate limits are enforced per workspace; the values above are the documented defaults.
+  The docs do not publish the exceeded-limit status code or X-RateLimit-* / Retry-After
+  response header names.

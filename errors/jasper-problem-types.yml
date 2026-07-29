@@ -1,0 +1,27 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.jasper.ai/reference (per-operation documented responses)
+format: http-status
+note: >-
+  Derived from the HTTP status codes documented on the Jasper API reference operation pages.
+  Jasper does not publish an RFC 9457 application/problem+json envelope schema in a captured
+  spec, so these are HTTP-status problem types with the reference-documented meanings.
+problems:
+- status: 400
+  title: Bad Request
+  meaning: The request body may be missing required fields or contain invalid data.
+- status: 401
+  title: Unauthorized
+  meaning: Missing or invalid API key / OAuth bearer token.
+- status: 403
+  title: Forbidden
+  meaning: Authenticated principal lacks access (e.g. plan/role not permitted; API access requires the Business plan).
+- status: 404
+  title: Not Found
+  meaning: The specified resource (e.g. agent task ID / app ID) does not exist.
+- status: 429
+  title: Too Many Requests
+  meaning: Per-workspace rate limit exceeded (see rate-limits/jasper-rate-limits.yml).
+- status: 500
+  title: Internal Server Error
+  meaning: Unable to complete the request (e.g. unable to run agent task).

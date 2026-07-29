@@ -1,0 +1,41 @@
+generated: '2026-07-19'
+method: searched
+source: >-
+  https://api.jasper.ai/.well-known/openid-configuration ;
+  https://api.jasper.ai/.well-known/oauth-authorization-server ;
+  https://www.jasper.ai/.well-known/api-catalog ;
+  https://security.jasper.ai/
+standards:
+- id: oauth2
+  conforms: true
+  evidence: RFC 8414 oauth-authorization-server document published; authorization_code + refresh_token grants.
+- id: oauth2-pkce
+  conforms: true
+  evidence: code_challenge_methods_supported includes S256.
+- id: oidc
+  conforms: true
+  evidence: /.well-known/openid-configuration published with issuer, id-token scopes (openid/email/profile).
+- id: oauth2-dcr
+  conforms: true
+  evidence: registration_endpoint https://api.jasper.ai/oauth2/register (RFC 7591 Dynamic Client Registration).
+- id: rfc9727-api-catalog
+  conforms: true
+  evidence: /.well-known/api-catalog linkset published at www.jasper.ai.
+- id: mcp
+  conforms: true
+  evidence: hosted MCP server at https://mcp.jasper.ai + @gojasper/mcp-server npm package.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: no /.well-known/security.txt on any probed host.
+- id: rfc9457-problem-details
+  conforms: unknown
+  evidence: error envelope schema not published in a captured machine-readable spec.
+- id: soc2
+  conforms: true
+  evidence: SOC 2 report listed on the Jasper trust portal (security.jasper.ai).
+- id: gdpr
+  conforms: true
+  evidence: GDPR listed on the Jasper trust portal.
+- id: ccpa
+  conforms: true
+  evidence: CCPA listed on the Jasper trust portal.

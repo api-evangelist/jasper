@@ -1,0 +1,19 @@
+generated: '2026-07-19'
+method: generated
+source: https://developers.jasper.ai/reference
+note: >-
+  Skills are grounded in operations documented on the Jasper API reference. Jasper does not
+  publish a downloadable OpenAPI, so operationIds mirror the reference operation names verbatim.
+skills:
+- file: jasper-run-agent-task.md
+  name: Run a Jasper marketing Agent Task
+  api: https://api.jasper.ai/v1
+  operations: [listTasks, getTaskById, createAttachment, runTask, runTaskStream]
+- file: jasper-knowledge-grounded-content.md
+  name: Generate content grounded in Jasper Knowledge
+  api: https://api.jasper.ai/v1
+  operations: [uploadKnowledgeDocument, searchKnowledge, getAllTones, getAllAudiences, command]
+- file: jasper-image-editing.md
+  name: Edit product images with the Jasper Image API
+  api: https://api.jasper.ai/v1
+  operations: [removeBackground, replaceBackground, cleanup, removeText, uncrop, upscale, packshotCompositing, altText]

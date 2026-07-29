@@ -1,8 +1,18 @@
 aid: jasper
 name: Jasper
-description: 'Jasper is a company surfaced as a portfolio company of bessemer-venture-partners, insight-partners,
-  ivp, northzone and added to the API Evangelist network as a stub for enrichment. Sector: ai-ml. This
-  profile is a lead awaiting the enrichment pipeline.'
+description: >-
+  Jasper is an AI platform purpose-built for marketing teams that orchestrates 100+
+  specialized AI agents and connected content pipelines to run end-to-end marketing
+  workflows — content creation, campaign execution, personalization, and SEO/GEO
+  optimization — while holding brand consistency at scale. Jasper IQ is the governance
+  layer that embeds brand voice, style guides, and marketing context into every output.
+  The Jasper API (https://api.jasper.ai/v1) exposes commands, agent tasks, documents,
+  projects, tones, audiences, knowledge/retrieval, and a full image-editing suite,
+  secured with workspace API keys (X-API-Key) or OAuth 2.0 (authorization code + PKCE,
+  Dynamic Client Registration). Jasper also ships a hosted, remote Model Context Protocol
+  (MCP) server at https://mcp.jasper.ai so agents in Claude, ChatGPT, Copilot Studio,
+  OpenAI Agent Builder, and n8n can create on-brand content. API access is available on
+  the Jasper Business plan.
 url: https://raw.githubusercontent.com/api-evangelist/jasper/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -13,18 +23,139 @@ x-backed-by:
 - northzone
 x-tier: stub
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
+image: https://cdn.prod.website-files.com/6807ee8d73c233fb82842313/681e121f9445a06741087852_Webclip.png
 tags:
 - Company
 - Ai Ml
-apis: []
+- Artificial Intelligence
+- Content Generation
+- Marketing
+- Generative AI
+- Agents
+- MCP
+apis:
+- name: Jasper API
+  description: >-
+    The Jasper API brings generative AI into your platform — generate on-brand content
+    via commands and templates, run marketing Agent Tasks, manage documents, projects,
+    tones, and audiences, augment generations with Knowledge/retrieval, and edit images
+    (background removal, upscale, uncrop, cleanup, packshot compositing). Secured with
+    workspace API keys or OAuth 2.0.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Content Generation
+  - Agents
+  - Images
+  - Knowledge
+  properties:
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: VulnerabilityDisclosure
+  url: security/jasper-vulnerability-disclosure.yml
+- type: Security
+  url: https://www.jasper.ai/security
 - type: Website
   url: https://www.jasper.ai/
+- type: DeveloperPortal
+  url: https://developers.jasper.ai/
+- type: Documentation
+  url: https://developers.jasper.ai/docs
+- type: APIReference
+  url: https://developers.jasper.ai/reference
+- type: GettingStarted
+  url: https://developers.jasper.ai/docs/getting-started-1
+- type: Blog
+  url: https://www.jasper.ai/blog
+- type: Support
+  url: https://community.jasper.ai/c/help-center/
+- type: HelpCenter
+  url: https://www.jasper.ai/contact-support
+- type: Pricing
+  url: https://www.jasper.ai/pricing
+- type: SignUp
+  url: https://app.jasper.ai/auth/signup
+- type: Login
+  url: https://app.jasper.ai/
+- type: TermsOfService
+  url: https://www.jasper.ai/legal/terms
+- type: PrivacyPolicy
+  url: https://www.jasper.ai/legal/privacy
+- type: TrustCenter
+  url: https://security.jasper.ai/
+- type: Compliance
+  url: https://security.jasper.ai/
+- type: GitHubOrganization
+  url: https://github.com/gojasper
+- type: Postman
+  url: https://developers.jasper.ai/docs/jaspers-api-postman-collection
+- type: LLMsTxt
+  url: llms/jasper-llms.txt
+- type: MCPServer
+  url: mcp/jasper-mcp.yml
+- type: Packages
+  url: packages/jasper-packages.yml
+- type: WellKnown
+  url: well-known/jasper-well-known.yml
+- type: Authentication
+  url: authentication/jasper-authentication.yml
+- type: OAuthScopes
+  url: scopes/jasper-scopes.yml
+- type: RateLimits
+  url: rate-limits/jasper-rate-limits.yml
+- type: Conventions
+  url: conventions/jasper-conventions.yml
+- type: ErrorCatalog
+  url: errors/jasper-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/jasper-lifecycle.yml
+- type: Conformance
+  url: conformance/jasper-conformance.yml
+- type: DataModel
+  url: data-model/jasper-data-model.yml
+- type: TrustCenter
+  url: security/jasper-trust-center.yml
+- type: DomainSecurity
+  url: security/jasper-domain-security.yml
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

@@ -1,0 +1,32 @@
+generated: '2026-07-19'
+method: searched
+source: >-
+  https://api.jasper.ai/.well-known/openid-configuration ;
+  https://api.jasper.ai/.well-known/oauth-authorization-server
+docs: https://developers.jasper.ai/docs/authentication
+schemes:
+- name: OAuth2
+  source: https://api.jasper.ai/.well-known/oauth-authorization-server
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://api.jasper.ai/oauth2/authorize
+    tokenUrl: https://api.jasper.ai/oauth2/token
+scopes:
+- scope: mcp
+  description: Access the Jasper hosted MCP server tools (brand voices, audiences, agents, content generation).
+  flows: [authorizationCode]
+- scope: user
+  description: Act on behalf of the authenticated Jasper user (default user scope for API/agent access).
+  flows: [authorizationCode]
+- scope: user:read
+  description: Read the authenticated user's Jasper profile and workspace membership.
+  flows: [authorizationCode]
+- scope: openid
+  description: OpenID Connect authentication — issue an ID token for the user.
+  flows: [authorizationCode]
+- scope: email
+  description: Access the user's email address claim.
+  flows: [authorizationCode]
+- scope: profile
+  description: Access the user's basic profile claims.
+  flows: [authorizationCode]

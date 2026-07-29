@@ -1,0 +1,36 @@
+generated: '2026-07-19'
+method: searched
+source: live /.well-known probes of Jasper hosts
+hosts:
+- host: https://api.jasper.ai
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: jasper-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: jasper-oauth-authorization-server.json
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://www.jasper.ai
+  documents:
+  - path: /.well-known/api-catalog
+    status: 200
+    file: jasper-api-catalog.json
+  - path: /.well-known/security.txt
+    status: 404
+- host: https://developers.jasper.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+notes: >-
+  Jasper publishes OIDC discovery and an RFC 8414 OAuth authorization-server document at
+  api.jasper.ai (issuer https://api.jasper.ai, PKCE S256, Dynamic Client Registration at
+  /oauth2/register), plus an RFC 9727 api-catalog linkset at www.jasper.ai pointing to the
+  developer docs and API reference. No security.txt was published on any probed host.

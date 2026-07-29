@@ -1,0 +1,52 @@
+generated: '2026-07-19'
+method: derived
+source: https://developers.jasper.ai/reference (documented resources and endpoints)
+note: >-
+  Derived from the resources and endpoints published in the Jasper API reference. Jasper does
+  not publish a downloadable OpenAPI with a full $ref graph, so relationships below are inferred
+  from documented endpoint paths and request/response fields, not from schema $refs.
+entities:
+- name: Project
+  endpoints: [createProject, getProjects, getProjectById, updateProject, deleteProject]
+- name: Document
+  endpoints: [createDocument, getAllDocuments, getDocumentById, updateDocument, deleteDocumentById]
+- name: Tone
+  endpoints: [createTone, getAllTones, getTone, updateTone, deleteTone]
+- name: Audience
+  endpoints: [getAllAudiences, getAudienceById]
+- name: StyleGuide
+  endpoints: [getStyle, getStyleById]
+- name: KnowledgeDocument
+  endpoints: [uploadKnowledgeDocument, getKnowledgeDocuments, getKnowledgeDocument, updateKnowledgeDocument, deleteKnowledgeDocument, searchKnowledge]
+- name: AgentTask
+  endpoints: [listTasks, getTaskById, runTask, runTaskStream]
+- name: Attachment
+  endpoints: [createAttachment]
+  note: Temporary attachment referenced by attachmentIds on runTask.
+- name: Template
+  endpoints: [getAllTemplates, getTemplate, completeTemplate]
+- name: ImageTemplate
+  endpoints: [createImageTemplate, getImageTemplate, renderImageTemplate]
+- name: User
+  endpoints: [getAllUsers, getUser]
+relationships:
+- from: Document
+  to: Project
+  kind: belongs_to
+  via: project
+- from: AgentTask
+  to: Attachment
+  kind: has_many
+  via: attachmentIds
+- from: AgentTask
+  to: KnowledgeDocument
+  kind: references
+  via: knowledge/retrieval add-ons
+- from: Content generation
+  to: Tone
+  kind: references
+  via: tone/brand voice
+- from: Content generation
+  to: Audience
+  kind: references
+  via: audience
