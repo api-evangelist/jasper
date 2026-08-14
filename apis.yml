@@ -37,7 +37,7 @@ accessModel:
   method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-19'
+modified: '2026-08-13'
 image: https://cdn.prod.website-files.com/6807ee8d73c233fb82842313/681e121f9445a06741087852_Webclip.png
 tags:
 - Company
@@ -80,12 +80,22 @@ apis:
     url: conformance/jasper-conformance.yml
   - type: DataModel
     url: data-model/jasper-data-model.yml
+  - type: OpenAPI
+    url: openapi/jasper-api-openapi.yml
+  - type: Overlay
+    url: overlays/jasper-api-overlay.yaml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/jasper-agentic-access.yml
 - type: VulnerabilityDisclosure
   url: security/jasper-vulnerability-disclosure.yml
 - type: Security
@@ -154,8 +164,20 @@ common:
   url: security/jasper-domain-security.yml
 - type: AgentSkill
   url: skills/_index.yml
+- type: OpenAPI
+  url: openapi/jasper-api-openapi.yml
+- type: Overlay
+  url: overlays/jasper-api-overlay.yaml
+- type: Examples
+  url: examples/jasper-examples.yml
+- type: ToolCrosswalk
+  url: mcp/jasper-tool-crosswalk.yml
+- type: Plans
+  url: plans/jasper-plans-pricing.yml
+- type: StatusPage
+  url: https://status.jasper.ai/
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 9
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
