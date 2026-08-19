@@ -1,4 +1,4 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
 status: published
 source: https://developers.jasper.ai/docs/jasper-mcp-server
@@ -7,26 +7,26 @@ server:
   transport: http
   streaming: sse
   url: https://mcp.jasper.ai
-  description: >-
-    Jasper's hosted, remote Model Context Protocol server. Lets AI agents in Claude (Web and
-    Desktop), ChatGPT, Microsoft Copilot Studio, OpenAI Agent Builder, and n8n create on-brand
-    content using the customer's Jasper brand voices, audiences, style guides, and agents.
+  description: Jasper's hosted, remote Model Context Protocol server. Lets AI agents in Claude (Web and
+    Desktop), ChatGPT, Microsoft Copilot Studio, OpenAI Agent Builder, and n8n create on-brand content
+    using the customer's Jasper brand voices, audiences, style guides, and agents.
 authentication:
   methods:
   - type: oauth2
     grant: authorization_code
     dynamic_client_registration: true
-    scopes: [mcp]
+    scopes:
+    - mcp
     note: Users authorize through a Jasper consent form (OAuth 2.0 DCR).
   - type: apiKey
     in: header
     name: X-API-KEY
     note: For programmatic access.
 local:
-  npm_package: "@gojasper/mcp-server"
+  npm_package: '@gojasper/mcp-server'
   transport: stdio
   install: npx -y @gojasper/mcp-server
-  desktop_extension: ".DXT one-click install"
+  desktop_extension: .DXT one-click install
 clients:
 - Claude (Web)
 - Claude (Desktop)
@@ -49,3 +49,34 @@ tools:
   description: Run a Jasper agent to execute a marketing task.
 - name: generate-content
   description: Generate on-brand content with Jasper.
+deployment:
+  mode: both
+  endpoint: https://mcp.jasper.ai/
+  install: npx -y @gojasper/mcp-server
+  package: https://www.npmjs.com/package/@gojasper/mcp-server
+  auth: oauth
+  verified: probed
+  checked: '2026-08-13'
+  probe:
+    method: POST
+    url: https://mcp.jasper.ai/
+    body: '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+    http_status: 401
+    response: '{"jsonrpc":"2.0","error":{"code":-32600,"message":"Invalid or expired OAuth access token"},"id":null}'
+    result: >-
+      Live JSON-RPC endpoint confirmed at the host ROOT (https://mcp.jasper.ai/) — POST /mcp returns
+      404 "Cannot POST /mcp". tools/list is OAuth-gated, so the tool inputSchemas below were not
+      obtained by live introspection; the tool names/descriptions come from Jasper's MCP docs.
+      Input schemas require an authenticated tools/list call.
+  discovery:
+  - url: https://mcp.jasper.ai/.well-known/oauth-protected-resource
+    http_status: 200
+    file: well-known/jasper-mcp-oauth-protected-resource.json
+    note: RFC 9728 — resource_name "Jasper MCP", scopes_supported [mcp], bearer_methods_supported [header].
+  - url: https://mcp.jasper.ai/.well-known/oauth-authorization-server
+    http_status: 200
+    file: well-known/jasper-mcp-oauth-authorization-server.json
+  note: >-
+    mode is `both`: Jasper ships a hosted remote endpoint an MCP client can POST to today AND a
+    local stdio package (@gojasper/mcp-server) a human installs. These are two different products
+    and both are real work by the provider.

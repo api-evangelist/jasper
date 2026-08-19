@@ -1,20 +1,39 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
-source: https://developers.jasper.ai/reference ; https://developers.jasper.ai/docs
+source: >-
+  https://developers.jasper.ai/reference ; https://developers.jasper.ai/docs ;
+  https://status.jasper.ai/ ; openapi/jasper-api-openapi.yml
 versioning:
   scheme: uri-path
   current: v1
   base_url: https://api.jasper.ai/v1
   docs: https://developers.jasper.ai/reference
+  prerelease_prefix: /beta
+  prerelease_note: >-
+    The Image Templates surface (createImageTemplate, getImageTemplate, renderImageTemplate) is
+    served from /beta/image-template rather than /v1 — three of fifty operations are explicitly
+    pre-stable in the contract itself.
 deprecation:
   policy_url: null
-  sunset_header: unknown
-  note: No published deprecation/sunset policy was found in the developer docs.
+  sunset_header: not documented
+  note: >-
+    No published deprecation or sunset policy in the developer docs, and no operation in the
+    captured OpenAPI carries `deprecated: true`. No Deprecation pointer is emitted.
 sla:
   url: null
   uptime_target: null
-status_page: null
+status_page: https://status.jasper.ai/
+status_page_evidence:
+  url: https://status.jasper.ai/
+  http_status: 200
+  checked: '2026-08-13'
+  note: >-
+    Hosted status-page application (S3/CloudFront-served SPA, title "Status Pages Site"). It is a
+    real, live status page. Its JSON endpoints (/api/v2/status.json, /api/v2/summary.json) return
+    403, so component/incident state is not machine-readable to an agent.
+deprecated_operations: []
 notes: >-
-  Jasper publishes a single v1 REST API (uri-path versioned). No dedicated public status page,
-  SLA document, or formal deprecation policy was found on developers.jasper.ai at capture time,
-  so no StatusPage or Deprecation pointers are emitted.
+  This round found the status page that the previous round recorded as absent — status.jasper.ai
+  answers 200 with a live status application — so a StatusPage pointer is now emitted. Still no
+  SLA document and still no deprecation policy. The status page is not linked from
+  developers.jasper.ai, which is why it was missed on the first pass.

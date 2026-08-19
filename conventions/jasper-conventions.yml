@@ -1,39 +1,76 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
 source: >-
   https://developers.jasper.ai/docs/authentication ;
   https://developers.jasper.ai/docs/rate-limits ;
-  https://developers.jasper.ai/reference
+  https://developers.jasper.ai/reference ;
+  openapi/jasper-api-openapi.yml (captured this round)
 conventions:
   base_url: https://api.jasper.ai/v1
   authentication:
     styles: [api-key-header, oauth2-bearer]
-    api_key_header: X-API-KEY
+    api_key_header: X-API-Key
     oauth2: authorization_code + PKCE (see authentication/jasper-authentication.yml)
+    applied: >-
+      All 50 operations declare `security: [{X-API-Key: []}, {oauth2: [user]}]` explicitly; the spec
+      declares no global `security` object. Every operation is individually secured.
     detail: authentication/jasper-authentication.yml
   versioning:
     scheme: uri-path
     current: v1
+    prerelease_prefix: /beta
     detail: lifecycle/jasper-lifecycle.yml
   idempotency:
     supported: false
+    evidence: >-
+      No Idempotency-Key header, parameter, requestBody field or x- extension appears anywhere in
+      the captured OpenAPI (50 operations, 95 schemas), and the docs document no idempotency
+      contract. No Idempotency pointer is emitted.
+    consequence: >-
+      A retried POST /v1/command, POST /v1/tasks/{id}/run or image operation re-executes the
+      generation and re-consumes credits. Agents must deduplicate client-side.
+  request_tracing:
+    supported: true
+    style: response-field
+    field: requestId
     note: >-
-      Jasper does not document an idempotency-key header or contract for the REST API. No
-      Idempotency pointer is emitted.
+      Every response envelope and every error envelope carries a `requestId` (UUID). It is a
+      RESPONSE body field, not a request header an agent can set — there is no X-Request-Id
+      request header in the contract, so a client cannot supply its own correlation id.
+  pagination:
+    style: response-metadata
+    schemas: [KnowledgePaginationResponseDto, TonePaginationDto]
+    note: >-
+      Knowledge and Voices list responses carry a pagination object. Other list operations
+      (listTasks, getProjects, getAllDocuments, getAllTemplates, getAllUsers, getAllAudiences)
+      declare no pagination schema in the spec.
   rate_limiting:
     style: per-workspace fixed windows (requests per minute)
     detail: rate-limits/jasper-rate-limits.yml
-  errors:
-    detail: errors/jasper-problem-types.yml
+    response_headers: none documented
+    exhaustion_status: not documented
     note: >-
-      Documented per-operation HTTP status codes (400/404/500 etc.); the error-envelope schema
-      is not published in a machine-readable spec captured here.
+      No 429 response is declared on any of the 50 operations and no RateLimit-* / X-RateLimit-* /
+      Retry-After header is named in the docs or the spec. The published limits are numbers in
+      prose with no runtime signal.
+  errors:
+    envelope: '{requestId, resource, errors[]}'
+    rfc9457: false
+    detail: errors/jasper-problem-types.yml
   content_types:
     request: [application/json, multipart/form-data]
     multipart_note: >-
-      multipart/form-data is used for temporary attachment upload (createAttachment) and image
-      manipulation endpoints.
+      multipart/form-data is used for temporary attachment upload (createAttachment), the image
+      manipulation endpoints, and image-template rendering (renderImageTemplate uses dot-notation
+      form fields such as `layers.author.text.content` and `background.color`).
   streaming:
     supported: true
     note: >-
-      runTaskStream (POST /v1/tasks/{id}/run streamed) and the MCP server use Server-Sent Events.
+      runTaskStream (POST /v1/tasks/{id}/run/stream) returns Server-Sent Events; the hosted MCP
+      server at https://mcp.jasper.ai/ also negotiates text/event-stream.
+  brand_context:
+    note: >-
+      Jasper's cross-cutting convention: every generation surface (command, completeTemplate,
+      runTask, runTaskStream) accepts the same optional brand-context bundle — toneId (Brand
+      Voice), audienceId + additionalAudienceIds, styleId/styleGuideId, and knowledgeIds. Passing
+      them is how a caller inherits Jasper IQ governance. See data-model/jasper-data-model.yml.

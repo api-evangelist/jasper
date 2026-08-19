@@ -1,10 +1,18 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
 source: >-
   https://developers.jasper.ai/docs/authentication ;
   https://api.jasper.ai/.well-known/openid-configuration ;
-  https://api.jasper.ai/.well-known/oauth-authorization-server
+  https://api.jasper.ai/.well-known/oauth-authorization-server ;
+  https://mcp.jasper.ai/.well-known/oauth-protected-resource ;
+  openapi/jasper-api-openapi.yml
 docs: https://developers.jasper.ai/docs/authentication
+spec_confirmation: >-
+  Confirmed against the OpenAPI captured this round: components.securitySchemes declares `X-API-Key`
+  (apiKey, in header, name X-API-Key) and `oauth2` (authorizationCode flow, authorize/token/refresh
+  at https://api.jasper.ai/oauth2/*). There is no global `security` object — all 50 operations
+  declare `security: [{X-API-Key: []}, {oauth2: [user]}]` individually, so both schemes are
+  accepted everywhere and neither is optional.
 summary:
   types: [apiKey, oauth2, openIdConnect]
   api_key_in: [header]

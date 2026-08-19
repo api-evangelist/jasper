@@ -1,0 +1,873 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/jasper-api-openapi.yml — request/response examples reconstructed from the `example` values Jasper
+  publishes on individual schema properties in its own OpenAPI 3.1.0 document.
+note: Jasper declares no operation-level `example`/`examples` objects. It does publish 321 property-level `example`
+  values across its 95 component schemas; the payloads below are assembled from those real published values only
+  — no value here was invented. Where a property carries no published example it is omitted rather than filled in.
+operation_count: 50
+operations_with_examples: 41
+examples:
+- operationId: createAttachment
+  method: POST
+  path: /v1/attachments
+  tags:
+  - Attachments
+  request:
+    media_type: multipart/form-data
+    value:
+      type: FILE
+      value: Q3 retention numbers improved 12% YoY across enterprise segments.
+    from: schema field examples
+  response:
+    status: '201'
+    media_type: application/json
+    value:
+      requestId: 8393f82b3f6a4f6e8a405777b9305254
+      resource: knowledge
+      data:
+        id: tmp_2ee766eaa4ef48e59da1d9602bfecf2d
+        type: FILE
+    from: schema field examples
+- operationId: listTasks
+  method: GET
+  path: /v1/tasks
+  tags:
+  - Tasks
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: 07008c5a-f916-4bdc-bfda-e8f6c328f7c5
+      resource: tasks
+      pagination:
+        totalRecords: 100
+        page: 1
+        pageSize: 25
+        next: '2'
+        prev: null
+    from: schema field examples
+- operationId: getTaskById
+  method: GET
+  path: /v1/tasks/{id}
+  tags:
+  - Tasks
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: 07008c5a-f916-4bdc-bfda-e8f6c328f7c5
+      resource: tasks
+      data:
+        id: agt_0190f3a1b2c34d5e6f7a8b9c0d1e2f3a
+        name: Grammar Checker
+        appUrl: https://app.jasper.ai/studio/962e4d4c-ffdc-4c7a-83e3-8f4e715004cf
+        description: Ensure your text is free from grammar errors to enhance clarity and professionalism
+        version: 1
+        scope: PUBLIC
+        updatedAt: '2024-10-29T03:47:44.468Z'
+        createdAt: '2024-10-02T03:51:26.020Z'
+        longDescription: '#### Overview
+
+          Elevate the quality of your content by running it through a comprehensive grammar checker...'
+        publishedAt: '2024-10-14T04:12:20.369Z'
+        categories: []
+    from: schema field examples
+- operationId: runTask
+  method: POST
+  path: /v1/tasks/{id}/run
+  tags:
+  - Tasks
+  request:
+    media_type: application/json
+    value:
+      contextItems: &id001
+      - id: 70346737-878b-4329-a4d6-9a054efef508
+        value:
+        - Registration reminder email
+        - Confirmation email
+      - name: Greeting
+        question: Who is the person that you want me to greet in the registration reminder email?
+        answer: John Doe
+      version: 1
+      toLanguage: EN-US
+      knowledgeIds: &id002
+      - kno_123
+      - kno_456
+      attachmentIds: &id003
+      - tmp_2ee766eaa4ef48e59da1d9602bfecf2d
+      toneId: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+      audienceId: aud_123
+      additionalAudienceIds: &id004
+      - aud_456
+      - aud_789
+      styleGuideId: sty_123
+      tools: &id005
+      - WEB_SEARCH
+      - KNOWLEDGE_SEARCH
+    from: schema field examples
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: tasks
+      data:
+        output:
+        - type: TEXT
+          value: This is the generated content from the agent...
+    from: schema field examples
+- operationId: runTaskStream
+  method: POST
+  path: /v1/tasks/{id}/run/stream
+  tags:
+  - Tasks
+  request:
+    media_type: application/json
+    value:
+      contextItems: *id001
+      version: 1
+      toLanguage: EN-US
+      knowledgeIds: *id002
+      attachmentIds: *id003
+      toneId: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+      audienceId: aud_123
+      additionalAudienceIds: *id004
+      styleGuideId: sty_123
+      tools: *id005
+    from: schema field examples
+- operationId: command
+  method: POST
+  path: /v1/command
+  tags:
+  - Command
+  response:
+    status: '201'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: content
+    from: schema field examples
+- operationId: uploadKnowledgeDocument
+  method: POST
+  path: /v1/knowledge
+  tags:
+  - Knowledge
+  request:
+    media_type: multipart/form-data
+    value:
+      name: Product Release Monthly Webinar - May 2023
+      file: jasperbrandvoice.pdf
+      metadata: '{"NewKey": "New Value", "AnotherKey": "Another Value"}'
+      settings: '{"appVisibility": "visible", "autoSummary": true}'
+      summary: This Knowledge item outlines guidelines for using the Jasper logo
+      tags:
+      - tag1
+      - tag2
+    from: schema field examples
+  response:
+    status: '201'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: knowledge
+      data:
+        name: Product Release Monthly Webinar - May 2023
+        file: jasperbrandvoice.pdf
+        metadata: &id006
+          key1: value1
+          key2: value2
+        id: kno_2ee766eaa4ef48e59da1d9602bfecf2d
+        createdAt: '2023-09-21T15:38:00.474Z'
+        updatedAt: '2023-09-21T15:38:00.474Z'
+        processingState: InProgress
+        tags: &id007
+        - tag1
+        - tag2
+        appUrl: https://app.jasper.ai/jasper-iq/knowledge-base/kno_2ee766eaa4ef48e59da1d9602bfecf2d
+    from: schema field examples
+- operationId: getKnowledgeDocuments
+  method: GET
+  path: /v1/knowledge
+  tags:
+  - Knowledge
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: knowledge
+      pagination:
+        totalRecords: 1
+        page: 1
+        size: 10
+    from: schema field examples
+- operationId: getKnowledgeDocument
+  method: GET
+  path: /v1/knowledge/{knowledgeId}
+  tags:
+  - Knowledge
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: knowledge
+      data:
+        name: Product Release Monthly Webinar - May 2023
+        file: jasperbrandvoice.pdf
+        metadata: *id006
+        id: kno_2ee766eaa4ef48e59da1d9602bfecf2d
+        createdAt: '2023-09-21T15:38:00.474Z'
+        updatedAt: '2023-09-21T15:38:00.474Z'
+        processingState: InProgress
+        tags: *id007
+        appUrl: https://app.jasper.ai/jasper-iq/knowledge-base/kno_2ee766eaa4ef48e59da1d9602bfecf2d
+    from: schema field examples
+- operationId: updateKnowledgeDocument
+  method: PATCH
+  path: /v1/knowledge/{knowledgeId}
+  tags:
+  - Knowledge
+  request:
+    media_type: multipart/form-data
+    value:
+      name: Product Release Monthly Webinar - May 2023
+      file: jasperbrandvoice.pdf
+      metadata: '{"NewKey": "New Value", "AnotherKey": "Another Value"}'
+      settings: '{"appVisibility": "visible", "autoSummary": true}'
+      summary: This Knowledge item outlines guidelines for using the Jasper logo
+      tags:
+      - tag1
+      - tag2
+    from: schema field examples
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: knowledge
+      data:
+        name: Product Release Monthly Webinar - May 2023
+        file: jasperbrandvoice.pdf
+        metadata: *id006
+        id: kno_2ee766eaa4ef48e59da1d9602bfecf2d
+        createdAt: '2023-09-21T15:38:00.474Z'
+        updatedAt: '2023-09-21T15:38:00.474Z'
+        processingState: InProgress
+        tags: *id007
+        appUrl: https://app.jasper.ai/jasper-iq/knowledge-base/kno_2ee766eaa4ef48e59da1d9602bfecf2d
+    from: schema field examples
+- operationId: deleteKnowledgeDocument
+  method: DELETE
+  path: /v1/knowledge/{knowledgeId}
+  tags:
+  - Knowledge
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: knowledge
+      deleted: true
+    from: schema field examples
+- operationId: searchKnowledge
+  method: POST
+  path: /v1/knowledge/search
+  tags:
+  - Knowledge
+  request:
+    media_type: application/json
+    value:
+      query: What are my brand guidelines for social media posts?
+    from: schema field examples
+  response:
+    status: '201'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1d9602bfecf2d
+      resource: knowledge
+    from: schema field examples
+- operationId: createTone
+  method: POST
+  path: /v1/tones
+  tags:
+  - Voices
+  request:
+    media_type: application/json
+    value:
+      name: It's-a me, Mario!
+      value: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident,
+        charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage and
+        entertain the audience.
+    from: schema field examples
+  response:
+    status: '201'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: tone
+      data:
+        name: It's-a me, Mario!
+        value: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident,
+          charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage
+          and entertain the audience.
+        id: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+        createdAt: '2023-09-21T15:38:00.474Z'
+        updatedAt: '2023-09-21T15:38:00.474Z'
+        appUrl: https://app.jasper.ai/jasper-iq/brand-voice/ton_2ee766eaa4ef48e59da1d9602bfecf2d
+    from: schema field examples
+- operationId: getAllTones
+  method: GET
+  path: /v1/tones
+  tags:
+  - Voices
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+    - requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: tone
+    from: schema field examples
+- operationId: getTone
+  method: GET
+  path: /v1/tones/{toneId}
+  tags:
+  - Voices
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: tone
+      data:
+        name: It's-a me, Mario!
+        value: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident,
+          charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage
+          and entertain the audience.
+        id: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+        createdAt: '2023-09-21T15:38:00.474Z'
+        updatedAt: '2023-09-21T15:38:00.474Z'
+        appUrl: https://app.jasper.ai/jasper-iq/brand-voice/ton_2ee766eaa4ef48e59da1d9602bfecf2d
+    from: schema field examples
+- operationId: updateTone
+  method: PATCH
+  path: /v1/tones/{toneId}
+  tags:
+  - Voices
+  request:
+    media_type: application/json
+    value:
+      name: It's-a me, Mario!
+      value: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident,
+        charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage and
+        entertain the audience.
+    from: schema field examples
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: tone
+      data:
+        name: It's-a me, Mario!
+        value: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident,
+          charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage
+          and entertain the audience.
+        id: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+        createdAt: '2023-09-21T15:38:00.474Z'
+        updatedAt: '2023-09-21T15:38:00.474Z'
+        appUrl: https://app.jasper.ai/jasper-iq/brand-voice/ton_2ee766eaa4ef48e59da1d9602bfecf2d
+    from: schema field examples
+- operationId: deleteTone
+  method: DELETE
+  path: /v1/tones/{toneId}
+  tags:
+  - Voices
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: tone
+    from: schema field examples
+- operationId: getStyle
+  method: GET
+  path: /v1/styles
+  tags:
+  - Styles
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      id: sty_f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0
+      name: My Style Guide
+      description: A style guide for marketing content
+      customInstructions: Always use a friendly, conversational tone.
+      createdAt: '2025-01-15T12:00:00.000Z'
+      createdBy: usr_abc123
+      updatedAt: '2025-01-20T14:30:00.000Z'
+      appUrl: https://app.jasper.ai/jasper-iq/style-guides/sty_f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0
+      terms: &id008
+      - type: REPLACE
+        term: waz
+        replaceWith: What's
+      - type: ABBREVIATE_AFTER_FIRST
+        term: Mergers & Acquisitions
+        replaceWith: M&A
+      - type: REPLACE_FIRST_INSTANCE
+        term: Jasper®
+        replaceWith: Jasper
+      rules: &id009
+      - name: activeVoice
+        type: boolean
+        value: true
+        ignore: enabled
+      - name: contractions
+        type: boolean
+        value: false
+        ignore: disabled
+      - name: emDashAside
+        type: boolean
+        value: false
+        ignore: disabled
+      - name: emDashSpaces
+        type: boolean
+        value: false
+        ignore: disabled
+      - name: enDashRanges
+        type: boolean
+        value: false
+        ignore: disabled
+      - name: exclamationPoints
+        type: boolean
+        value: true
+        ignore: enabled
+      - name: formatNumerals
+        type: boolean
+        value: true
+        ignore: enabled
+      - name: locale
+        type: locale
+        value: EN_US
+        ignore: enabled
+      - name: oxfordComma
+        type: boolean
+        value: false
+        ignore: disabled
+      - name: removeAmpersands
+        type: boolean
+        value: false
+        ignore: disabled
+      - name: removePlusAsAnd
+        type: boolean
+        value: true
+        ignore: enabled
+      - name: removeSemicolons
+        type: boolean
+        value: false
+        ignore: disabled
+      - name: spacesAfterPeriod
+        type: number
+        value: 1
+        ignore: disabled
+      - name: spellNumbers
+        type: number
+        value: 100
+        ignore: enabled
+    from: schema field examples
+- operationId: getStyleById
+  method: GET
+  path: /v1/styles/{styleId}
+  tags:
+  - Styles
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      id: sty_f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0
+      name: My Style Guide
+      description: A style guide for marketing content
+      customInstructions: Always use a friendly, conversational tone.
+      createdAt: '2025-01-15T12:00:00.000Z'
+      createdBy: usr_abc123
+      updatedAt: '2025-01-20T14:30:00.000Z'
+      appUrl: https://app.jasper.ai/jasper-iq/style-guides/sty_f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0
+      terms: *id008
+      rules: *id009
+    from: schema field examples
+- operationId: getAllDocuments
+  method: GET
+  path: /v1/documents
+  tags:
+  - Documents
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+    - requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: documents
+    from: schema field examples
+- operationId: createDocument
+  method: POST
+  path: /v1/documents
+  tags:
+  - Documents
+  request:
+    media_type: application/json
+    value:
+      userId: user123
+      content: This is the content of the document.
+      name: Document Title
+      status: DRAFT
+      projectId: prj_E8F0457A95B04D87A11F6B1DD6AA2356
+    from: schema field examples
+- operationId: getDocumentById
+  method: GET
+  path: /v1/documents/{documentId}
+  tags:
+  - Documents
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: documents
+    from: schema field examples
+- operationId: updateDocument
+  method: PATCH
+  path: /v1/documents/{documentId}
+  tags:
+  - Documents
+  request:
+    media_type: application/json
+    value:
+      userId: user123
+      content: Updated document content.
+      name: Document Title
+      status: DRAFT
+      projectId: prj_E8F0457A95B04D87A11F6B1DD6AA2356
+    from: schema field examples
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: documents
+    from: schema field examples
+- operationId: deleteDocumentById
+  method: DELETE
+  path: /v1/documents/{documentId}
+  tags:
+  - Documents
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: documents
+      deleted: true
+    from: schema field examples
+- operationId: getAllUsers
+  method: GET
+  path: /v1/users
+  tags:
+  - Users
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+    - requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: users
+    from: schema field examples
+- operationId: getUser
+  method: GET
+  path: /v1/users/{userId}
+  tags:
+  - Users
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: users
+    from: schema field examples
+- operationId: altText
+  method: POST
+  path: /v1/image/alt-text
+  tags:
+  - Images
+  request:
+    media_type: application/json
+    value:
+      imageUrl: https://example.com/image.png
+    from: schema field examples
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      altText: A dog running in a field.
+    from: schema field examples
+- operationId: analyse
+  method: POST
+  path: /v1/image/analysis
+  tags:
+  - Images
+  request:
+    media_type: application/json
+    value:
+      imageUrl: https://example.com/image.png
+      question: Is the main object centered and fully visible?
+    from: schema field examples
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      analysis: Yes the main object is centered and fully visible.
+    from: schema field examples
+- operationId: getImageTemplate
+  method: GET
+  path: /beta/image-template/{template_id}
+  tags:
+  - Image Templates
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      metadata:
+        width: 1080
+        height: 1080
+        visibility: private
+      layers:
+      - type: text
+        editableProperties:
+        - content
+        - color
+        - font
+        - backgroundColor
+        width: 200
+        height: 100
+        x: 50
+        y: 30
+    from: schema field examples
+- operationId: renderImageTemplate
+  method: POST
+  path: /beta/image-template/render
+  tags:
+  - Image Templates
+  request:
+    media_type: multipart/form-data
+    value:
+      template_id: 123e4567-e89b-12d3-a456-426614174000
+      scale: 1
+      background.color: rgba(245,166,35,1)
+      format: png
+      layers.author.text.content: Tom C.
+      layers.author.text.color: '#FF0000'
+      layers.author.text.font: <binary font file>
+      layers.author.text.opacity: '0.8'
+      layers.author.text.isVisible: 'true'
+      layers.review.text.content: Nice product, I love it
+      layers.review.text.backgroundColor: '#FFFFFF'
+      layers.logo.image.imageFile: <binary file>
+      layers.logo.image.fit: contain
+      layers.logo.image.opacity: '0.5'
+      layers.logo.image.isVisible: 'false'
+      layers.icon.svg.color: '#00FF00'
+      layers.icon.svg.opacity: '0.5'
+      layers.icon.svg.isVisible: 'false'
+    from: schema field examples
+- operationId: createProject
+  method: POST
+  path: /v1/projects
+  tags:
+  - Projects
+  request:
+    media_type: application/json
+    value:
+      userId: usr_535B1EC15F5F41EAB1B400E9ED4077B6
+      name: My Project
+      accessLevel: PRIVATE
+      metadata:
+        externalId: ext_123
+        source: crm
+    from: schema field examples
+  response:
+    status: '201'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: projects
+    from: schema field examples
+- operationId: getProjects
+  method: GET
+  path: /v1/projects
+  tags:
+  - Projects
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: projects
+    from: schema field examples
+- operationId: getProjectById
+  method: GET
+  path: /v1/projects/{id}
+  tags:
+  - Projects
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: projects
+      data:
+        id: prj_073D2D49094A4AED991A47B614522579
+        name: My Canvas
+        userId: usr_073D2D49094A4AED991A47B614522579
+        appUrl: https://app.jasper.ai/canvas/edit/962e4d4c-ffdc-4c7a-83e3-8f4e715004cf
+        accessLevel: PRIVATE
+        metadata:
+          externalId: ext_123
+          source: crm
+    from: schema field examples
+- operationId: deleteProject
+  method: DELETE
+  path: /v1/projects/{id}
+  tags:
+  - Projects
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: projects
+      deleted: true
+    from: schema field examples
+- operationId: updateProject
+  method: PATCH
+  path: /v1/projects/{id}
+  tags:
+  - Projects
+  request:
+    media_type: application/json
+    value:
+      userId: usr_535B1EC15F5F41EAB1B400E9ED4077B6
+      name: Updated Project name
+      accessLevel: PRIVATE
+      metadata:
+        externalId: ext_123
+        source: null
+    from: schema field examples
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: projects
+    from: schema field examples
+- operationId: getAllTemplates
+  method: GET
+  path: /v1/templates
+  tags:
+  - Templates
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+    - requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: template
+    from: schema field examples
+- operationId: getTemplate
+  method: GET
+  path: /v1/templates/{templateId}
+  tags:
+  - Templates
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: template
+      data:
+        id: skl_03a2b34578094db09dd806e49f2e15d1
+        name: Product Descriptions
+        description: Create compelling product descriptions to be used on websites, emails and social media.
+        responseFormats:
+        - text
+        - json
+    from: schema field examples
+- operationId: completeTemplate
+  method: POST
+  path: /v1/templates/{templateId}/run
+  tags:
+  - Templates
+  request:
+    media_type: application/json
+    value:
+      inputs:
+        productName: Snazzy Snooze Machine
+        productDescription: Hits snooze on your alarm for you
+        tone: Clever, Witty
+        knowledgeIds:
+        - kno_bce766eaa4ef48e59da1d9602bfecf2d
+        - kno_61cb0d23f2cd4cc2b4e6fd25057dfc1a
+        styleId: sty_2ee766eaa4ef48e59da1d9602bfecf2d
+        audienceId: aud_2ee766eaa4ef48e59da1d9602bfecf2d
+        toneId: ton_2ee766eaa4ef48e59d9602bfecf2d
+        retrievalAddOn: webScraper
+    from: schema field examples
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: content
+    from: schema field examples
+- operationId: usage
+  method: GET
+  path: /v1/usage
+  tags:
+  - Usage
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: usage
+      data:
+        requests:
+        - t: '2023-09-11T13:28:59.318Z'
+          v: 83
+        - t: '2023-09-11T14:28:59.318Z'
+          v: 173
+        - t: '2023-09-11T15:28:59.318Z'
+          v: 162
+    from: schema field examples
+- operationId: getAudienceById
+  method: GET
+  path: /v1/audiences/{audienceId}
+  tags:
+  - Audiences
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+      requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: audience
+      data:
+        appUrl: https://app.jasper.ai/jasper-iq/audiences/aud_2ee766eaa4ef48e59da1d9602bfecf2d
+    from: schema field examples
+- operationId: getAllAudiences
+  method: GET
+  path: /v1/audiences
+  tags:
+  - Audiences
+  response:
+    status: '200'
+    media_type: application/json
+    value:
+    - requestId: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+      resource: audience
+    from: schema field examples

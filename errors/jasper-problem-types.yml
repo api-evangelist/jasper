@@ -1,27 +1,66 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
-source: https://developers.jasper.ai/reference (per-operation documented responses)
-format: http-status
-note: >-
-  Derived from the HTTP status codes documented on the Jasper API reference operation pages.
-  Jasper does not publish an RFC 9457 application/problem+json envelope schema in a captured
-  spec, so these are HTTP-status problem types with the reference-documented meanings.
+source: >-
+  openapi/jasper-api-openapi.yml (declared 4xx/5xx responses across all 50 operations) enriched with
+  https://developers.jasper.ai/reference operation pages.
+format: custom-envelope
+rfc9457: false
+envelope:
+  media_type: application/json
+  shape:
+    requestId: string — server-assigned request identifier, echo it when contacting support
+    resource: string — the resource family that failed (e.g. "knowledge", "style")
+    errors: array — human-readable error messages
+  schemas: [Knowledge400Error, Knowledge500Error, Attachment400Error, Attachment500Error, StyleError]
+  note: >-
+    Jasper does not use RFC 9457 application/problem+json. There is no `type` URI, no `title` and no
+    `status` member — the envelope is a `requestId` + `resource` + `errors[]` object. Only 5 of the
+    95 component schemas are error schemas, and most operations declare 4xx/5xx with a description
+    only and no typed body, so an agent cannot reliably parse a machine-readable failure reason.
+coverage:
+  operations: 50
+  with_400: 30
+  with_401: 12
+  with_404: 26
+  with_500: 49
+  with_429: 0
+  note: >-
+    No operation in the spec declares a 429 response, even though Jasper publishes per-workspace
+    rate limits. Rate-limit exhaustion is undocumented in the contract.
 problems:
 - status: 400
   title: Bad Request
-  meaning: The request body may be missing required fields or contain invalid data.
+  meaning: >-
+    Missing required fields, malformed body, or an unsupported file type on a multipart upload.
+  schema: Knowledge400Error / Attachment400Error
+  occurrences: 30
 - status: 401
   title: Unauthorized
-  meaning: Missing or invalid API key / OAuth bearer token.
+  meaning: Missing or invalid X-API-Key header, or an invalid/expired OAuth 2.0 bearer token.
+  occurrences: 12
 - status: 403
   title: Forbidden
-  meaning: Authenticated principal lacks access (e.g. plan/role not permitted; API access requires the Business plan).
+  meaning: >-
+    Authenticated principal lacks access. Most commonly the workspace is not on the Jasper Business
+    plan, which is the plan that carries API access.
+  occurrences: 0
+  note: Documented in the auth guide, not declared in the spec.
 - status: 404
   title: Not Found
-  meaning: The specified resource (e.g. agent task ID / app ID) does not exist.
+  meaning: The specified resource (agent task, knowledge item, style guide, document, project) does not exist.
+  schema: Knowledge400Error / StyleError
+  occurrences: 26
 - status: 429
   title: Too Many Requests
-  meaning: Per-workspace rate limit exceeded (see rate-limits/jasper-rate-limits.yml).
+  meaning: Per-workspace rate limit exceeded — see rate-limits/jasper-rate-limits.yml.
+  occurrences: 0
+  note: >-
+    NOT declared in the spec and the exhaustion status code is not stated in the rate-limit docs
+    either. 429 is the conventional expectation, not a documented Jasper contract.
 - status: 500
   title: Internal Server Error
-  meaning: Unable to complete the request (e.g. unable to run agent task).
+  meaning: >-
+    Unable to complete the request (e.g. unable to run the agent task, unable to create the
+    knowledge item, unexpected failure fetching a style guide).
+  schema: Knowledge500Error / Attachment500Error / StyleError
+  occurrences: 49

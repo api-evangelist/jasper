@@ -1,9 +1,18 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
 source: >-
   https://api.jasper.ai/.well-known/openid-configuration ;
-  https://api.jasper.ai/.well-known/oauth-authorization-server
+  https://api.jasper.ai/.well-known/oauth-authorization-server ;
+  https://mcp.jasper.ai/.well-known/oauth-protected-resource ;
+  openapi/jasper-api-openapi.yml
 docs: https://developers.jasper.ai/docs/authentication
+spec_divergence: >-
+  The captured OpenAPI's oauth2 securityScheme declares only two scopes — `user:read` ("Read user
+  information") and `user` ("Read and write user information") — and every one of the 50 operations
+  requires `user`. The live RFC 8414 authorization-server document additionally advertises `mcp`,
+  `openid`, `email` and `profile`. The spec therefore under-declares the scope surface, and no
+  operation is scoped more finely than "read and write user information": there is no per-resource
+  authorization in the contract.
 schemes:
 - name: OAuth2
   source: https://api.jasper.ai/.well-known/oauth-authorization-server

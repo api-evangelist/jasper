@@ -1,11 +1,11 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
 - host: www.jasper.ai
   https: true
   tls_version: TLSv1.3
-  cert_expires: Sep 13 01:03:28 2026 GMT
+  cert_expires: Nov 11 09:20:57 2026 GMT
   hsts: true
   hsts_max_age: 31536000
 - host: developers.jasper.ai

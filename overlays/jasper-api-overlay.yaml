@@ -1,0 +1,112 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Jasper API
+  version: 1.0.0
+x-generated: '2026-08-13'
+x-method: generated
+x-source: >-
+  Generated from openapi/jasper-api-openapi.yml plus the artifacts already captured in this repo
+  (rate-limits/, authentication/, scopes/, errors/, lifecycle/, conventions/, mcp/). Captures API
+  Evangelist annotations WITHOUT mutating the harvested original at
+  openapi/_original/jasper-api-openapi.json.
+extends: openapi/jasper-api-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: jasper
+    x-apievangelist-profile: https://apis.io/providers/jasper/
+    x-apievangelist-captured: '2026-08-13'
+    x-apievangelist-spec-source: >-
+      Recovered from the Jasper ReadMe developer portal page payload
+      (https://developers.jasper.ai/reference/listtasks, spec file jasper-api-4.json). Jasper serves
+      no spec at any /openapi.json, /swagger.json or /api-docs path on api.jasper.ai or
+      developers.jasper.ai — every one of those returns 404.
+    contact:
+      name: Jasper Developer Support
+      url: https://developers.jasper.ai/
+    termsOfService: https://www.jasper.ai/legal/terms
+- target: $.info
+  update:
+    x-rate-limits:
+      scope: per-workspace
+      docs: https://developers.jasper.ai/docs/rate-limits
+      artifact: rate-limits/jasper-rate-limits.yml
+      groups:
+      - {name: content generation, limit: 105, interval: minute}
+      - {name: resource management, limit: 200, interval: minute}
+      - {name: styles, limit: 60, interval: minute}
+      - {name: image manipulation, limit: 30, interval: minute}
+      note: >-
+        Documented limits are per workspace. Jasper does not publish X-RateLimit-* / RateLimit-* /
+        Retry-After response header names, and no 429 response is declared anywhere in the spec —
+        an agent cannot detect exhaustion from the contract alone.
+- target: $.info
+  update:
+    x-error-envelope:
+      shape: '{requestId: string, resource: string, errors: array}'
+      schemas: [Knowledge400Error, Knowledge500Error, Attachment400Error, Attachment500Error, StyleError]
+      artifact: errors/jasper-problem-types.yml
+      note: >-
+        Not RFC 9457. No application/problem+json media type appears in the spec. Only 5 of 38
+        paths bind a typed error schema; the rest declare 4xx/5xx with a description only.
+- target: $.info
+  update:
+    x-agent-surfaces:
+      mcp:
+        endpoint: https://mcp.jasper.ai/
+        transport: http
+        auth: oauth2 (scope `mcp`, RFC 7591 DCR)
+        tools: 7
+        artifact: mcp/jasper-mcp.yml
+        crosswalk: mcp/jasper-tool-crosswalk.yml
+        coverage: 9 of 50 REST operations reachable via MCP
+      a2a:
+        agent_card: null
+        note: No agent card at /.well-known/agent-card.json or /.well-known/agent.json on any Jasper host.
+      llms_txt: https://developers.jasper.ai/llms.txt
+- target: $.components.securitySchemes.oauth2
+  update:
+    x-oauth-discovery:
+      authorization_server_metadata: https://api.jasper.ai/.well-known/oauth-authorization-server
+      openid_configuration: https://api.jasper.ai/.well-known/openid-configuration
+      registration_endpoint: https://api.jasper.ai/oauth2/register
+      revocation_endpoint: https://api.jasper.ai/oauth2/revoke
+      introspection_endpoint: https://api.jasper.ai/oauth2/introspect
+      pkce: S256
+    x-scopes-note: >-
+      The spec's oauth2 flow declares only `user:read` and `user`. The live RFC 8414 document
+      additionally advertises `mcp`, `openid`, `email` and `profile` — see scopes/jasper-scopes.yml.
+      The spec under-declares the scope surface.
+- target: $.tags[?(@.name=='Images')]
+  update:
+    description: >-
+      Image manipulation suite — background removal/replacement, cleanup, text removal, upscale,
+      uncrop, packshot compositing, decomposition, alt-text generation and visual analysis. Subject
+      to the tightest published rate limit (30 requests/minute per workspace). Not exposed on the
+      Jasper MCP server.
+- target: $.tags[?(@.name=='Voices')]
+  update:
+    description: >-
+      Brand Voices. The REST resource is named `tones` (/v1/tones) while the product and the MCP
+      tool `get-jasper-brand-voices` call it a Brand Voice — the same object under two names.
+- target: $.tags[?(@.name=='Image Templates')]
+  update:
+    description: >-
+      Image Templates (BETA). Served from the /beta path prefix rather than /v1 — the only
+      unversioned-stable surface in the API. Treat as unstable.
+- target: $.info
+  update:
+    x-lifecycle:
+      versioning: uri-path (v1), with a /beta prefix for Image Templates
+      status_page: https://status.jasper.ai/
+      deprecation_policy: null
+      sunset_header: not documented
+      artifact: lifecycle/jasper-lifecycle.yml
+- target: $.info
+  update:
+    x-idempotency:
+      supported: false
+      evidence: >-
+        No Idempotency-Key header, parameter or extension appears anywhere in the spec, and the
+        docs document no idempotency contract. Retrying a POST /v1/command, /v1/tasks/{id}/run or
+        any image operation re-executes and re-bills the generation.

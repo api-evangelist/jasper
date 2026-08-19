@@ -1,13 +1,14 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
 probe: true
-source: https://security.jasper.ai/
-url: https://security.jasper.ai/
+source: https://www.jasper.ai/trust
+url: https://www.jasper.ai/trust
 certifications:
 - SOC 2
 - GDPR
 evidence:
-- source: https://security.jasper.ai/
+- source: https://www.jasper.ai/trust
   keywords:
   - soc 2
+  - soc2
   - gdpr

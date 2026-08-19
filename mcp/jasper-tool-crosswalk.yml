@@ -1,0 +1,112 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  mcp/jasper-mcp.yml (tool list from https://developers.jasper.ai/docs/jasper-mcp-server) bound to
+  openapi/jasper-api-openapi.yml operationIds. Live tools/list on https://mcp.jasper.ai/ is
+  OAuth-gated (HTTP 401, "Invalid or expired OAuth access token"), so tools are mapped by
+  name/semantics against the captured OpenAPI rather than by comparing published inputSchemas.
+surfaces:
+  openapi:
+    file: openapi/jasper-api-openapi.yml
+    servers: [https://api.jasper.ai]
+    operations: 50
+    gated: false
+  mcp:
+    url: https://mcp.jasper.ai/
+    transport: http
+    gated: true
+    gate: OAuth 2.0 bearer (scope `mcp`), Dynamic Client Registration at https://api.jasper.ai/oauth2/register
+  graphql:
+    present: false
+crosswalk:
+- tool: get-jasper-brand-voices
+  category: brand-context
+  rest: [getAllTones]
+  binding: rest
+  confidence: high
+  note: >-
+    Jasper's REST API names brand voices "tones" (tag `Voices`, path /v1/tones); the MCP tool uses
+    the product name "brand voices". Same resource.
+- tool: get-jasper-audiences
+  category: brand-context
+  rest: [getAllAudiences]
+  binding: rest
+  confidence: high
+- tool: get-jasper-style-guides
+  category: brand-context
+  rest: [getStyle]
+  binding: rest
+  confidence: high
+  note: GET /v1/styles returns the workspace style guides.
+- tool: search-knowledge-base
+  category: knowledge
+  rest: [searchKnowledge]
+  binding: rest
+  confidence: high
+  note: POST /v1/knowledge/search — natural-language search over workspace Knowledge.
+- tool: get-jasper-agents
+  category: agents
+  rest: [listTasks]
+  binding: rest
+  confidence: medium
+  note: >-
+    The REST surface models agents as "agent tasks" (GET /v1/tasks returns public + custom
+    workspace agent tasks). The MCP tool is named for the product concept "agents".
+- tool: run-jasper-agent
+  category: agents
+  rest: [runTask, runTaskStream]
+  binding: rest
+  confidence: medium
+  note: >-
+    Fans out to two operations — POST /v1/tasks/{id}/run and the SSE variant
+    POST /v1/tasks/{id}/run/stream. Which one the MCP server calls is not published.
+- tool: generate-content
+  category: generation
+  rest: [command, completeTemplate]
+  binding: rest
+  confidence: medium
+  note: >-
+    POST /v1/command is the free-form generation operation; POST /v1/templates/{templateId}/run
+    runs a named template. The MCP tool description ("Generate on-brand content with Jasper") does
+    not say which it dispatches to, so both are recorded.
+mcp_only: []
+rest_only:
+- capability: Knowledge management (write)
+  operations: [uploadKnowledgeDocument, getKnowledgeDocuments, getKnowledgeDocument, updateKnowledgeDocument, deleteKnowledgeDocument]
+  note: MCP exposes only knowledge SEARCH; creating/updating/deleting knowledge items is REST-only.
+- capability: Voice (tone) management
+  operations: [createTone, getTone, updateTone, deleteTone]
+- capability: Style guide detail
+  operations: [getStyleById]
+- capability: Audience detail
+  operations: [getAudienceById]
+- capability: Documents
+  operations: [getAllDocuments, createDocument, getDocumentById, updateDocument, deleteDocumentById]
+- capability: Projects
+  operations: [createProject, getProjects, getProjectById, updateProject, deleteProject]
+- capability: Templates
+  operations: [getAllTemplates, getTemplate]
+- capability: Agent task detail + ad-hoc context
+  operations: [getTaskById, createAttachment]
+- capability: Image editing suite
+  operations: [removeBackground, replaceBackground, cleanup, removeText, upscale, uncrop, packshotCompositing, decompose, altText, analyse]
+  note: >-
+    The entire Image API is REST-only — no MCP tool exposes image manipulation, so an agent on the
+    MCP surface cannot edit images. This is the largest surface divergence in the Jasper contract.
+- capability: Image templates (beta)
+  operations: [createImageTemplate, getImageTemplate, renderImageTemplate]
+- capability: Users
+  operations: [getAllUsers, getUser]
+- capability: Usage reporting
+  operations: [usage]
+coverage:
+  tools_named: 7
+  tools_bound: 7
+  tools_mcp_only: 0
+  rest_operations_total: 50
+  rest_operations_with_a_tool: 9
+  rest_operations_without_a_tool: 41
+  note: >-
+    Every published MCP tool binds to at least one real OpenAPI operation, but the MCP surface
+    reaches only 9 of 50 REST operations (18%). MCP is a curated on-brand content-creation
+    projection of the API, not a full projection of it.

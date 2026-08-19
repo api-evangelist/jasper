@@ -1,11 +1,19 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
 source: >-
+  openapi/jasper-api-openapi.yml ;
   https://api.jasper.ai/.well-known/openid-configuration ;
   https://api.jasper.ai/.well-known/oauth-authorization-server ;
+  https://mcp.jasper.ai/.well-known/oauth-protected-resource ;
   https://www.jasper.ai/.well-known/api-catalog ;
   https://security.jasper.ai/
 standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: >-
+    OpenAPI 3.1.0 document, 38 paths / 50 operations / 95 component schemas, recovered from the
+    Jasper developer portal (spec file jasper-api-4.json). Every operation has an operationId, a
+    summary, a description and a tag.
 - id: oauth2
   conforms: true
   evidence: RFC 8414 oauth-authorization-server document published; authorization_code + refresh_token grants.
@@ -18,18 +26,46 @@ standards:
 - id: oauth2-dcr
   conforms: true
   evidence: registration_endpoint https://api.jasper.ai/oauth2/register (RFC 7591 Dynamic Client Registration).
+- id: rfc9728-oauth-protected-resource
+  conforms: true
+  evidence: >-
+    https://mcp.jasper.ai/.well-known/oauth-protected-resource returns 200 with resource,
+    resource_name "Jasper MCP", scopes_supported [mcp], bearer_methods_supported [header].
 - id: rfc9727-api-catalog
   conforms: true
   evidence: /.well-known/api-catalog linkset published at www.jasper.ai.
 - id: mcp
   conforms: true
-  evidence: hosted MCP server at https://mcp.jasper.ai + @gojasper/mcp-server npm package.
+  evidence: >-
+    Hosted MCP server at https://mcp.jasper.ai/ (JSON-RPC at the host root; POST /mcp is 404),
+    OAuth-gated, plus the @gojasper/mcp-server npm package for local stdio.
+- id: a2a
+  conforms: false
+  evidence: >-
+    No agent card at /.well-known/agent-card.json or /.well-known/agent.json on api.jasper.ai,
+    mcp.jasper.ai, www.jasper.ai, developers.jasper.ai or app.jasper.ai — all 404.
+- id: llmstxt
+  conforms: true
+  evidence: https://developers.jasper.ai/llms.txt published (captured verbatim at llms/jasper-llms.txt).
 - id: rfc9116-security-txt
   conforms: false
   evidence: no /.well-known/security.txt on any probed host.
 - id: rfc9457-problem-details
-  conforms: unknown
-  evidence: error envelope schema not published in a captured machine-readable spec.
+  conforms: false
+  evidence: >-
+    Errors use a custom {requestId, resource, errors[]} envelope over application/json. No
+    application/problem+json media type appears anywhere in the spec.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: no deprecation/sunset policy published and no deprecated operations in the spec.
+- id: ratelimit-headers
+  conforms: false
+  evidence: >-
+    Limits are published in prose only. No RateLimit-* / X-RateLimit-* / Retry-After header is
+    named, and no operation declares a 429 response.
+- id: idempotency-key
+  conforms: false
+  evidence: no idempotency header, parameter or documented contract.
 - id: soc2
   conforms: true
   evidence: SOC 2 report listed on the Jasper trust portal (security.jasper.ai).

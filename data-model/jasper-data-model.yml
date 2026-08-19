@@ -1,52 +1,122 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: derived
-source: https://developers.jasper.ai/reference (documented resources and endpoints)
+source: >-
+  openapi/jasper-api-openapi.yml — component `$ref` graph (95 schemas) plus id-reference fields
+  (audienceId, toneId, styleId, knowledgeIds, projectId, attachmentIds, userId), enriched with the
+  operation descriptions on https://developers.jasper.ai/reference.
 note: >-
-  Derived from the resources and endpoints published in the Jasper API reference. Jasper does
-  not publish a downloadable OpenAPI with a full $ref graph, so relationships below are inferred
-  from documented endpoint paths and request/response fields, not from schema $refs.
+  Upgraded this round from a docs-only derivation to a real derivation against the captured Jasper
+  OpenAPI 3.1.0 (openapi/_original/jasper-api-openapi.json). Relationships below are read from
+  actual `$ref` links and typed id fields in the spec, not inferred from endpoint paths.
+envelope:
+  note: >-
+    Every top-level response wraps its payload in a `requestId` + data envelope
+    (e.g. TaskResponseDto -> TaskResource, ProjectResponseDto -> ProjectData). `requestId` is the
+    correlation id and is also the error-envelope key — see errors/jasper-problem-types.yml.
 entities:
-- name: Project
-  endpoints: [createProject, getProjects, getProjectById, updateProject, deleteProject]
-- name: Document
-  endpoints: [createDocument, getAllDocuments, getDocumentById, updateDocument, deleteDocumentById]
-- name: Tone
-  endpoints: [createTone, getAllTones, getTone, updateTone, deleteTone]
-- name: Audience
-  endpoints: [getAllAudiences, getAudienceById]
-- name: StyleGuide
-  endpoints: [getStyle, getStyleById]
-- name: KnowledgeDocument
-  endpoints: [uploadKnowledgeDocument, getKnowledgeDocuments, getKnowledgeDocument, updateKnowledgeDocument, deleteKnowledgeDocument, searchKnowledge]
 - name: AgentTask
-  endpoints: [listTasks, getTaskById, runTask, runTaskStream]
+  schemas: [TaskResource, TaskResponseDto, TasksListResponseDto, TaskRunDto, TaskRunResult, TaskRunResultMetadata]
+  path_root: /v1/tasks
+  operations: [listTasks, getTaskById, runTask, runTaskStream]
+  key_fields: [id, generationSkillId]
 - name: Attachment
-  endpoints: [createAttachment]
-  note: Temporary attachment referenced by attachmentIds on runTask.
+  schemas: [CreateAttachmentResource, CreateAttachmentResponseDto]
+  path_root: /v1/attachments
+  operations: [createAttachment]
+  key_fields: [id]
+  note: Temporary, short-lived ad-hoc context. Referenced only by runTask via attachmentIds.
+- name: KnowledgeItem
+  schemas: [KnowledgeResponseDto, GetAllKnowledgeResponseDto, ScoredKnowledgeDto, RelevantChunkDto, KnowledgeItemDto]
+  path_root: /v1/knowledge
+  operations: [uploadKnowledgeDocument, getKnowledgeDocuments, getKnowledgeDocument, updateKnowledgeDocument, deleteKnowledgeDocument, searchKnowledge]
+  key_fields: [id, knowledgeId]
+- name: Voice
+  schemas: [ToneDto, ToneSettingsDto, CreateToneDto, UpdateToneDto, GetAllTonesResponseDto]
+  path_root: /v1/tones
+  operations: [createTone, getAllTones, getTone, updateTone, deleteTone]
+  key_fields: [id]
+  note: Called "Brand Voice" in the product and on the MCP surface; `tone` in the REST contract.
+- name: StyleGuide
+  schemas: [StyleResponseDto, StyleError]
+  path_root: /v1/styles
+  operations: [getStyle, getStyleById]
+  key_fields: [id]
+  note: Read-only over the API — no create/update/delete operations exist.
+- name: Audience
+  schemas: [GetAudienceResponseDto, AudienceResponse, AudiencesResponse, CoreMessagingDto, ContentEngagementPatternsDto, LanguagePatternsDto, ContentChecklistDto, AdditionalCharacteristicDto, ContextSourceDto]
+  path_root: /v1/audiences
+  operations: [getAllAudiences, getAudienceById]
+  key_fields: [id]
+  note: Read-only over the API. The richest sub-graph in the model (6 nested component schemas).
+- name: Project
+  schemas: [ProjectData, ProjectCreateRequestDto, ProjectUpdateRequestDto, ProjectSettingsDto, ProjectResponseDto, ProjectSingleResponseDto]
+  path_root: /v1/projects
+  operations: [createProject, getProjects, getProjectById, updateProject, deleteProject]
+  key_fields: [id, userId]
+- name: Document
+  schemas: [DocumentsData, DocumentCreateDto, DocumentUpdateDto, DocumentResponse]
+  path_root: /v1/documents
+  operations: [getAllDocuments, createDocument, getDocumentById, updateDocument, deleteDocumentById]
+  key_fields: [id, projectId, userId]
 - name: Template
-  endpoints: [getAllTemplates, getTemplate, completeTemplate]
+  schemas: [Template, InputSchemaItem, InputItemOption, CompleteTemplateRequest, CompleteTemplateInputs, CompleteTemplateResponse]
+  path_root: /v1/templates
+  operations: [getAllTemplates, getTemplate, completeTemplate]
+  key_fields: [id]
+- name: Command
+  schemas: [CommandDto, CommandInputs, CommandOptions, CommandResponseDto, GeneratedText]
+  path_root: /v1/command
+  operations: [command]
 - name: ImageTemplate
-  endpoints: [createImageTemplate, getImageTemplate, renderImageTemplate]
+  schemas: []
+  path_root: /beta/image-template
+  operations: [createImageTemplate, getImageTemplate, renderImageTemplate]
+  note: BETA — served from /beta, not /v1.
+- name: Image
+  schemas: []
+  path_root: /v1/image
+  operations: [removeBackground, replaceBackground, cleanup, removeText, upscale, uncrop, packshotCompositing, decompose, altText, analyse]
+  note: Stateless transformation endpoints — no persisted entity, input and output are image URLs/bytes.
 - name: User
-  endpoints: [getAllUsers, getUser]
+  schemas: [UsersData, UsersResponse]
+  path_root: /v1/users
+  operations: [getAllUsers, getUser]
+  key_fields: [id]
+- name: Usage
+  schemas: [Usage, UsageRequest, UsageResponseDto]
+  path_root: /v1/usage
+  operations: [usage]
+  note: Content-generation request statistics only (command + template runs).
 relationships:
-- from: Document
-  to: Project
-  kind: belongs_to
-  via: project
-- from: AgentTask
-  to: Attachment
-  kind: has_many
-  via: attachmentIds
-- from: AgentTask
-  to: KnowledgeDocument
-  kind: references
-  via: knowledge/retrieval add-ons
-- from: Content generation
-  to: Tone
-  kind: references
-  via: tone/brand voice
-- from: Content generation
-  to: Audience
-  kind: references
-  via: audience
+- {from: Document, to: Project, kind: belongs_to, via: projectId, evidence: DocumentsData.projectId}
+- {from: Document, to: User, kind: belongs_to, via: userId, evidence: DocumentsData.userId}
+- {from: Project, to: User, kind: belongs_to, via: userId, evidence: ProjectData.userId}
+- {from: Project, to: Voice, kind: has_one, via: toneId, evidence: ProjectSettingsDto.toneId}
+- {from: Project, to: Audience, kind: has_one, via: audienceId, evidence: ProjectSettingsDto.audienceId}
+- {from: Project, to: StyleGuide, kind: has_one, via: styleId, evidence: ProjectSettingsDto.styleId}
+- {from: Project, to: KnowledgeItem, kind: has_many, via: knowledgeIds, evidence: ProjectSettingsDto.knowledgeIds}
+- {from: AgentTask, to: Attachment, kind: has_many, via: attachmentIds, evidence: TaskRunDto.attachmentIds}
+- {from: AgentTask, to: KnowledgeItem, kind: has_many, via: knowledgeIds, evidence: TaskRunDto.knowledgeIds}
+- {from: AgentTask, to: Voice, kind: has_one, via: toneId, evidence: TaskRunDto.toneId}
+- {from: AgentTask, to: Audience, kind: has_one, via: audienceId, evidence: TaskRunDto.audienceId}
+- {from: AgentTask, to: Audience, kind: has_many, via: additionalAudienceIds, evidence: TaskRunDto.additionalAudienceIds}
+- {from: AgentTask, to: StyleGuide, kind: has_one, via: styleGuideId, evidence: TaskRunDto.styleGuideId}
+- {from: Command, to: Voice, kind: has_one, via: toneId, evidence: CommandInputs.toneId}
+- {from: Command, to: Audience, kind: has_one, via: audienceId, evidence: CommandInputs.audienceId}
+- {from: Command, to: Audience, kind: has_many, via: additionalAudienceIds, evidence: CommandInputs.additionalAudienceIds}
+- {from: Command, to: StyleGuide, kind: has_one, via: styleId, evidence: CommandInputs.styleId}
+- {from: Command, to: KnowledgeItem, kind: has_many, via: knowledgeIds, evidence: CommandInputs.knowledgeIds}
+- {from: Template, to: Voice, kind: has_one, via: toneId, evidence: CompleteTemplateInputs.toneId}
+- {from: Template, to: Audience, kind: has_one, via: audienceId, evidence: CompleteTemplateInputs.audienceId}
+- {from: Template, to: StyleGuide, kind: has_one, via: styleId, evidence: CompleteTemplateInputs.styleId}
+- {from: Template, to: KnowledgeItem, kind: has_many, via: knowledgeIds, evidence: CompleteTemplateInputs.knowledgeIds}
+- {from: Voice, to: ToneSettings, kind: has_one, via: $ref ToneSettingsDto, evidence: ToneDto.$ref}
+- {from: KnowledgeItem, to: Settings, kind: has_one, via: $ref Settings, evidence: KnowledgeResponseDto.$ref}
+observations:
+- >-
+  Voice, Audience, StyleGuide and KnowledgeItem form a shared "brand context" bundle that every
+  generation surface (Command, Template, AgentTask, Project) references by the SAME four id fields.
+  That bundle is Jasper IQ expressed in the contract.
+- >-
+  Audience and StyleGuide are read-only over the API — they can be referenced but not created or
+  changed, so an agent can consume brand governance but cannot author it.

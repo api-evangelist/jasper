@@ -1,0 +1,52 @@
+generated: '2026-08-13'
+method: searched
+source: https://www.jasper.ai/pricing
+currency: USD
+plan_count: 2
+notes: >-
+  Jasper publishes two named plans on its public pricing page. Only the Pro tier carries a public
+  price; the Business tier is "custom pricing / Contact Sales". API access — including the REST API
+  at https://api.jasper.ai/v1 and the hosted MCP server — is a Business-tier entitlement, so the
+  API surface itself has no published price. No usage/overage rate card, no per-call or per-token
+  pricing, and no published quota for API calls; the per-workspace rate limits in
+  rate-limits/jasper-rate-limits.yml are the only published usage ceiling.
+plans:
+- name: Pro
+  price: 69
+  currency: USD
+  billing_period: month
+  unit: seat
+  annual_price: 59
+  annual_billing_period: month
+  annual_note: Billed yearly, ~20% saving (the page shows $59/month/seat on the Yearly toggle).
+  seats_included: 1
+  trial: 7-day free trial
+  api_access: false
+  included:
+  - Canvas platform for on-brand content creation
+  - Agents for core marketing workflows
+  - 2 Brand Voices
+  - 5 multi-modal Knowledge assets
+  - 3 Audiences
+  - 100+ purpose-built marketing agents
+  - 30+ languages
+  cta: Start Free 7-Day Trial
+- name: Business
+  price: null
+  price_model: custom
+  billing_period: null
+  api_access: true
+  included:
+  - Everything in Pro
+  - Agents for complex marketing workflows (GEO, translations, deep research)
+  - No-code builder for Custom AI Agents
+  - Jasper Grid for scaled systematic content execution
+  - Unlimited Jasper IQ customization (Brand Voices, Knowledge, Audiences)
+  - API access
+  - Enterprise-grade governance — admin controls and Groups
+  - Dedicated account management and priority support
+  - Secure and flexible deployment options
+  cta: Contact Sales
+  note: >-
+    "API access" is listed as a Business-plan line item, and the Jasper authentication docs confirm
+    API tokens require the Business plan. There is no self-serve path to the API.

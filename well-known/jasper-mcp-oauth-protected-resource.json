@@ -1,0 +1,13 @@
+{
+    "resource": "https://mcp.jasper.ai",
+    "resource_name": "Jasper MCP",
+    "authorization_servers": [
+        "https://mcp.jasper.ai"
+    ],
+    "scopes_supported": [
+        "mcp"
+    ],
+    "bearer_methods_supported": [
+        "header"
+    ]
+}
