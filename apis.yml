@@ -61,6 +61,11 @@ apis:
   tags:
   - Content Generation
   - Agents
+  - Image
+  - Knowledge
+  tags_raw:
+  - Content Generation
+  - Agents
   - Images
   - Knowledge
   properties:
