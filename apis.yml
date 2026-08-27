@@ -49,26 +49,16 @@ tags:
 - Agents
 - MCP
 apis:
-- name: Jasper API
-  description: >-
-    The Jasper API brings generative AI into your platform — generate on-brand content
-    via commands and templates, run marketing Agent Tasks, manage documents, projects,
-    tones, and audiences, augment generations with Knowledge/retrieval, and edit images
-    (background removal, upscale, uncrop, cleanup, packshot compositing). Secured with
-    workspace API keys or OAuth 2.0.
+- aid: jasper:jasper-attachments-api
+  name: Jasper Attachments API
+  description: The Attachments API from Jasper — 1 operation(s) for attachments.
   humanURL: https://developers.jasper.ai/
   baseURL: https://api.jasper.ai/v1
   tags:
-  - Content Generation
-  - Agents
-  - Image
-  - Knowledge
-  tags_raw:
-  - Content Generation
-  - Agents
-  - Images
-  - Knowledge
+  - Attachments
   properties:
+  - type: OpenAPI
+    url: openapi/jasper-attachments-api-openapi.yml
   - type: Authentication
     url: authentication/jasper-authentication.yml
   - type: OAuthScopes
@@ -85,10 +75,396 @@ apis:
     url: conformance/jasper-conformance.yml
   - type: DataModel
     url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-audiences-api
+  name: Jasper Audiences API
+  description: The Audiences API from Jasper — 2 operation(s) for audiences.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Audiences
+  properties:
   - type: OpenAPI
-    url: openapi/jasper-api-openapi.yml
-  - type: Overlay
-    url: overlays/jasper-api-overlay.yaml
+    url: openapi/jasper-audiences-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-command-api
+  name: Jasper Command API
+  description: The Command API from Jasper — 1 operation(s) for command.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Command
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-command-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-documents-api
+  name: Jasper Documents API
+  description: The Documents API from Jasper — 2 operation(s) for documents.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Documents
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-documents-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-image-templates-api
+  name: Jasper Image Templates API
+  description: The Image Templates API from Jasper — 3 operation(s) for image templates.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Image Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-image-templates-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-images-api
+  name: Jasper Images API
+  description: The Images API from Jasper — 10 operation(s) for images.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Images
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-images-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-knowledge-api
+  name: Jasper Knowledge API
+  description: The Knowledge API from Jasper — 3 operation(s) for knowledge.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Knowledge
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-knowledge-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-projects-api
+  name: Jasper Projects API
+  description: The Projects API from Jasper — 2 operation(s) for projects.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-projects-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-styles-api
+  name: Jasper Styles API
+  description: The Styles API from Jasper — 2 operation(s) for styles.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Styles
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-styles-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-tasks-api
+  name: Jasper Tasks API
+  description: The Tasks API from Jasper — 4 operation(s) for tasks.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-tasks-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-templates-api
+  name: Jasper Templates API
+  description: The Templates API from Jasper — 3 operation(s) for templates.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-templates-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-usage-api
+  name: Jasper Usage API
+  description: The Usage API from Jasper — 1 operation(s) for usage.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-usage-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-users-api
+  name: Jasper Users API
+  description: The Users API from Jasper — 2 operation(s) for users.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-users-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
+  - type: Examples
+    url: examples/jasper-examples.yml
+  - type: AgenticAccess
+    url: agentic-access/jasper-agentic-access.yml
+- aid: jasper:jasper-voices-api
+  name: Jasper Voices API
+  description: The Voices API from Jasper — 2 operation(s) for voices.
+  humanURL: https://developers.jasper.ai/
+  baseURL: https://api.jasper.ai/v1
+  tags:
+  - Voices
+  properties:
+  - type: OpenAPI
+    url: openapi/jasper-voices-api-openapi.yml
+  - type: Authentication
+    url: authentication/jasper-authentication.yml
+  - type: OAuthScopes
+    url: scopes/jasper-scopes.yml
+  - type: RateLimits
+    url: rate-limits/jasper-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/jasper-problem-types.yml
+  - type: Conventions
+    url: conventions/jasper-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/jasper-lifecycle.yml
+  - type: Conformance
+    url: conformance/jasper-conformance.yml
+  - type: DataModel
+    url: data-model/jasper-data-model.yml
   - type: Examples
     url: examples/jasper-examples.yml
   - type: AgenticAccess
