@@ -1,0 +1,338 @@
+openapi: 3.2.0
+info:
+  title: Jasper Voices API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Voices
+  description: ''
+paths:
+  /v1/tones:
+    post:
+      description: Create a voice for use in personalizing AI outputs
+      operationId: createTone
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateToneDto'
+      responses:
+        '201':
+          description: Created. The new voice was added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetToneResponseDto'
+        '400':
+          description: Bad request. May be missing required fields or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to create the voice.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Create a voice
+      tags:
+      - Voices
+    get:
+      description: Returns a list of voices available to your workspace, sorted from most recently created
+      operationId: getAllTones
+      parameters:
+      - name: q
+        required: false
+        in: query
+        description: "You can use the `q` parameter to run a query parameter search. Query parameter search supports the following fields: `name`, `metadata`, and `settings`.\n\nSupported operators: `AND` \n\nThe `AND` operator can be used to combine multiple search criteria. \n\n`NOTE`: The `AND` operator supports a maximum of `10` operators \n\nAvailable field examples: \n\n`name: value` \n\n`metadata[key]:value` \n\n`settings[appVisibility]:visible` \n\n`metadata[key1]:value1 AND metadata[key2]:value2` \n\n"
+        schema:
+          example: metadata[key]:value
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: The desired page number of voices
+        schema:
+          default: 1
+          type: number
+      - name: size
+        required: false
+        in: query
+        description: The number of voices per page to return in the response
+        schema:
+          default: 10
+          type: number
+      responses:
+        '200':
+          description: Retrieve voices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAllTonesResponseDto'
+        '500':
+          description: Internal server error. Unable to get voices
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve all voices
+      tags:
+      - Voices
+  /v1/tones/{toneId}:
+    get:
+      description: Retrieve a voice by ID
+      operationId: getTone
+      parameters:
+      - name: toneId
+        required: true
+        in: path
+        description: The voice's unique ID
+        schema:
+          example: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+          type: string
+      responses:
+        '200':
+          description: Retrieve voice by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetToneResponseDto'
+        '404':
+          description: Not found. May have an incorrect URL path or voice ID.
+        '500':
+          description: Internal server error. Unable to get specified voice ID.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve voice by ID
+      tags:
+      - Voices
+    patch:
+      description: Update an existing voice by ID
+      operationId: updateTone
+      parameters:
+      - name: toneId
+        required: true
+        in: path
+        description: The voice's unique ID
+        schema:
+          example: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateToneDto'
+      responses:
+        '200':
+          description: Update an existing voice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetToneResponseDto'
+        '404':
+          description: Not found. May have an incorrect URL path or voice ID.
+        '500':
+          description: Internal server error. Unable to update specified voice.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Update voice by ID
+      tags:
+      - Voices
+    delete:
+      description: Delete an existing voice by ID
+      operationId: deleteTone
+      parameters:
+      - name: toneId
+        required: true
+        in: path
+        description: The voice's unique ID
+        schema:
+          example: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+          type: string
+      responses:
+        '200':
+          description: Voice deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteToneResponseDto'
+        '404':
+          description: Not found. May have an incorrect URL path or voice ID.
+        '500':
+          description: Internal server error. Unable to get specified voice.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Delete voice by ID
+      tags:
+      - Voices
+components:
+  schemas:
+    UpdateToneDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The friendly name of the voice.
+          example: It's-a me, Mario!
+        value:
+          type: string
+          description: The voices's description.
+          example: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident, charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage and entertain the audience.
+        metadata:
+          type: object
+          description: An optional set of key-value pairs to attach any data you wish to the voice, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long.
+        settings:
+          description: Additional configuration options.
+          allOf:
+          - $ref: '#/components/schemas/ToneSettingsDto'
+    DeleteToneResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: tone
+        deleted:
+          type: boolean
+      required:
+      - deleted
+    ToneSettingsDto:
+      type: object
+      properties:
+        appVisibility:
+          type: string
+          description: Whether the brand is available in the Jasper app. Provides a way to omit voices created from the API, from being available in the Jasper app experience. One of "visible" or "hidden". Defaults to "visible".
+          default: visible
+          example: visible
+          enum:
+          - visible
+          - hidden
+    ToneDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The friendly name of the voice.
+          example: It's-a me, Mario!
+        value:
+          type: string
+          description: The voice's description
+          example: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident, charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage and entertain the audience.
+        metadata:
+          type: object
+          description: An optional set of key-value pairs to attach any data you wish to the voice, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long.
+        settings:
+          description: Additional configuration options.
+          allOf:
+          - $ref: '#/components/schemas/ToneSettingsDto'
+        id:
+          type: string
+          example: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+        createdAt:
+          type: string
+          example: '2023-09-21T15:38:00.474Z'
+        updatedAt:
+          type: string
+          example: '2023-09-21T15:38:00.474Z'
+        appUrl:
+          type: string
+          description: The client URL to view the voice in the Jasper app. Empty when no link can be resolved.
+          example: https://app.jasper.ai/jasper-iq/brand-voice/ton_2ee766eaa4ef48e59da1d9602bfecf2d
+      required:
+      - name
+      - value
+    TonePaginationDto:
+      type: object
+      properties:
+        totalRecords:
+          type: number
+          description: Total number of records
+        page:
+          type: number
+          description: Current page
+        pageSize:
+          type: number
+          description: Page size
+        next:
+          type: object
+          description: URL for requesting the next page
+        prev:
+          type: object
+          description: URL for requesting the previous page
+    GetAllTonesResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: tone
+        data:
+          $ref: '#/components/schemas/ToneDto'
+        pagination:
+          $ref: '#/components/schemas/TonePaginationDto'
+    CreateToneDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The friendly name of the voice.
+          example: It's-a me, Mario!
+        value:
+          type: string
+          description: The voice's description
+          example: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident, charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage and entertain the audience.
+        metadata:
+          type: object
+          description: An optional set of key-value pairs to attach any data you wish to the voice, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long.
+        settings:
+          description: Additional configuration options.
+          allOf:
+          - $ref: '#/components/schemas/ToneSettingsDto'
+      required:
+      - name
+      - value
+    GetToneResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: tone
+        data:
+          $ref: '#/components/schemas/ToneDto'
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

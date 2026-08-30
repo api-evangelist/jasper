@@ -1,0 +1,337 @@
+openapi: 3.2.0
+info:
+  title: Jasper Audiences API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Audiences
+  description: ''
+paths:
+  /v1/audiences/{audienceId}:
+    get:
+      description: Retrieve a specific audience in your workspace by ID
+      operationId: getAudienceById
+      parameters:
+      - name: audienceId
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Retrieve Audience by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudienceResponse'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs.
+        '401':
+          description: Unauthorized access to the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to get specified audience.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve audience by ID
+      tags:
+      - Audiences
+  /v1/audiences:
+    get:
+      description: Retrieve all audiences in your workspace
+      operationId: getAllAudiences
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: The desired page number of audiences
+        schema:
+          default: 1
+          example: 1
+          type: number
+      - name: size
+        required: false
+        in: query
+        description: The maximum number of audiences to return per page. Defaults to 10 if omitted.
+        schema:
+          minimum: 1
+          default: 10
+          example: 25
+          type: number
+      responses:
+        '200':
+          description: Retrieve all audiences
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AudiencesResponse'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs.
+        '401':
+          description: Unauthorized access to the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to get audiences.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve audiences
+      tags:
+      - Audiences
+components:
+  schemas:
+    ProofPointDto:
+      type: object
+      properties:
+        category:
+          type: string
+        examples:
+          type: array
+          items:
+            type: string
+      required:
+      - category
+      - examples
+    AudiencesResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: audience
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetAudienceResponseDto'
+    GetAudienceResponseDto:
+      type: object
+      properties:
+        coreMessaging:
+          $ref: '#/components/schemas/CoreMessagingDto'
+        contentChecklist:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentChecklistDto'
+        languagePatterns:
+          $ref: '#/components/schemas/LanguagePatternsDto'
+        contentEngagementPatterns:
+          $ref: '#/components/schemas/ContentEngagementPatternsDto'
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        useCaseRequirements:
+          type: array
+          items:
+            type: string
+        successIndicators:
+          type: array
+          items:
+            type: string
+        buyingTriggers:
+          type: array
+          items:
+            type: string
+        additionalCharacteristics:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalCharacteristicDto'
+        accessLevel:
+          type: string
+          enum:
+          - PRIVATE
+          - PUBLIC
+        createdAt:
+          format: date-time
+          type: string
+        createdBy:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        contextSources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContextSourceDto'
+        appUrl:
+          type: string
+          description: The client URL to view the audience in the Jasper app. Empty when no link can be resolved.
+          example: https://app.jasper.ai/jasper-iq/audiences/aud_2ee766eaa4ef48e59da1d9602bfecf2d
+      required:
+      - coreMessaging
+      - contentChecklist
+      - languagePatterns
+      - contentEngagementPatterns
+      - id
+      - name
+      - useCaseRequirements
+      - successIndicators
+      - buyingTriggers
+      - additionalCharacteristics
+      - accessLevel
+      - createdAt
+      - createdBy
+      - updatedAt
+      - contextSources
+      - appUrl
+    ContentChecklistDto:
+      type: object
+      properties:
+        category:
+          type: string
+        checklistItems:
+          type: array
+          items:
+            type: string
+      required:
+      - category
+      - checklistItems
+    CoreMessagingDto:
+      type: object
+      properties:
+        valuePropositions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValuePropositionDto'
+        positioningStatement:
+          type: string
+      required:
+      - valuePropositions
+      - positioningStatement
+    AudienceResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: audience
+        data:
+          $ref: '#/components/schemas/GetAudienceResponseDto'
+    ContentEngagementPatternsDto:
+      type: object
+      properties:
+        proofPoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProofPointDto'
+        attentionHooks:
+          type: array
+          items:
+            type: string
+        engagementTriggers:
+          type: array
+          items:
+            type: string
+        objectionResponses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObjectionResponseDto'
+      required:
+      - proofPoints
+      - attentionHooks
+      - engagementTriggers
+      - objectionResponses
+    AdditionalCharacteristicDto:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+      required:
+      - key
+      - value
+    LanguagePatternsDto:
+      type: object
+      properties:
+        dos:
+          type: array
+          items:
+            type: string
+        donts:
+          type: array
+          items:
+            type: string
+        powerWords:
+          type: array
+          items:
+            type: string
+        powerPhrases:
+          type: array
+          items:
+            type: string
+        technicalLevel:
+          type: array
+          items:
+            type: string
+      required:
+      - dos
+      - donts
+      - powerWords
+      - powerPhrases
+      - technicalLevel
+    ObjectionResponseDto:
+      type: object
+      properties:
+        objection:
+          type: string
+        response:
+          type: string
+      required:
+      - objection
+      - response
+    ValuePropositionDto:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+      required:
+      - title
+      - description
+    ContextSourceDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - id
+      - name
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

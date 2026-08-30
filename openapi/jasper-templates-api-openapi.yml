@@ -1,0 +1,403 @@
+openapi: 3.2.0
+info:
+  title: Jasper Templates API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Templates
+  description: ''
+paths:
+  /v1/templates:
+    get:
+      description: Retrieve all templates available in your workspace including default templates and custom templates
+      operationId: getAllTemplates
+      parameters: []
+      responses:
+        '200':
+          description: Retrieve all templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAllTemplatesResponseDto'
+        '500':
+          description: Internal server error. Unable to get templates.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve templates
+      tags:
+      - Templates
+  /v1/templates/{templateId}:
+    get:
+      description: Retrieve an individual default or custom template available in your workspace by ID
+      operationId: getTemplate
+      parameters:
+      - name: templateId
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Retrieve template by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTemplateResponseDto'
+        '404':
+          description: Not found. May have an incorrect URL path or template ID.
+        '500':
+          description: Internal server error. Unable to get specified template.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve template by ID
+      tags:
+      - Templates
+  /v1/templates/{templateId}/run:
+    post:
+      description: Run a default template or custom template by ID to generate an AI output. See our guide on Using Templates for tips on getting started.
+      operationId: completeTemplate
+      parameters:
+      - name: templateId
+        required: true
+        in: path
+        description: The template's unique ID
+        schema:
+          example: skl_501CFB66C00F47ECA277BF4ECC99DD21
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteTemplateRequest'
+      responses:
+        '200':
+          description: Generate outputs for a specific template
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompleteTemplateResponse'
+        '400':
+          description: Bad Request. May need to check that the request body corresponds with the input schema for the template you are trying to complete.
+        '404':
+          description: Not found. May be due to an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to generate outputs for specified template.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Run template
+      tags:
+      - Templates
+components:
+  schemas:
+    Template:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The template's unique identifier.
+          example: skl_03a2b34578094db09dd806e49f2e15d1
+        name:
+          type: string
+          description: The template's name.
+          example: Product Descriptions
+        description:
+          type: string
+          description: The template's description.
+          example: Create compelling product descriptions to be used on websites, emails and social media.
+        responseFormats:
+          description: The template's supported response formats.
+          example:
+          - text
+          - json
+          type: array
+          items:
+            type: string
+        inputSchema:
+          description: The schema of a template's allowed inputs.
+          type: array
+          items:
+            $ref: '#/components/schemas/InputSchemaItem'
+    InputSchemaItem:
+      type: object
+      properties:
+        inputKey:
+          type: string
+          description: The key to be used in the request body's inputs when using the `Run Template` endpoint to complete the template generation.
+          example: productName
+        type:
+          type: string
+          description: The expected type of the input's value
+          enum:
+          - string
+          - boolean
+          - number
+          - string[]
+          - knowledge[]
+          example: string
+        required:
+          type: boolean
+          description: Indicates if an input is required to complete the template.
+          example: true
+        maxLength:
+          type: number
+          description: The maximum character count accepted for this input's value
+          example: '800'
+        label:
+          type: string
+          description: The suggested input label.
+          example: Product Name
+        placeholder:
+          type: string
+          description: An input's placeholder that acts as an example input value.
+          example: Sherlock Holmes Adventure Escape Room
+        tooltip:
+          type: string
+          description: An input's tooltip to add additional context for the user.
+          example: This should match the product name found in our company catalog.
+        options:
+          description: '"options" will only be present when type is "select".'
+          type: array
+          items:
+            $ref: '#/components/schemas/InputItemOption'
+    CompleteTemplateResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: content
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeneratedText'
+    GetAllTemplatesResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: template
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Template'
+    CompleteTemplateInputs:
+      type: object
+      properties:
+        knowledgeIds:
+          description: A list of knowledge items to use when generating content. Up to 3 knowledge items are allowed.
+          example: '[kno_bce766eaa4ef48e59da1d9602bfecf2d, kno_61cb0d23f2cd4cc2b4e6fd25057dfc1a]'
+          type: array
+          items:
+            type: string
+        toneId:
+          type: string
+          description: Tone to use when running the template
+          example: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+        styleId:
+          type: string
+          description: Style to use when running the template
+          example: sty_2ee766eaa4ef48e59da1d9602bfecf2d
+        audienceId:
+          type: string
+          description: The primary audience ID to use when running the template.
+          example: aud_2ee766eaa4ef48e59da1d9602bfecf2d
+        additionalAudienceIds:
+          description: Additional audience IDs to include alongside the primary `audienceId` when running the template.
+          example:
+          - aud_7c1f0b9d2e4a4f6b8d3c5a1e9f0b2c4d
+          - aud_3a9e5d1c8b7f4062a1d3e6c9b0f8a2e7
+          type: array
+          items:
+            type: string
+        retrievalAddOn:
+          type: string
+          description: The add-on to use to further enhance your generation with information that lives outside of Jasper. You can further customize the behavior of the add-on with the associated parameter in the options portion of your request body.
+          enum:
+          - webScraper
+          - webSearch
+    RequestOptionsDto:
+      type: object
+      properties:
+        outputCount:
+          type: number
+          description: Number of outputs to generate.
+          example: 3
+          default: 1
+        outputLanguage:
+          type: string
+          description: The language in which outputs should be returned.
+          default: English
+          example: English
+          enum:
+          - English
+          - French
+          - Spanish
+          - Italian
+          - Portuguese
+          - German
+        inputLanguage:
+          type: string
+          description: The language in which inputs will be given.
+          default: English
+          example: English
+          enum:
+          - English
+          - French
+          - Spanish
+          - Italian
+          - Portuguese
+          - German
+        languageFormality:
+          type: string
+          description: The formality of the outputs, for the languages where formality applies.
+          default: default
+          example: default
+          enum:
+          - default
+          - more
+          - less
+        webScraper:
+          description: Optional parameters for further customizing the behavior of the webScraper add-on.
+          allOf:
+          - $ref: '#/components/schemas/WebScraperOptions'
+        webSearch:
+          description: Optional parameters for further customizing the behavior of the webSearch add-on.
+          allOf:
+          - $ref: '#/components/schemas/WebSearchOptions'
+    WebScraperOptions:
+      type: object
+      properties:
+        urls:
+          description: An optional list of URLs for Jasper to scrape during generation to use as context. Max of 3 per request. If nothing is provided, Jasper will automatically detect URLs in the request inputs to use as context for the generation.
+          example:
+          - https://en.wikipedia.org/wiki/Rabbit
+          - https://en.wikipedia.org/wiki/Lagomorpha
+          type: array
+          items:
+            type: string
+    InputItemOption:
+      type: object
+      properties:
+        label:
+          type: string
+          description: The displayed value in a select input's dropdown.
+          example: First Option
+        value:
+          type: string
+          description: The value to use in the associated input when completing the template.
+          example: option1
+    CompleteTemplateRequest:
+      type: object
+      properties:
+        inputs:
+          description: A template's inputs. The required inputs for the given template should match it's inputKey values, which are available in the response from a GET request to templates. In addition, a tone can be optionally applied to any template.
+          example:
+            productName: Snazzy Snooze Machine
+            productDescription: Hits snooze on your alarm for you
+            tone: Clever, Witty
+            knowledgeIds:
+            - kno_bce766eaa4ef48e59da1d9602bfecf2d
+            - kno_61cb0d23f2cd4cc2b4e6fd25057dfc1a
+            styleId: sty_2ee766eaa4ef48e59da1d9602bfecf2d
+            audienceId: aud_2ee766eaa4ef48e59da1d9602bfecf2d
+            toneId: ton_2ee766eaa4ef48e59d9602bfecf2d
+            retrievalAddOn: webScraper
+          additionalProperties:
+            oneOf:
+            - type: string
+          allOf:
+          - $ref: '#/components/schemas/CompleteTemplateInputs'
+        options:
+          description: The schema of a template's allowed inputs.
+          allOf:
+          - $ref: '#/components/schemas/RequestOptionsDto'
+      required:
+      - inputs
+    GeneratedText:
+      type: object
+      properties:
+        text:
+          type: string
+          example: '
+
+
+            Furry friends so sweet,
+
+            Nibbling on fresh kale leaves,
+
+            Soft hops fill the breeze.'
+        id:
+          type: string
+          example: txt_bce766eaa4ef48e59da1d9602bfecf2d
+    GetTemplateResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: template
+        data:
+          $ref: '#/components/schemas/Template'
+      required:
+      - data
+    WebSearchOptions:
+      type: object
+      properties:
+        siteBlockList:
+          description: An optional list of domains for Jasper to omit from the search results. For example, providing mycompetor.com will filter out results returned with that domain and it’s subdomains, such as blog.mycompetitor.com. If nothing is provided, all search results will be used for the generation.
+          example:
+          - https://en.wikipedia.org
+          type: array
+          items:
+            type: string
+        searchQuery:
+          type: string
+          description: A query to override the default behavior for how Jasper searches the web. If nothing is provided, Jasper will automatically define an appropriate query based on the inputs supplied.
+          example: Recent bear attacks in Alaska
+        maxResults:
+          type: number
+          description: The number of search results to use for additional context when generating a response
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

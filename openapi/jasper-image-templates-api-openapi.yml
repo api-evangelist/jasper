@@ -1,0 +1,343 @@
+openapi: 3.2.0
+info:
+  title: Jasper Image Templates API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Image Templates
+  description: ''
+paths:
+  /beta/image-template:
+    post:
+      description: Create a new image template.
+      operationId: createImageTemplate
+      parameters: []
+      requestBody:
+        required: true
+        description: Image template creation request parameters (form-data)
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                template:
+                  type: string
+                  format: binary
+                  description: The template data as a JSON file (max 5MB)
+                workspace_id:
+                  type: string
+                  description: Optional workspace ID (must match authenticated workspace)
+              required:
+              - template
+              additionalProperties: false
+      responses:
+        '201':
+          description: The template was successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  externalId:
+                    type: string
+                    description: The external ID of the created template
+        '400':
+          description: Bad request. May be missing required file, invalid JSON, file too large, or workspace mismatch.
+        '500':
+          description: Internal server error. Unable to create template.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Create a new image template
+      tags:
+      - Image Templates
+  /beta/image-template/{template_id}:
+    get:
+      description: Retrieve template metadata (version, dimensions, workspace) and a list of all layers with their properties. This endpoint provides information about what layers are available in the template and what properties can be edited for each layer.
+      operationId: getImageTemplate
+      parameters:
+      - name: template_id
+        required: true
+        in: path
+        description: The external ID of the template to introspect
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Template introspection data retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The external ID of the template
+                  metadata:
+                    type: object
+                    properties:
+                      width:
+                        type: number
+                        description: Template width in pixels
+                        example: 1080
+                      height:
+                        type: number
+                        description: Template height in pixels
+                        example: 1080
+                      visibility:
+                        type: string
+                        enum:
+                        - private
+                        - public
+                        description: 'Template visibility: "private" if associated with a specific workspace, "public" otherwise'
+                        example: private
+                  layers:
+                    type: array
+                    description: List of layers in the template
+                    items:
+                      type: object
+                      required:
+                      - name
+                      - type
+                      - editableProperties
+                      - width
+                      - height
+                      - x
+                      - y
+                      properties:
+                        name:
+                          type: string
+                          description: Layer name (used for referencing in render endpoint)
+                        type:
+                          type: string
+                          description: Layer type (text, image, etc.)
+                          example: text
+                        editableProperties:
+                          type: array
+                          description: List of properties that can be edited for this layer
+                          items:
+                            type: string
+                          example:
+                          - content
+                          - color
+                          - font
+                          - backgroundColor
+                        width:
+                          type: integer
+                          description: Layer width in pixels
+                          example: 200
+                        height:
+                          type: integer
+                          description: Layer height in pixels
+                          example: 100
+                        x:
+                          type: integer
+                          description: Layer x-coordinate position
+                          example: 50
+                        y:
+                          type: integer
+                          description: Layer y-coordinate position
+                          example: 30
+        '404':
+          description: Template not found or access denied.
+        '500':
+          description: Internal server error. Unable to retrieve template information.
+      security:
+      - X-API-Key: []
+      summary: Get template introspection data
+      tags:
+      - Image Templates
+  /beta/image-template/render:
+    post:
+      description: 'Generate multiple variations of advertising images connecting a predefined template with dynamic content. You can dynamically update layer properties and page background using dot notation in form fields. For layers: "layers.author.text.content" to update text content. For background: "background.color" for solid colors or "background.imageFile" for image backgrounds. Only layers.* and background.* form fields will be processed as dynamic updates, other fields are ignored.'
+      operationId: renderImageTemplate
+      parameters: []
+      requestBody:
+        required: true
+        description: Multi-layer image composition request parameters (form-data)
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                template_id:
+                  type: string
+                  format: uuid
+                  description: Id of the template to render.
+                scale:
+                  type: number
+                  description: 'Scale factor for the rendered image (0 < scale <= 4). Default: 1'
+                  minimum: 0
+                  maximum: 4
+                  default: 1
+                format:
+                  type: string
+                  enum:
+                  - png
+                  - jpeg
+                  description: 'Output image format. Default: png'
+                  default: png
+                layers.{name}.text.content:
+                  type: string
+                  description: Update text content for a text layer
+                layers.{name}.text.color:
+                  type: string
+                  description: Update text color
+                layers.{name}.text.font:
+                  type: string
+                  format: binary
+                  description: 'Upload a custom font file for a text layer (TTF, OTF, WOFF, WOFF2). Max size: 5MB'
+                layers.{name}.text.opacity:
+                  type: string
+                  description: Set text layer opacity, value is a number between 0 and 1
+                  maximum: 1
+                layers.{name}.text.isVisible:
+                  type: string
+                  enum:
+                  - 'true'
+                  - 'false'
+                  description: Set text layer visibility
+                layers.{name}.text.backgroundColor:
+                  type: string
+                  description: Update text background color
+                layers.{name}.image.imageFile:
+                  oneOf:
+                  - type: string
+                    format: binary
+                    description: 'Upload an image file (PNG, JPEG, WebP). Max size: 5MB'
+                  - type: string
+                    format: url
+                    description: URL of an image.
+                layers.{name}.image.fit:
+                  type: string
+                  enum:
+                  - contain
+                  - cover
+                  description: 'Auto-fit the image to the layer. Requires providing layers.{name}.image.imageFile in the same request. "contain": no crop, resize and center the image. "cover": crop to fill the layer. Fit will override any existing crop attributes in the template'
+                layers.{name}.image.cropWidth:
+                  type: string
+                  description: Crop width as percentage (0-1). Cannot be used with fit attribute.
+                  minimum: 0
+                  maximum: 1
+                  default: 1
+                layers.{name}.image.cropHeight:
+                  type: string
+                  description: Crop height as percentage (0-1). Cannot be used with fit attribute.
+                  minimum: 0
+                  maximum: 1
+                  default: 1
+                layers.{name}.image.cropX:
+                  type: string
+                  description: Crop X offset as percentage (0-1). Cannot be used with fit attribute.
+                  minimum: 0
+                  maximum: 1
+                  default: 0
+                layers.{name}.image.cropY:
+                  type: string
+                  description: Crop Y offset as percentage (0-1). Cannot be used with fit attribute.
+                  minimum: 0
+                  maximum: 1
+                  default: 0
+                layers.{name}.image.opacity:
+                  type: string
+                  description: Set image layer opacity, value is a number between 0 and 1
+                  minimum: 0
+                  maximum: 1
+                layers.{name}.image.isVisible:
+                  type: string
+                  enum:
+                  - 'true'
+                  - 'false'
+                  description: Set image layer visibility
+                background.color:
+                  type: string
+                  description: Set page background to a solid color (e.g., "rgba(245,166,35,1)", "#FF0000", "white"). Cannot be used with background.imageFile.
+                background.imageFile:
+                  type: string
+                  format: binary
+                  description: 'Upload an image file for page background (PNG, JPEG, WebP). Max size: 5MB. Cannot be used with background.color.'
+                layers.{name}.svg.color:
+                  type: string
+                  description: Update SVG fill color
+                layers.{name}.svg.opacity:
+                  type: string
+                  description: Set svg layer opacity, value is a number between 0 and 1
+                  minimum: 0
+                  maximum: 1
+                layers.{name}.svg.isVisible:
+                  type: string
+                  enum:
+                  - 'true'
+                  - 'false'
+                  description: Set svg layer visibility
+              required:
+              - template_id
+              additionalProperties: true
+              example:
+                template_id: 123e4567-e89b-12d3-a456-426614174000
+                scale: 1
+                background.color: rgba(245,166,35,1)
+                format: png
+                layers.author.text.content: Tom C.
+                layers.author.text.color: '#FF0000'
+                layers.author.text.font: <binary font file>
+                layers.author.text.opacity: '0.8'
+                layers.author.text.isVisible: 'true'
+                layers.review.text.content: Nice product, I love it
+                layers.review.text.backgroundColor: '#FFFFFF'
+                layers.logo.image.imageFile: <binary file>
+                layers.logo.image.fit: contain
+                layers.logo.image.opacity: '0.5'
+                layers.logo.image.isVisible: 'false'
+                layers.icon.svg.color: '#00FF00'
+                layers.icon.svg.opacity: '0.5'
+                layers.icon.svg.isVisible: 'false'
+      responses:
+        '200':
+          description: The image was successfully rendered.
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '404':
+          description: Template not found or access denied.
+        '500':
+          description: Internal server error. Unable to render image.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Render an image template with dynamic layer and background updates
+      tags:
+      - Image Templates
+components:
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

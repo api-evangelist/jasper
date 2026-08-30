@@ -1,0 +1,701 @@
+openapi: 3.2.0
+info:
+  title: Jasper Tasks API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Tasks
+  description: ''
+paths:
+  /v1/tasks:
+    get:
+      description: Retrieve all agent tasks available in your workspace including public agent tasks and custom workspace agent tasks
+      operationId: listTasks
+      parameters:
+      - name: size
+        required: false
+        in: query
+        description: Number of agent tasks to return per page
+        schema:
+          minimum: 1
+          maximum: 100
+          default: 100
+          example: 100
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: Page number (1-indexed)
+        schema:
+          minimum: 1
+          default: 1
+          example: 1
+          type: number
+      - name: scope
+        required: false
+        in: query
+        description: 'Filter by agent task scope: PUBLIC or WORKSPACE'
+        schema:
+          example: PUBLIC
+          type: string
+          enum:
+          - USER
+          - WORKSPACE
+          - PUBLIC
+      - name: includeContextItems
+        required: false
+        in: query
+        description: Include context items (input fields) in the response for the task to be executed by the agent. Default is false.
+        schema:
+          default: false
+          example: false
+          type: boolean
+      - name: includeCategories
+        required: false
+        in: query
+        description: Include categories for the agent tasks in the response. Default is false.
+        schema:
+          default: false
+          example: false
+          type: boolean
+      - name: searchTerm
+        required: false
+        in: query
+        description: Search term to filter agent tasks by name, description, categories, or tags. Performs partial case-insensitive matching.
+        schema:
+          example: blog
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved list of agent tasks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TasksListResponseDto'
+        '500':
+          description: Internal server error. Unable to get agent tasks.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user:read
+      summary: List all agent tasks
+      tags:
+      - Tasks
+  /v1/tasks/{id}:
+    get:
+      description: Retrieve a specific agent task by its unique identifier
+      operationId: getTaskById
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: The external ID (agt_…) or internal UUID of the agent task
+        schema:
+          example: agt_0190f3a1b2c34d5e6f7a8b9c0d1e2f3a
+          type: string
+      - name: version
+        required: false
+        in: query
+        description: The agent task version to filter by. If not provided, the latest version will be used.
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successfully retrieved agent task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponseDto'
+        '404':
+          description: Agent task not found. The specified app ID may not exist or you may not have access to it.
+        '500':
+          description: Internal server error. Unable to get agent task.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user:read
+      summary: Get agent task by ID
+      tags:
+      - Tasks
+  /v1/tasks/{id}/run:
+    post:
+      description: Execute an agent task by ID to generate AI output. Provide the necessary context items and configuration in the request body.
+      operationId: runTask
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: The external ID (agt_…) or internal UUID of the agent task to run
+        schema:
+          example: agt_0190f3a1b2c34d5e6f7a8b9c0d1e2f3a
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskRunDto'
+      responses:
+        '200':
+          description: Successfully executed agent task and generated output
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskRunResponseDto'
+        '400':
+          description: Bad Request. The request body may be missing required fields or contain invalid data. Check the agent task input schema.
+        '404':
+          description: Agent task not found. The specified app ID may not exist.
+        '500':
+          description: Internal server error. Unable to run agent task.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Run an agent task
+      tags:
+      - Tasks
+  /v1/tasks/{id}/run/stream:
+    post:
+      description: Execute an agent task by ID to generate AI output with Server-Sent Events (SSE) streaming. Provides real-time content as it is generated.
+      operationId: runTaskStream
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: The external ID (agt_…) or internal UUID of the agent task to run
+        schema:
+          example: agt_0190f3a1b2c34d5e6f7a8b9c0d1e2f3a
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskRunDto'
+      responses:
+        '200':
+          description: Stream of events containing step updates and content chunks
+          content:
+            application/json:
+              schema:
+                type: object
+                description: SSE stream with multiple event types
+                oneOf:
+                - type: object
+                  properties:
+                    step:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        status:
+                          type: string
+                          enum:
+                          - loading
+                          - completed
+                        label:
+                          type: string
+                  example:
+                    step:
+                      id: f1d3b309-67bd-4054-a852-8806bc1a5344
+                      status: loading
+                      label: Generating content
+                - type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    content:
+                      type: string
+                    role:
+                      type: string
+                    usage:
+                      type: object
+                      nullable: true
+                    skillId:
+                      type: string
+                      format: uuid
+                    contentId:
+                      type: string
+                      format: uuid
+                  example:
+                    id: 155cb8fc-d483-49e1-9cb5-ae30c04f5ef0
+                    content: .
+                    role: JASPER
+                    usage: null
+                    skillId: 8c1ede2b-8067-4633-9ba9-2fa0c8f59a2f
+                    contentId: 155cb8fc-d483-49e1-9cb5-ae30c04f5ef0
+                - type: object
+                  description: Error event sent during stream (HTTP 200 with error payload)
+                  properties:
+                    statusCode:
+                      type: number
+                    message:
+                      type: string
+                    error:
+                      type: string
+                  example:
+                    statusCode: 400
+                    message: app not found
+                    error: HttpException
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Run an agent task with streaming response
+      tags:
+      - Tasks
+components:
+  schemas:
+    TasksListResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: 07008c5a-f916-4bdc-bfda-e8f6c328f7c5
+        resource:
+          type: string
+          example: tasks
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskResource'
+        pagination:
+          type: object
+          example:
+            totalRecords: 100
+            page: 1
+            pageSize: 25
+            next: '2'
+            prev: null
+    TaskRunResultMetadata:
+      type: object
+      properties:
+        credits:
+          description: Credit cost of this run. Present only when the workspace meters this operation; reflects what was billed.
+          allOf:
+          - $ref: '#/components/schemas/TaskRunCreditCost'
+        translation:
+          description: Translation-specific run metadata. Present only for translation tasks that emit it.
+          allOf:
+          - $ref: '#/components/schemas/TranslationRunMetadata'
+    TmsMatch:
+      type: object
+      properties:
+        target:
+          type: string
+          example: Klicken Sie auf Speichern, um fortzufahren.
+          description: Approved translation-memory target text for the source segment.
+        score:
+          type: number
+          example: 1
+          description: Match score between 0 and 1; higher is a closer match.
+      required:
+      - target
+      - score
+    TaskRunResult:
+      type: object
+      properties:
+        output:
+          description: Array of output items generated by the agent
+          example:
+          - type: TEXT
+            value: This is the generated content from the agent...
+          type: array
+          items:
+            $ref: '#/components/schemas/OutputItem'
+        metadata:
+          description: Optional run metadata. Present only for features that emit it (e.g. TMS segment matches).
+          allOf:
+          - $ref: '#/components/schemas/TaskRunResultMetadata'
+      required:
+      - output
+    TmsSegmentMatchItem:
+      type: object
+      properties:
+        sourceSegment:
+          type: string
+          example: Click Save to continue.
+          description: The source segment that matched the translation memory
+        matches:
+          description: Approved translation-memory targets for this segment (highest score first)
+          example:
+          - target: Klicken Sie auf Speichern, um fortzufahren.
+            score: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/TmsMatch'
+      required:
+      - sourceSegment
+      - matches
+    PredefinedContextItemDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Context item ID
+          example: 729d2dd3-9ec6-4930-b216-48b8923671ca
+        value:
+          description: 'Context item value - format depends on the context item type:
+
+            • INPUT, TEXTAREA, SELECT, IMAGE_ID, TOOL, CUSTOM: string
+
+            • MULTISELECT, TAGS_INPUT: string[] (array of selected values)
+
+            • KNOWLEDGE: KnowledgeItemDto[] (array of knowledge objects with knowledgeId and optional knowledgeExtractionPrompt)
+
+            • CHECKBOX: string ("true" or "false")'
+          examples:
+            stringValue:
+              summary: Text input (INPUT/TEXTAREA/SELECT/IMAGE_ID/TOOL/CUSTOM)
+              value: Sample text content
+            arrayValue:
+              summary: Multi-select or tags (MULTISELECT/TAGS_INPUT)
+              value:
+              - option1
+              - option2
+              - option3
+            knowledgeValue:
+              summary: Knowledge items (KNOWLEDGE type)
+              value:
+              - knowledgeId: kno_123
+                knowledgeExtractionPrompt: Extract statistics, facts, and important timeline information
+            checkboxValue:
+              summary: Checkbox (CHECKBOX type)
+              value: 'true'
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          - type: array
+            items:
+              type: object
+              properties:
+                knowledgeId:
+                  type: string
+                knowledgeExtractionPrompt:
+                  type: string
+      required:
+      - id
+      - value
+    TaskRunDto:
+      type: object
+      properties:
+        contextItems:
+          type: array
+          description: Array of context items - can include both predefined context items (with id and value) and custom context items (with name, question, and answer)
+          example:
+          - id: 70346737-878b-4329-a4d6-9a054efef508
+            value:
+            - Registration reminder email
+            - Confirmation email
+          - name: Greeting
+            question: Who is the person that you want me to greet in the registration reminder email?
+            answer: John Doe
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PredefinedContextItemDto'
+            - $ref: '#/components/schemas/CustomContextItemDto'
+        version:
+          type: number
+          description: Agent task version (optional, defaults to latest)
+          example: 1
+        toLanguage:
+          type: string
+          description: Target output language for the completion (optional, defaults to EN-US)
+          example: EN-US
+        knowledgeIds:
+          description: Array of knowledge IDs to use as context to power the agent
+          example:
+          - kno_123
+          - kno_456
+          type: array
+          items:
+            type: string
+        attachmentIds:
+          description: Array of temporary attachment IDs (prefixed `tmp_`) to use as ad-hoc context for this run. Create attachments up front via `POST /v1/attachments` and pass the returned IDs here. Temporary attachments are intended for short-lived context (the same attachment can be referenced across retries of the same run) and are not durable — use `knowledgeIds` for content that should persist in your workspace.
+          example:
+          - tmp_2ee766eaa4ef48e59da1d9602bfecf2d
+          type: array
+          items:
+            type: string
+        toneId:
+          type: string
+          description: Tone ID for the brand voice of the agent's output
+          example: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+        audienceId:
+          type: string
+          description: The primary audience ID used to customize the agent's output for a target audience.
+          example: aud_123
+        additionalAudienceIds:
+          description: Additional audience IDs to customize the agent's output for multiple target audiences in a single run, included alongside the primary `audienceId`.
+          example:
+          - aud_456
+          - aud_789
+          type: array
+          items:
+            type: string
+        styleGuideId:
+          type: string
+          description: Style Guide ID to apply writing rules to the agent's output
+          example: sty_123
+        tools:
+          type: array
+          description: Array of tools to enable for agent task execution. Can include WEB_SEARCH and/or KNOWLEDGE_SEARCH
+          example:
+          - WEB_SEARCH
+          - KNOWLEDGE_SEARCH
+          default: []
+          items:
+            type: string
+            enum:
+            - WEB_SEARCH
+            - KNOWLEDGE_SEARCH
+      required:
+      - contextItems
+    OutputItem:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - TEXT
+          example: TEXT
+          description: The type of output item
+        value:
+          type: string
+          example: This is the generated content from the agent...
+          description: The output value content
+      required:
+      - type
+      - value
+    CustomContextItemDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name/label of the custom context item
+          example: Greeting
+        question:
+          type: string
+          description: The question/prompt for this context item (how it will be presented to the model)
+          example: Who is the person that you want me to greet in the registration reminder email?
+        answer:
+          type: string
+          description: The value/answer for this custom context item
+          example: Tim Everett
+        priority:
+          type: number
+          description: The priority of this context item (higher priority = more important)
+          example: 1
+          default: 0
+      required:
+      - name
+      - question
+      - answer
+    TaskRunCreditCost:
+      type: object
+      properties:
+        cost:
+          type: number
+          example: 40
+          description: Credits this run cost on your workspace plan.
+      required:
+      - cost
+    TaskContextItem:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 5e9f3d7b-9ec6-44e7-b752-3977fef34c18
+          description: Unique identifier for the context item
+        name:
+          type: string
+          example: Original text
+          description: Name of the context item
+        type:
+          type: string
+          enum:
+          - TEXTAREA
+          - INPUT
+          - TAGS_INPUT
+          - SELECT
+          - MULTISELECT
+          - CUSTOM
+          - KNOWLEDGE
+          - IMAGE_ID
+          - TOOL
+          - CHECKBOX
+          example: TEXTAREA
+          description: Type of the context item
+        question:
+          type: string
+          example: What text do you want to check?
+          description: Question prompt for the context item
+        options:
+          example:
+          - grammar
+          - writing
+          description: List of options for the context item
+          type: array
+          items:
+            type: string
+        tooltip:
+          type: object
+          example: null
+          description: Tooltip text for the context item
+          nullable: true
+        required:
+          type: boolean
+          example: false
+          description: Whether this context item is required
+        value:
+          type: object
+          description: Value of the context item
+      required:
+      - id
+      - name
+      - type
+    TranslationRunMetadata:
+      type: object
+      properties:
+        tmsMatches:
+          description: Contextual translation-memory segment matches used to inform the translation. Present only for workspaces with a connected TMS integration.
+          type: array
+          items:
+            $ref: '#/components/schemas/TmsSegmentMatchItem'
+    TaskResource:
+      type: object
+      properties:
+        id:
+          type: string
+          example: agt_0190f3a1b2c34d5e6f7a8b9c0d1e2f3a
+          description: Stable, public-facing identifier for the agent task. The internal UUID is also accepted anywhere this id is required.
+        name:
+          type: string
+          example: Grammar Checker
+          description: Name of the agent task
+        appUrl:
+          type: string
+          example: https://app.jasper.ai/studio/962e4d4c-ffdc-4c7a-83e3-8f4e715004cf
+          description: The client URL to view the agent task in the Jasper app. Empty when no link can be resolved.
+        description:
+          type: string
+          example: Ensure your text is free from grammar errors to enhance clarity and professionalism
+          description: Short description of the agent task
+        contextItems:
+          description: Context items required by the agent task
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskContextItem'
+        generationSkillId:
+          type: object
+          description: Associated generation skill ID
+          nullable: true
+        version:
+          type: number
+          example: 1
+          description: Version number of the agent task
+        scope:
+          type: string
+          enum:
+          - USER
+          - WORKSPACE
+          - PUBLIC
+          example: PUBLIC
+          description: Scope of the agent task (PUBLIC for those available to all users, WORKSPACE for those custom to your workspace)
+        updatedAt:
+          type: string
+          example: '2024-10-29T03:47:44.468Z'
+          description: Timestamp when the agent task was last updated
+        createdAt:
+          type: string
+          example: '2024-10-02T03:51:26.020Z'
+          description: Timestamp when the agent task was created
+        longDescription:
+          type: object
+          example: '#### Overview
+
+            Elevate the quality of your content by running it through a comprehensive grammar checker...'
+          description: Extended description of the agent task in markdown format
+          nullable: true
+        publishedAt:
+          type: object
+          example: '2024-10-14T04:12:20.369Z'
+          description: Timestamp when the agent task was published
+          nullable: true
+        customFields:
+          type: object
+          description: Custom fields associated with the agent task
+          nullable: true
+        theme:
+          type: object
+          description: Theme of the agent task
+          nullable: true
+        categories:
+          example: []
+          description: Categories the agent task belongs to
+          nullable: true
+          type: array
+          items:
+            type: string
+      required:
+      - id
+      - name
+      - appUrl
+      - description
+      - version
+      - scope
+      - updatedAt
+      - createdAt
+    TaskResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: 07008c5a-f916-4bdc-bfda-e8f6c328f7c5
+        resource:
+          type: string
+          example: tasks
+        data:
+          $ref: '#/components/schemas/TaskResource'
+      required:
+      - data
+    TaskRunResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: tasks
+        data:
+          $ref: '#/components/schemas/TaskRunResult'
+      required:
+      - data
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

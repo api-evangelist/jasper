@@ -1,0 +1,164 @@
+openapi: 3.2.0
+info:
+  title: Jasper Attachments API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Attachments
+  description: ''
+paths:
+  /v1/attachments:
+    post:
+      description: 'Create a temporary attachment for use as ad-hoc context on a Task Agent run. Submit as `multipart/form-data`. The `type` form field discriminates the payload carried on `value`: for FILE, send the file bytes as the `value` multipart part; for TEXT and URL, send the payload as the `value` form field. Reference the returned `id` in `attachmentIds` on a subsequent `POST /v1/tasks/{id}/run` call.
+
+
+        The returned attachment ID is currently only accepted by `POST /v1/tasks/{id}/run` (via the `attachmentIds` field). It is not supported by other endpoints.
+
+
+        Temporary attachments are intended for short-lived context (the same attachment can be referenced across retries of the same run) and should not be relied on for durable storage. Use the Knowledge API (`POST /v1/knowledge`) for content that should persist in your workspace.'
+      operationId: createAttachment
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateAttachmentDto'
+      responses:
+        '201':
+          description: Attachment created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAttachmentResponseDto'
+        '400':
+          description: Bad request. Missing required fields or unsupported file type.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attachment400Error'
+        '500':
+          description: Internal server error. Unable to create attachment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attachment500Error'
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Create a temporary attachment
+      tags:
+      - Attachments
+components:
+  schemas:
+    CreateAttachmentDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - FILE
+          - TEXT
+          - URL
+          description: 'The kind of attachment being created. In every case the payload is carried on the `value` multipart part: FILE sends binary file bytes, TEXT sends a raw text string, URL sends a URL string.'
+          example: FILE
+        value:
+          oneOf:
+          - title: binary
+            type: string
+            format: binary
+          - title: string
+            type: string
+          description: 'The attachment payload. Its shape depends on `type`: for FILE, the binary file bytes (multipart file part; pick `binary` in the docs UI); for TEXT, a raw text string (form field; pick `string`); for URL, a URL string (form field; pick `string`).'
+          example: Q3 retention numbers improved 12% YoY across enterprise segments.
+      required:
+      - type
+      - value
+    CreateAttachmentResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: 8393f82b3f6a4f6e8a405777b9305254
+        resource:
+          type: string
+          example: knowledge
+        data:
+          $ref: '#/components/schemas/CreateAttachmentResource'
+      required:
+      - requestId
+      - resource
+      - data
+    Attachment400Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 400
+        message:
+          type: string
+          example: 'Unsupported file type "exe". Supported extensions: pdf, docx, txt, md, png, …'
+        error:
+          type: string
+          example: Bad Request
+      required:
+      - statusCode
+      - message
+      - error
+    CreateAttachmentResource:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The temporary attachment ID. Reference this value in `attachmentIds` on a subsequent `POST /v1/tasks/{id}/run` call.
+          example: tmp_2ee766eaa4ef48e59da1d9602bfecf2d
+        type:
+          type: string
+          enum:
+          - FILE
+          - TEXT
+          - URL
+          description: The attachment type, echoing back the request `type`.
+          example: FILE
+      required:
+      - id
+      - type
+    Attachment500Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 500
+        message:
+          type: string
+          example: Couldn't create attachment
+        error:
+          type: string
+          example: Internal Server Error
+      required:
+      - statusCode
+      - message
+      - error
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

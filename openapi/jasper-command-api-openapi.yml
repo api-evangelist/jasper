@@ -1,0 +1,239 @@
+openapi: 3.2.0
+info:
+  title: Jasper Command API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Command
+  description: ''
+paths:
+  /v1/command:
+    post:
+      description: Run a command to generate an AI Output
+      operationId: command
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandDto'
+      responses:
+        '201':
+          description: Created. The command ran successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponseDto'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to run command.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Run command
+      tags:
+      - Command
+components:
+  schemas:
+    CommandDto:
+      type: object
+      properties:
+        inputs:
+          description: Inputs for generating a command
+          allOf:
+          - $ref: '#/components/schemas/CommandInputs'
+        options:
+          description: Options for generating a command
+          allOf:
+          - $ref: '#/components/schemas/CommandOptions'
+      required:
+      - inputs
+    CommandInputs:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Your command for Jasper
+          example: Write a haiku about rabbits
+        context:
+          type: string
+          description: Do you have any background information for Jasper?
+          example: All rabbits eat kale
+        knowledgeIds:
+          description: A list of knowledge items to use when generating content. Up to 3 knowledge items are allowed.
+          example: '[kno_bce766eaa4ef48e59da1d9602bfecf2d, kno_61cb0d23f2cd4cc2b4e6fd25057dfc1a]'
+          type: array
+          items:
+            type: string
+        styleId:
+          type: string
+          description: The style to use when generating a command
+          example: sty_2ee766eaa4ef48e59da1d9602bfecf2d
+        toneId:
+          type: string
+          description: Tone to use when generating a command
+          example: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+        audienceId:
+          type: string
+          description: The primary audience ID to use when generating a command.
+          example: aud_2ee766eaa4ef48e59da1d9602bfecf2d
+        additionalAudienceIds:
+          description: Additional audience IDs to include alongside the primary `audienceId` when generating a command.
+          example:
+          - aud_7c1f0b9d2e4a4f6b8d3c5a1e9f0b2c4d
+          - aud_3a9e5d1c8b7f4062a1d3e6c9b0f8a2e7
+          type: array
+          items:
+            type: string
+        retrievalAddOn:
+          type: string
+          description: The add-on to use to further enhance your generation with information that lives outside of Jasper. You can further customize the behavior of the add-on with the associated parameter in the options portion of your request body.
+          enum:
+          - webScraper
+          - webSearch
+      required:
+      - command
+    WebScraperOptions:
+      type: object
+      properties:
+        urls:
+          description: An optional list of URLs for Jasper to scrape during generation to use as context. Max of 3 per request. If nothing is provided, Jasper will automatically detect URLs in the request inputs to use as context for the generation.
+          example:
+          - https://en.wikipedia.org/wiki/Rabbit
+          - https://en.wikipedia.org/wiki/Lagomorpha
+          type: array
+          items:
+            type: string
+    CommandResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: content
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeneratedText'
+    GeneratedText:
+      type: object
+      properties:
+        text:
+          type: string
+          example: '
+
+
+            Furry friends so sweet,
+
+            Nibbling on fresh kale leaves,
+
+            Soft hops fill the breeze.'
+        id:
+          type: string
+          example: txt_bce766eaa4ef48e59da1d9602bfecf2d
+    CommandOptions:
+      type: object
+      properties:
+        outputCount:
+          type: number
+          description: Number of outputs to generate.
+          example: 3
+          default: 1
+        outputLanguage:
+          type: string
+          description: The language in which outputs should be returned.
+          default: English
+          example: English
+          enum:
+          - English
+          - French
+          - Spanish
+          - Italian
+          - Portuguese
+          - German
+        inputLanguage:
+          type: string
+          description: The language in which inputs will be given.
+          default: English
+          example: English
+          enum:
+          - English
+          - French
+          - Spanish
+          - Italian
+          - Portuguese
+          - German
+        languageFormality:
+          type: string
+          description: The formality of the outputs, for the languages where formality applies.
+          default: default
+          example: default
+          enum:
+          - default
+          - more
+          - less
+        webScraper:
+          description: Optional parameters for further customizing the behavior of the webScraper add-on.
+          allOf:
+          - $ref: '#/components/schemas/WebScraperOptions'
+        webSearch:
+          description: Optional parameters for further customizing the behavior of the webSearch add-on.
+          allOf:
+          - $ref: '#/components/schemas/WebSearchOptions'
+        completionType:
+          type: string
+          description: How would you like Jasper to optimize your output? With quality, Jasper will take more time to generate the highest quality output possible. With performance, Jasper will prioritize generating outputs faster.
+          enum:
+          - performance
+          - quality
+          default: performance
+    WebSearchOptions:
+      type: object
+      properties:
+        siteBlockList:
+          description: An optional list of domains for Jasper to omit from the search results. For example, providing mycompetor.com will filter out results returned with that domain and it’s subdomains, such as blog.mycompetitor.com. If nothing is provided, all search results will be used for the generation.
+          example:
+          - https://en.wikipedia.org
+          type: array
+          items:
+            type: string
+        searchQuery:
+          type: string
+          description: A query to override the default behavior for how Jasper searches the web. If nothing is provided, Jasper will automatically define an appropriate query based on the inputs supplied.
+          example: Recent bear attacks in Alaska
+        maxResults:
+          type: number
+          description: The number of search results to use for additional context when generating a response
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

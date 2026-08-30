@@ -1,0 +1,605 @@
+openapi: 3.2.0
+info:
+  title: Jasper Knowledge API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Knowledge
+  description: ''
+paths:
+  /v1/knowledge:
+    post:
+      description: Create a knowledge item for use in personalizing AI outputs
+      operationId: uploadKnowledgeDocument
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/KnowledgeInputDto'
+      responses:
+        '201':
+          description: Created. The new knowledge item was added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOrUpdateKnowledgeResponseDto'
+        '400':
+          description: Bad request. May be missing required fields or may have badly formatted inputs or options.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge400Error'
+        '500':
+          description: Internal server error. Unable to create knowledge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge500Error'
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Create a knowledge item
+      tags:
+      - Knowledge
+    get:
+      description: Returns a list of knowledge items available to your workspace, sorted from most recently created
+      operationId: getKnowledgeDocuments
+      parameters:
+      - name: q
+        required: false
+        in: query
+        description: "You can use the `q` parameter to run a query parameter search. Query parameter search supports the following fields: `name`, `tags`, `metadata`, and `settings`.\n\nSupported operators: `AND` \n\nThe `AND` operator can be used to combine multiple search criteria. \n\n`NOTE`: The `AND` operator supports a maximum of `10` operators \n\nAvailable field examples: \n\n`name: value` \n\n`tags: value` \n\n`metadata[key]:value` \n\n`settings[appVisibility]:visible` \n\n`metadata[key1]:value1 AND metadata[key2]:value2` \n\n"
+        schema:
+          example: metadata[key]:value
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: The desired page number of Knowledge items
+        schema:
+          default: 1
+          example: 1
+          type: number
+      - name: size
+        required: false
+        in: query
+        description: The number of Knowledge items per page to return in the response
+        schema:
+          default: 10
+          example: 10
+          type: number
+      responses:
+        '200':
+          description: Retrieve knowledge items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllKnowledgeResponseDto'
+        '400':
+          description: Bad request. May be missing required fields or may have badly formatted inputs or options.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge400Error'
+        '500':
+          description: Internal server error. Unable to get knowledge items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge500Error'
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve knowledge items
+      tags:
+      - Knowledge
+  /v1/knowledge/{knowledgeId}:
+    get:
+      description: Retrieve a knowledge item by ID
+      operationId: getKnowledgeDocument
+      parameters:
+      - name: knowledgeId
+        required: true
+        in: path
+        description: The knowledge items unique ID
+        schema:
+          example: kno_2ee766eaa4ef48e59da1d9602bfecf2d
+          type: string
+      responses:
+        '200':
+          description: Retrieve a knowledge item by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetKnowledgeResponseDto'
+        '400':
+          description: Bad request. May be missing required fields or may have badly formatted inputs or options.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge400Error'
+        '404':
+          description: Not found. May have an incorrect URL path or Knowledge ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge400Error'
+        '500':
+          description: Internal server error. Unable to get Knowledge by ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge500Error'
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve knowledge item by ID
+      tags:
+      - Knowledge
+    patch:
+      description: Update an existing knowledge item by ID
+      operationId: updateKnowledgeDocument
+      parameters:
+      - name: knowledgeId
+        required: true
+        in: path
+        description: The Knowledge's unique ID
+        schema:
+          example: kno_2ee766eaa4ef48e59da1d9602bfecf2d
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/KnowledgeUpdateInput'
+      responses:
+        '200':
+          description: Update an existing Knowledge
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOrUpdateKnowledgeResponseDto'
+        '400':
+          description: Bad request. May be missing required fields or may have badly formatted inputs or options.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge400Error'
+        '404':
+          description: Not found. May have an incorrect URL path or Knowledge ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge400Error'
+        '500':
+          description: Internal server error. Unable to update Knowledge by ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge500Error'
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Update a knowledge item by ID
+      tags:
+      - Knowledge
+    delete:
+      description: Delete an existing knowledge item by ID
+      operationId: deleteKnowledgeDocument
+      parameters:
+      - name: knowledgeId
+        required: true
+        in: path
+        description: The Knowledge's unique ID
+        schema:
+          example: kno_2ee766eaa4ef48e59da1d9602bfecf2d
+          type: string
+      responses:
+        '200':
+          description: Knowledge item deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteKnowledgeResponseDto'
+        '404':
+          description: Not found. May have an incorrect URL path or Knowledge ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge400Error'
+        '500':
+          description: Internal server error. Unable to get specified Knowledge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Knowledge500Error'
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Delete knowledge item by ID
+      tags:
+      - Knowledge
+  /v1/knowledge/search:
+    post:
+      description: Searches through your Knowledge Base and returns items most relevant to the provided query. This endpoint is designed to support natural language search, allowing you to find Knowledge based on meaning and context—not just exact keyword matches.
+      operationId: searchKnowledge
+      parameters: []
+      requestBody:
+        required: true
+        description: Search knowledge request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchKnowledgeRequestDto'
+      responses:
+        '201':
+          description: Successfully retrieved list of Knowledge by relevance to the query.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchKnowledgeResponseDto'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to search Knowledge.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Search Knowledge
+      tags:
+      - Knowledge
+components:
+  schemas:
+    KnowledgePaginationResponseDto:
+      type: object
+      properties:
+        totalRecords:
+          type: number
+          description: The total number of Knowledge items in the response
+          example: 1
+        page:
+          type: number
+          description: The current page number of Knowledge items in the response
+          example: 1
+          default: 1
+        size:
+          type: number
+          description: The number of Knowledge items per page in the response
+          example: 10
+          default: 10
+        next:
+          type: object
+          description: The URL to the next page of Knowledge items in the response
+          example: null
+        prev:
+          type: object
+          description: The URL to the previous page of Knowledge items in the response
+          example: null
+      required:
+      - totalRecords
+      - page
+      - size
+      - next
+      - prev
+    SearchKnowledgeResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1d9602bfecf2d
+        resource:
+          type: string
+          example: knowledge
+        data:
+          description: Array of Knowledge items with relevant chunks, ordered by relevance
+          type: array
+          items:
+            $ref: '#/components/schemas/ScoredKnowledgeDto'
+    Settings:
+      type: object
+      properties:
+        appVisibility:
+          type: string
+          description: Whether the Knowledge is available in the Jasper app. Provides a way to omit Knowledge items created from the API, from being available in the Jasper app experience. One of "visible" or "hidden". Defaults to "visible".
+          enum:
+          - visible
+          - hidden
+          default: visible
+        autoSummary:
+          type: boolean
+          description: Specify if the summary should be created manually or automatically.
+          default: true
+    KnowledgeInputDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The friendly name of the Knowledge item. Up to 100 characters.
+          example: Product Release Monthly Webinar - May 2023
+        file:
+          type: string
+          format: binary
+          description: The file containing content you want to create a Knowledge item from. Supported file types are .txt, .pdf, .doc, .docx, .pptx, .mp3, .wav, .m4a, .aac, .mp4, .mov, .csv, .xlsx, .xls, .png, .jpeg, .jpg, .md, up to 300MB (or 2GB for video files).
+          example: jasperbrandvoice.pdf
+        metadata:
+          type: string
+          description: Set of key-value pairs for storing additional structured information.
+          format: json
+          example: '{"NewKey": "New Value", "AnotherKey": "Another Value"}'
+        settings:
+          type: string
+          description: Additional configuration options.
+          format: json
+          default: '{"appVisibility": "visible", "autoSummary": true}'
+          example: '{"appVisibility": "visible", "autoSummary": true}'
+        summary:
+          type: string
+          description: The manually created Knowledge item summary.
+          example: This Knowledge item outlines guidelines for using the Jasper logo
+        tags:
+          description: The tags associated with the Knowledge item. Tags are searchable via the Jasper app.
+          example:
+          - tag1
+          - tag2
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - file
+    Knowledge500Error:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: knowledge
+        errors:
+          example: Couldn't get the Knowledge item document
+          type: array
+          items:
+            type: string
+    KnowledgeResponseDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The friendly name of the Knowledge item. Up to 100 characters.
+          example: Product Release Monthly Webinar - May 2023
+        file:
+          type: string
+          description: The filename or download URL of the Knowledge item source file. When available, this will be a signed URL for downloading the file.
+          example: jasperbrandvoice.pdf
+        metadata:
+          type: object
+          description: Set of key-value pairs that you can attach to a Knowledge. This can be useful for storing any additional information you wish, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long.
+          example:
+            key1: value1
+            key2: value2
+        settings:
+          description: Additional configuration options.
+          allOf:
+          - $ref: '#/components/schemas/Settings'
+        id:
+          type: string
+          example: kno_2ee766eaa4ef48e59da1d9602bfecf2d
+        createdAt:
+          type: string
+          example: '2023-09-21T15:38:00.474Z'
+        updatedAt:
+          type: string
+          example: '2023-09-21T15:38:00.474Z'
+        processingState:
+          type: string
+          example: InProgress
+        tags:
+          example:
+          - tag1
+          - tag2
+          type: array
+          items:
+            type: string
+        appUrl:
+          type: string
+          description: The client URL to view the Knowledge item in the Jasper app. Empty when no link can be resolved.
+          example: https://app.jasper.ai/jasper-iq/knowledge-base/kno_2ee766eaa4ef48e59da1d9602bfecf2d
+      required:
+      - name
+      - file
+    GetAllKnowledgeResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: knowledge
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/KnowledgeResponseDto'
+        pagination:
+          $ref: '#/components/schemas/KnowledgePaginationResponseDto'
+    KnowledgeUpdateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The friendly name of the Knowledge item. Up to 100 characters.
+          example: Product Release Monthly Webinar - May 2023
+        file:
+          type: string
+          format: binary
+          description: The file containing content you want to create a Knowledge item from. Supported file types are .txt, .pdf, .doc, .docx, .pptx, .mp3, .wav, .m4a, .aac, .mp4, .mov, .csv, .xlsx, .xls, .png, .jpeg, .jpg, .md, up to 300MB (or 2GB for video files).
+          example: jasperbrandvoice.pdf
+        metadata:
+          type: string
+          description: Set of key-value pairs for storing additional structured information.
+          format: json
+          example: '{"NewKey": "New Value", "AnotherKey": "Another Value"}'
+        settings:
+          type: string
+          description: Additional configuration options.
+          format: json
+          default: '{"appVisibility": "visible", "autoSummary": true}'
+          example: '{"appVisibility": "visible", "autoSummary": true}'
+        summary:
+          type: string
+          description: The manually created Knowledge item summary.
+          example: This Knowledge item outlines guidelines for using the Jasper logo
+        tags:
+          description: The tags associated with the Knowledge item. Tags are searchable via the Jasper app.
+          example:
+          - tag1
+          - tag2
+          type: array
+          items:
+            type: string
+    ScoredKnowledgeDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the Knowledge item
+          example: kno_2ee766eaa4ef48e59da1d9602bfecf2d
+        name:
+          type: string
+          description: The name of the Knowledge item
+          example: Brand Guidelines Document
+        summary:
+          type: string
+          description: The summary of the Knowledge item
+          example: Comprehensive brand guidelines including logo usage, color palette, and typography standards.
+        tags:
+          description: Tags associated with the Knowledge item
+          example:
+          - branding
+          - guidelines
+          - logo
+          type: array
+          items:
+            type: string
+        appUrl:
+          type: string
+          description: The client URL to view the Knowledge item in the Jasper app. Empty when no link can be resolved.
+          example: https://app.jasper.ai/jasper-iq/knowledge-base/kno_2ee766eaa4ef48e59da1d9602bfecf2d
+        relevantChunks:
+          description: Array of relevant content chunks from the Knowledge item, ordered by relevance score
+          type: array
+          items:
+            $ref: '#/components/schemas/RelevantChunkDto'
+      required:
+      - id
+      - name
+      - summary
+      - tags
+      - appUrl
+      - relevantChunks
+    DeleteKnowledgeResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: knowledge
+        deleted:
+          type: boolean
+          example: true
+      required:
+      - deleted
+    GetKnowledgeResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: knowledge
+        data:
+          $ref: '#/components/schemas/KnowledgeResponseDto'
+    Knowledge400Error:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: knowledge
+        errors:
+          example:
+          - error message
+          type: array
+          items:
+            type: array
+    SearchKnowledgeRequestDto:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The search query to find relevant Knowledge items. Supports natural language search.
+          example: What are my brand guidelines for social media posts?
+      required:
+      - query
+    CreateOrUpdateKnowledgeResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: knowledge
+        data:
+          $ref: '#/components/schemas/KnowledgeResponseDto'
+    RelevantChunkDto:
+      type: object
+      properties:
+        content:
+          type: string
+          description: The content of the relevant chunk from the Knowledge item
+          example: Brand guidelines specify that our logo should always maintain a minimum clear space equivalent to the height of the "J" in our wordmark.
+        score:
+          type: number
+          description: The relevance score of this chunk (0-1, where 1 is most relevant)
+          example: 0.85
+      required:
+      - content
+      - score
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

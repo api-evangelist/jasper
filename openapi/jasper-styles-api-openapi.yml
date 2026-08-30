@@ -1,0 +1,232 @@
+openapi: 3.2.0
+info:
+  title: Jasper Styles API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Styles
+  description: ''
+paths:
+  /v1/styles:
+    get:
+      description: Returns a list of style guides available to your workspace, sorted from most recently created
+      operationId: getStyle
+      parameters: []
+      responses:
+        '200':
+          description: The list of all style guides in the workspace.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StyleResponseDto'
+        '500':
+          description: Something unexpected happened while trying to get the style guide.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StyleError'
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve all style guides
+      tags:
+      - Styles
+  /v1/styles/{styleId}:
+    get:
+      description: Returns a single style guide available to your workspace, fetched by its ID.
+      operationId: getStyleById
+      parameters:
+      - name: styleId
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The requested style guide.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StyleResponseDto'
+        '404':
+          description: No Style Guide found for the given ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StyleError'
+        '500':
+          description: Something unexpected happened while trying to get the style guide.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StyleError'
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve style guide by ID
+      tags:
+      - Styles
+components:
+  schemas:
+    StyleResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The style guide's unique ID
+          example: sty_f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0
+        name:
+          type: string
+          description: The style guide's name
+          example: My Style Guide
+        description:
+          type: string
+          description: The style guide's description
+          example: A style guide for marketing content
+        customInstructions:
+          type: object
+          description: Free-form custom instructions for the style guide
+          example: Always use a friendly, conversational tone.
+          nullable: true
+        createdAt:
+          type: string
+          description: When the style guide was created
+          example: '2025-01-15T12:00:00.000Z'
+        createdBy:
+          type: object
+          description: The user ID of who created the style guide
+          example: usr_abc123
+          nullable: true
+        updatedAt:
+          type: string
+          description: When the style guide was last updated
+          example: '2025-01-20T14:30:00.000Z'
+        appUrl:
+          type: string
+          description: The client URL to view the style guide in the Jasper app. Empty when no link can be resolved.
+          example: https://app.jasper.ai/jasper-iq/style-guides/sty_f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0
+        terms:
+          example:
+          - type: REPLACE
+            term: waz
+            replaceWith: What's
+          - type: ABBREVIATE_AFTER_FIRST
+            term: Mergers & Acquisitions
+            replaceWith: M&A
+          - type: REPLACE_FIRST_INSTANCE
+            term: Jasper®
+            replaceWith: Jasper
+          type: array
+          items:
+            type: string
+        rules:
+          example:
+          - name: activeVoice
+            type: boolean
+            value: true
+            ignore: enabled
+          - name: contractions
+            type: boolean
+            value: false
+            ignore: disabled
+          - name: emDashAside
+            type: boolean
+            value: false
+            ignore: disabled
+          - name: emDashSpaces
+            type: boolean
+            value: false
+            ignore: disabled
+          - name: enDashRanges
+            type: boolean
+            value: false
+            ignore: disabled
+          - name: exclamationPoints
+            type: boolean
+            value: true
+            ignore: enabled
+          - name: formatNumerals
+            type: boolean
+            value: true
+            ignore: enabled
+          - name: locale
+            type: locale
+            value: EN_US
+            ignore: enabled
+          - name: oxfordComma
+            type: boolean
+            value: false
+            ignore: disabled
+          - name: removeAmpersands
+            type: boolean
+            value: false
+            ignore: disabled
+          - name: removePlusAsAnd
+            type: boolean
+            value: true
+            ignore: enabled
+          - name: removeSemicolons
+            type: boolean
+            value: false
+            ignore: disabled
+          - name: spacesAfterPeriod
+            type: number
+            value: 1
+            ignore: disabled
+          - name: spellNumbers
+            type: number
+            value: 100
+            ignore: enabled
+          type: array
+          items:
+            type: string
+      required:
+      - id
+      - name
+      - description
+      - customInstructions
+      - createdAt
+      - createdBy
+      - updatedAt
+      - appUrl
+      - terms
+      - rules
+    StyleError:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: 000000-0000-0000-0000-000000000000
+        resource:
+          type: string
+          example: style
+        errors:
+          example:
+          - error message
+          type: array
+          items:
+            type: array
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

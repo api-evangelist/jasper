@@ -1,0 +1,401 @@
+openapi: 3.2.0
+info:
+  title: Jasper Documents API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Documents
+  description: ''
+paths:
+  /v1/documents:
+    get:
+      description: Retrieve all documents in your workspace
+      operationId: getAllDocuments
+      parameters:
+      - name: userId
+        required: false
+        in: query
+        description: The user Id associated with the workspace
+        schema:
+          example: usr_535B1EC15F5F41EAB1B400E9ED4077B6
+          type: string
+      - name: size
+        required: false
+        in: query
+        description: The maximum number of results to return
+        schema:
+          maximum: 50
+          default: 50
+          example: 50
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: The number of results to skip before starting to collect the results
+        schema:
+          default: 1
+          example: 1
+          type: number
+      - name: sort
+        required: false
+        in: query
+        description: The sorting order for the documents
+        schema:
+          example: LAST_UPDATED
+          type: string
+          enum:
+          - LAST_UPDATED
+          - OLDEST_UPDATED
+          - ALPHABETICAL
+          - REVERSE_ALPHABETICAL
+          - NEWEST_CREATED
+          - OLDEST_CREATED
+      - name: name
+        required: false
+        in: query
+        description: Filter documents by name
+        schema:
+          example: Project Report
+          type: string
+      - name: statuses
+        required: false
+        in: query
+        description: Filter documents by statuses
+        schema:
+          example:
+          - DRAFT
+          - PUBLISHED
+          type: array
+          items:
+            type: string
+            enum:
+            - DRAFT
+            - PUBLISHED
+            - IN PROGRESS
+            - IN REVIEW
+            - COMPLETED
+      - name: createdAtStart
+        required: false
+        in: query
+        description: Start date for the created at filter
+        schema:
+          example: '2021-09-01T00:00:00.000Z'
+          type: string
+      - name: createdAtEnd
+        required: false
+        in: query
+        description: End date for the created at filter
+        schema:
+          example: '2021-09-01T00:00:00.000Z'
+          type: string
+      responses:
+        '200':
+          description: Retrieve all documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocumentResponse'
+        '401':
+          description: Unauthorized. User is not a member of the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to get documents.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve documents
+      tags:
+      - Documents
+    post:
+      description: Create a new document in your workspace
+      operationId: createDocument
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentCreateDto'
+      responses:
+        '401':
+          description: Unauthorized. User is not a member of the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to create document.
+        default:
+          description: Create document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Create document
+      tags:
+      - Documents
+  /v1/documents/{documentId}:
+    get:
+      description: Retrieve a specific document in your workspace by ID
+      operationId: getDocumentById
+      parameters:
+      - name: documentId
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Retrieve document by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '401':
+          description: Unauthorized. User is not a member of the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to get specified document.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve document by ID
+      tags:
+      - Documents
+    patch:
+      description: Update a document in your workspace
+      operationId: updateDocument
+      parameters:
+      - name: documentId
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentUpdateDto'
+      responses:
+        '200':
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '401':
+          description: Unauthorized. User is not a member of the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to update document.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Update document
+      tags:
+      - Documents
+    delete:
+      description: Deletes a specific document in your workspace by ID
+      operationId: deleteDocumentById
+      parameters:
+      - name: documentId
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Deleted document by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDeleteResponse'
+        '401':
+          description: Unauthorized. User is not a member of the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to delete specified document.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Delete a document by ID
+      tags:
+      - Documents
+components:
+  schemas:
+    DocumentUpdateDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The ID of the user updating the document
+          example: user123
+        content:
+          type: string
+          description: The updated content of the document
+          example: Updated document content.
+        name:
+          type: string
+          description: The name of the document
+          example: Document Title
+        status:
+          type: string
+          description: The status of the document
+          example: DRAFT
+          enum:
+          - DRAFT
+          - PUBLISHED
+          - IN PROGRESS
+          - IN REVIEW
+          - COMPLETED
+        projectId:
+          type: string
+          description: The ID of the project to associate the document with. Pass an empty string to detach the document from its current project.
+          example: prj_E8F0457A95B04D87A11F6B1DD6AA2356
+      required:
+      - userId
+      - name
+    DocumentDeleteResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: documents
+        deleted:
+          type: boolean
+          example: true
+      required:
+      - deleted
+    DocumentCreateDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The ID of the user creating the document
+          example: user123
+        content:
+          type: string
+          description: The content of the document
+          example: This is the content of the document.
+        name:
+          type: string
+          description: The name of the document
+          example: Document Title
+        status:
+          type: string
+          description: The status of the document
+          example: DRAFT
+          enum:
+          - DRAFT
+          - PUBLISHED
+          - IN PROGRESS
+          - IN REVIEW
+          - COMPLETED
+        projectId:
+          type: string
+          description: The ID of the project to associate the document with. When provided, the document is attached to the project so it appears under that project in Jasper.
+          example: prj_E8F0457A95B04D87A11F6B1DD6AA2356
+      required:
+      - userId
+      - content
+      - name
+    DocumentsData:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the document
+          example: doc_073D2D49094A4AED991A47B614522579
+        content:
+          type: string
+          description: The content of the document
+          example: This is the content of the document.
+        createdAt:
+          format: date-time
+          type: string
+          description: The creation date of the document
+          example: '2023-01-01T12:00:00.000Z'
+        updatedAt:
+          format: date-time
+          type: string
+          description: The last updated date of the document
+          example: '2023-01-02T12:00:00.000Z'
+        name:
+          type: string
+          description: The name of the document
+          example: My Document
+        status:
+          type: string
+          description: The status of the document
+          example: active
+        userId:
+          type: string
+          description: The user Id associated with the workspace
+          example: usr_535B1EC15F5F41EAB1B400E9ED4077B6
+        projectId:
+          type: string
+          description: The ID of the project the document is associated with, if any. Documents created before project association was supported may have this field empty.
+          example: prj_E8F0457A95B04D87A11F6B1DD6AA2356
+        appUrl:
+          type: string
+          description: The client URL to open the document in the Jasper app. Jasper has no page for a document on its own, so the link opens the project that contains it and selects the document within it. Null when the document does not belong to a project, because there is nowhere in the app to open it.
+          example: https://app.jasper.ai/canvas/edit/2efa3e90-34ff-4a61-a251-0d8f93ce0be3?activeNode=962e4d4c-ffdc-4c7a-83e3-8f4e715004cf
+          nullable: true
+      required:
+      - id
+      - content
+      - name
+      - status
+      - userId
+      - appUrl
+    DocumentResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: documents
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentsData'
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

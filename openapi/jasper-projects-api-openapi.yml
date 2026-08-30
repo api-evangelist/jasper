@@ -1,0 +1,452 @@
+openapi: 3.2.0
+info:
+  title: Jasper Projects API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Projects
+  description: ''
+paths:
+  /v1/projects:
+    post:
+      description: Create a new Project in your workspace
+      operationId: createProject
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreateRequestDto'
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponseDto'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs.
+        '401':
+          description: Unauthorized access to the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to create project.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Create a Project
+      tags:
+      - Projects
+    get:
+      description: Retrieve all Projects in your workspace
+      operationId: getProjects
+      parameters:
+      - name: userId
+        required: false
+        in: query
+        description: The user Id associated with the workspace
+        schema:
+          example: usr_535B1EC15F5F41EAB1B400E9ED4077B6
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: Filter by the project name
+        schema:
+          example: My Project
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: The maximum number of results to return
+        schema:
+          maximum: 50
+          default: 50
+          example: 50
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: The number of results to skip before starting to collect the results
+        schema:
+          default: 1
+          example: 1
+          type: number
+      - name: sort
+        required: false
+        in: query
+        description: The sorting order for the projects
+        schema:
+          default: LAST_UPDATED
+          example: LAST_UPDATED
+          type: string
+          enum:
+          - LAST_UPDATED
+          - OLDEST_UPDATED
+          - ALPHABETICAL
+          - REVERSE_ALPHABETICAL
+          - NEWEST_CREATED
+          - OLDEST_CREATED
+      - name: createdAtStart
+        required: false
+        in: query
+        description: Start date for the created at filter
+        schema:
+          default: ''
+          example: '2021-09-01T00:00:00.000Z'
+          type: string
+      - name: createdAtEnd
+        required: false
+        in: query
+        description: End date for the created at filter
+        schema:
+          default: ''
+          example: '2021-09-01T00:00:00.000Z'
+          type: string
+      - name: q
+        required: false
+        in: query
+        description: 'IQ-style search query. Combine up to 10 filters with `AND`. Supported tokens: `userId:<id>` (equality on the project owner), `metadata[<key>]:<value>` (equality on the project metadata JSONB column). Example: `userId:usr_535B1EC15F5F41EAB1B400E9ED4077B6 AND metadata[source]:crm`. The query is matched in SQL against the projects table — every recognised token contributes an additive `AND` predicate to the underlying `where` clause.'
+        schema:
+          example: userId:usr_535B1EC15F5F41EAB1B400E9ED4077B6 AND metadata[source]:crm
+          type: string
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponseDto'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs.
+        '401':
+          description: Unauthorized access to the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to get projects.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve Projects
+      tags:
+      - Projects
+  /v1/projects/{id}:
+    get:
+      description: Retrieve a specific Project in your workspace by ID
+      operationId: getProjectById
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: The Project's unique ID
+        schema:
+          example: prj_535B1EC15F5F41EAB1B400E9ED4077B6
+          type: string
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectSingleResponseDto'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs.
+        '401':
+          description: Unauthorized access to the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to get project.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve Project by ID
+      tags:
+      - Projects
+    delete:
+      description: Deletes a specific Project in your workspace by ID
+      operationId: deleteProject
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: The Project's unique ID
+        schema:
+          example: prj_535B1EC15F5F41EAB1B400E9ED4077B6
+          type: string
+      responses:
+        '200':
+          description: Project deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDeleteResponseDto'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs.
+        '401':
+          description: Unauthorized access to the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to delete project.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Delete Project by ID
+      tags:
+      - Projects
+    patch:
+      description: Update a Project in your workspace
+      operationId: updateProject
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: The Project's unique ID
+        schema:
+          example: prj_535B1EC15F5F41EAB1B400E9ED4077B6
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdateRequestDto'
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponseDto'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs.
+        '401':
+          description: Unauthorized access to the workspace.
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to update project.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Update Project by ID
+      tags:
+      - Projects
+components:
+  schemas:
+    ProjectResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: projects
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectData'
+      required:
+      - requestId
+      - resource
+      - data
+    ProjectUpdateRequestDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The ID of the user updating the project
+          example: usr_535B1EC15F5F41EAB1B400E9ED4077B6
+        name:
+          type: string
+          description: The name of the project
+          example: Updated Project name
+        accessLevel:
+          type: string
+          description: Who can access the project. `PRIVATE` restricts access to the owning user (plus anyone explicitly shared in); `WORKSPACE` shares the project with every member of the calling workspace. Omit to leave the current access level unchanged.
+          enum:
+          - PRIVATE
+          - WORKSPACE
+          example: PRIVATE
+        settings:
+          description: Updated default settings for the project (goal, brand voice, audience, style, knowledge). Omit a field to leave it unchanged.
+          allOf:
+          - $ref: '#/components/schemas/ProjectSettingsDto'
+        metadata:
+          type: object
+          description: An optional set of key-value pairs to attach any data you wish to the project, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long. Provided string values upsert that key; pass `null` for a key to remove it; omit this field entirely to leave the existing metadata unchanged.
+          additionalProperties:
+            type: string
+            nullable: true
+          example:
+            externalId: ext_123
+            source: null
+    ProjectCreateRequestDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The ID of the user creating the project
+          example: usr_535B1EC15F5F41EAB1B400E9ED4077B6
+        name:
+          type: string
+          description: The name of the project
+          example: My Project
+        accessLevel:
+          type: string
+          description: Who can access the new project. `PRIVATE` (default) restricts access to the owning user; `WORKSPACE` shares the project with all members of the calling workspace.
+          enum:
+          - PRIVATE
+          - WORKSPACE
+          example: PRIVATE
+        settings:
+          description: Optional default settings to seed on the project (goal, brand voice, audience, style, knowledge).
+          allOf:
+          - $ref: '#/components/schemas/ProjectSettingsDto'
+        metadata:
+          type: object
+          description: An optional set of key-value pairs to attach any data you wish to the project, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long. `null` values are accepted but ignored on create (there is nothing to clear yet) and are supported for symmetry with the update endpoint.
+          additionalProperties:
+            type: string
+            nullable: true
+          example:
+            externalId: ext_123
+            source: crm
+      required:
+      - userId
+      - name
+    ProjectSettingsDto:
+      type: object
+      properties:
+        goal:
+          type: string
+          description: High-level goal/description for the project (free text).
+          example: Launch announcement for Q3 product release
+        toneId:
+          type: string
+          description: Default Brand Voice (Tone) ID, e.g. `ton_...`. Pass `null` to clear.
+          example: ton_535B1EC15F5F41EAB1B400E9ED4077B6
+          nullable: true
+        audienceId:
+          type: string
+          description: Default Audience ID, e.g. `aud_...`. Pass `null` to clear.
+          example: aud_535B1EC15F5F41EAB1B400E9ED4077B6
+          nullable: true
+        styleId:
+          type: string
+          description: Default Style Guide ID, e.g. `sty_...`. Pass `null` to clear.
+          example: sty_535B1EC15F5F41EAB1B400E9ED4077B6
+          nullable: true
+        knowledgeIds:
+          description: Knowledge IDs (`kno_*`) to attach to the project. Replaces the existing set of knowledge attachments; pass an empty array to clear them. Non-knowledge attachments are not affected.
+          example:
+          - kno_535B1EC15F5F41EAB1B400E9ED4077B6
+          type: array
+          items:
+            type: string
+    ProjectDeleteResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: projects
+        deleted:
+          type: boolean
+          example: true
+      required:
+      - requestId
+      - resource
+      - deleted
+    ProjectData:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the project
+          example: prj_073D2D49094A4AED991A47B614522579
+        name:
+          type: string
+          description: The name of the project
+          example: My Canvas
+        userId:
+          type: string
+          description: The ID of the user creating the project
+          example: usr_073D2D49094A4AED991A47B614522579
+        appUrl:
+          type: string
+          description: The client URL to view the project in the Jasper app
+          example: https://app.jasper.ai/canvas/edit/962e4d4c-ffdc-4c7a-83e3-8f4e715004cf
+        accessLevel:
+          type: string
+          description: Who currently has access to the project. `WORKSPACE` means every member of the calling workspace can access it; `PRIVATE` means access is limited to the owner (and anyone explicitly shared in).
+          enum:
+          - PRIVATE
+          - WORKSPACE
+          example: PRIVATE
+        settings:
+          description: Project-level defaults (goal, brand voice, audience, style guide, knowledge). Fields are omitted when not configured. Tone, style, and knowledge IDs are returned in their public (`ton_*` / `sty_*` / `kno_*`) form.
+          allOf:
+          - $ref: '#/components/schemas/ProjectSettingsDto'
+        metadata:
+          type: object
+          description: Set of key-value pairs previously attached to the project via create/update. Omitted from the response when no metadata is set.
+          additionalProperties:
+            type: string
+          example:
+            externalId: ext_123
+            source: crm
+      required:
+      - id
+      - name
+      - userId
+      - appUrl
+    ProjectSingleResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: projects
+        data:
+          $ref: '#/components/schemas/ProjectData'
+      required:
+      - requestId
+      - resource
+      - data
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

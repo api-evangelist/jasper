@@ -1,0 +1,115 @@
+openapi: 3.2.0
+info:
+  title: Jasper Usage API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Usage
+  description: ''
+paths:
+  /v1/usage:
+    get:
+      description: Retrieve API usage statistics for your workspace. Note that the statistics returned are for content generation requests only (e.g Run command or Run template).
+      operationId: usage
+      parameters:
+      - name: start
+        required: true
+        in: query
+        description: Start date for usage data
+        schema:
+          example: '2023-06-01T00:00:00.000Z'
+          type: string
+      - name: end
+        required: true
+        in: query
+        description: End date for usage data
+        schema:
+          example: '2023-06-07T00:00:00.000Z'
+          type: string
+      - name: granularity
+        required: true
+        in: query
+        description: Bucket size for usage data
+        schema:
+          example: day
+          type: string
+          enum:
+          - week
+          - day
+          - hour
+      responses:
+        '200':
+          description: Retrieved API usage.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageResponseDto'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to run command.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve API usage
+      tags:
+      - Usage
+components:
+  schemas:
+    UsageResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: usage
+        data:
+          $ref: '#/components/schemas/UsageRequest'
+    Usage:
+      type: object
+      properties:
+        t:
+          type: string
+          example: '2023-09-11T13:28:59.318Z'
+        v:
+          type: number
+          example: 83
+    UsageRequest:
+      type: object
+      properties:
+        requests:
+          example:
+          - t: '2023-09-11T13:28:59.318Z'
+            v: 83
+          - t: '2023-09-11T14:28:59.318Z'
+            v: 173
+          - t: '2023-09-11T15:28:59.318Z'
+            v: 162
+          type: array
+          items:
+            $ref: '#/components/schemas/Usage'
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

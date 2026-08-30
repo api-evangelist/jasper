@@ -1,0 +1,536 @@
+openapi: 3.2.0
+info:
+  title: Jasper Images API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Images
+  description: ''
+paths:
+  /v1/image/remove-background:
+    post:
+      description: Removes the background from the input image by isolating the main subject and returns a cutout with a transparent background.
+      operationId: removeBackground
+      parameters:
+      - name: accept
+        in: header
+        description: The Accept request HTTP header indicates the preferred returned image content type, expressed as a MIME type
+        required: false
+        schema:
+          type: string
+          enum:
+          - image/webp
+          - image/png
+          - image/jpeg
+      requestBody:
+        required: true
+        description: "Image file upload\n     Size of an image uploaded must not exceed 30MB and resolution must not exceed 25 mega-pixels (5000*5000)\n    "
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image_file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: The image background was successfully removed.
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to remove background.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Remove background
+      tags:
+      - Images
+  /v1/image/replace-background:
+    post:
+      description: Replaces the image background using the provided text prompt and returns a photorealistic composite.
+      operationId: replaceBackground
+      parameters:
+      - name: accept
+        in: header
+        description: The Accept request HTTP header indicates the preferred returned image content type, expressed as a MIME type
+        required: false
+        schema:
+          type: string
+          enum:
+          - image/webp
+          - image/png
+          - image/jpeg
+      requestBody:
+        required: true
+        description: "Image file upload and prompt\n     Size of an image uploaded must not exceed 20MB and resolution must not exceed 4 mega-pixels (2048*2048)\n     Prompt must not exceed 5000 characters\n    "
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image_file:
+                  type: string
+                  format: binary
+                prompt:
+                  type: string
+                  description: Description of the desired background
+                  maxLength: 5000
+      responses:
+        '200':
+          description: The image background was successfully replaced.
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to replace background.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Replace background
+      tags:
+      - Images
+  /v1/image/cleanup:
+    post:
+      description: Remove unwanted elements from an image using a mask to specify areas to clean
+      operationId: cleanup
+      parameters:
+      - name: accept
+        in: header
+        description: The Accept request HTTP header indicates the preferred returned image content type, expressed as a MIME type
+        required: false
+        schema:
+          type: string
+          enum:
+          - image/webp
+          - image/png
+          - image/jpeg
+      requestBody:
+        required: true
+        description: "Image file upload and mask file upload\n     Size of an image uploaded must not exceed 30MB and resolution must not exceed 16 mega-pixels\n     Size of a mask uploaded must not exceed 30MB and resolution must not exceed 16 mega-pixels\n     Both image and mask must have the same size\n    "
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image_file:
+                  type: string
+                  format: binary
+                  description: The image to be cleaned
+                mask_file:
+                  type: string
+                  format: binary
+                  description: "The mask indicating areas to clean\n          The mask should be black and white with no grey pixels (e.g. values of only 0 or 255), the value of 0 indicating a pixel to keep as is and 255 a pixel to 'clean up'\n          "
+      responses:
+        '200':
+          description: The image was successfully cleaned.
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to clean image.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Clean up
+      tags:
+      - Images
+  /v1/image/remove-text:
+    post:
+      description: Removes overlaid text from the image while preserving surrounding content and textures.
+      operationId: removeText
+      parameters:
+      - name: accept
+        in: header
+        description: The Accept request HTTP header indicates the preferred returned image content type, expressed as a MIME type
+        required: false
+        schema:
+          type: string
+          enum:
+          - image/webp
+          - image/png
+          - image/jpeg
+      requestBody:
+        required: true
+        description: "Image file upload\n     Size of an image uploaded must not exceed 30MB and resolution must not exceed 16 mega-pixels (4096*4096)\n    "
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image_file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: The text was successfully removed from the image.
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to remove text.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Remove text
+      tags:
+      - Images
+  /v1/image/upscale:
+    post:
+      description: Upscales the input image to the specified width and height.
+      operationId: upscale
+      parameters: []
+      requestBody:
+        required: true
+        description: "Image file upload\n     Size of an image uploaded must not exceed 30MB and resolution must not exceed 16 mega-pixels (4096*4096)\n    "
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image_file:
+                  type: string
+                  format: binary
+                target_width:
+                  type: number
+                target_height:
+                  type: number
+      responses:
+        '200':
+          description: The image was successfully upscaled.
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to upscale image.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Upscale
+      tags:
+      - Images
+  /v1/image/uncrop:
+    post:
+      description: Extends the image in the specified directions and generates plausible content to fill the new areas.
+      operationId: uncrop
+      parameters:
+      - name: accept
+        in: header
+        description: The Accept request HTTP header indicates the preferred returned image content type, expressed as a MIME type
+        required: false
+        schema:
+          type: string
+          enum:
+          - image/webp
+          - image/png
+          - image/jpeg
+      requestBody:
+        required: true
+        description: The request must be an http POST and its body must be a multipart/form-data that has one image file & several text fields
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image_file:
+                  type: string
+                  format: binary
+                  description: The original image to process should be a JPG, PNG or WebP, with a maximum resolution of 10 megapixels and a max file size of 30 Mb.
+                extend_left:
+                  type: number
+                  description: Number of pixels to extend to the left
+                  maximum: 2000
+                extend_right:
+                  type: number
+                  description: Number of pixels to extend to the right
+                  maximum: 2000
+                extend_up:
+                  type: number
+                  description: Number of pixels to extend upward
+                  maximum: 2000
+                extend_down:
+                  type: number
+                  description: Number of pixels to extend downward
+                  maximum: 2000
+      responses:
+        '200':
+          description: The image was successfully uncropped.
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to uncrop image.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Uncrop
+      tags:
+      - Images
+  /v1/image/packshot-compositing:
+    post:
+      description: Composites a foreground image onto a background with configurable shadows, reflections, margins, and placement.
+      operationId: packshotCompositing
+      parameters: []
+      requestBody:
+        required: true
+        description: Foreground and background image upload, plus compositing options
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image_file:
+                  type: string
+                  format: binary
+                background_image_file:
+                  type: string
+                  format: binary
+                output_width:
+                  type: number
+                  minimum: 64
+                  maximum: 4096
+                output_height:
+                  type: number
+                  minimum: 64
+                  maximum: 4096
+                flip_horizontally:
+                  type: boolean
+                  default: false
+                shadow_type:
+                  type: string
+                  enum:
+                  - behind_left
+                  - bottom_left
+                  - none
+                  default: bottom_left
+                shadow_intensity:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 1
+                reflection_type:
+                  type: string
+                  enum:
+                  - bottom
+                  - none
+                  default: bottom
+                reflection_intensity:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 1
+                margin_left:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 0.15
+                margin_right:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 0.15
+                margin_top:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 0.15
+                margin_bottom:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 0.15
+                vertical_placement:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 0.5
+      responses:
+        '200':
+          description: The packshot compositing was successful.
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to composite packshot.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Packshot Compositing
+      tags:
+      - Images
+  /v1/image/decompose:
+    post:
+      description: Decomposes an image into constituent layers using provided mask images. Returns URLs to the generated layers.
+      operationId: decompose
+      parameters: []
+      requestBody:
+        required: true
+        description: "Image file upload and mask files upload\n     Size of an image uploaded must not exceed 30MB and resolution must not exceed 16 mega-pixels\n     Size of each mask uploaded must not exceed 30MB and resolution must not exceed 16 mega-pixels\n     All masks must have the same dimensions as the main image\n     At least one mask is required, maximum of 10 masks allowed\n    "
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image_file:
+                  type: string
+                  format: binary
+                  description: The main image to be decomposed
+                mask_files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Array of mask images (1-10 masks)
+                  minItems: 1
+                  maxItems: 10
+                background_output_format:
+                  type: string
+                  enum:
+                  - jpg
+                  - png
+                  - webp
+                  description: Optional output format for the background layer
+                layers_output_format:
+                  type: string
+                  enum:
+                  - png
+                  - webp
+                  description: Optional output format for the decomposed layers
+      responses:
+        '200':
+          description: The image was successfully decomposed.
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to decompose image.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Decompose image
+      tags:
+      - Images
+  /v1/image/alt-text:
+    post:
+      description: Generates concise, descriptive alt text for the provided image URL.
+      operationId: altText
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageAltTextRequestDto'
+      responses:
+        '200':
+          description: The alt text was successfully generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageAltTextResponseDto'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to remove background.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Generate alt text
+      tags:
+      - Images
+  /v1/image/analysis:
+    post:
+      description: Analyzes the image and answers the provided question with a short, focused response.
+      operationId: analyse
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageAnalysisRequestDto'
+      responses:
+        '200':
+          description: The analysis was successfully generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageAnalysisResponseDto'
+        '400':
+          description: Bad request. May be missing required inputs or may have badly formatted inputs or options.
+        '500':
+          description: Internal server error. Unable to remove background.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Analyze
+      tags:
+      - Images
+components:
+  schemas:
+    ImageAnalysisResponseDto:
+      type: object
+      properties:
+        analysis:
+          type: string
+          description: The result of the analysis of the image.
+          example: Yes the main object is centered and fully visible.
+      required:
+      - analysis
+    ImageAltTextResponseDto:
+      type: object
+      properties:
+        altText:
+          type: string
+          description: The alt text of the image.
+          example: A dog running in a field.
+      required:
+      - altText
+    ImageAnalysisRequestDto:
+      type: object
+      properties:
+        imageUrl:
+          type: string
+          description: The URL of the image to check.
+          example: https://example.com/image.png
+        question:
+          type: string
+          description: The expected analysis to perform on the image.
+          example: Is the main object centered and fully visible?
+      required:
+      - imageUrl
+      - question
+    ImageAltTextRequestDto:
+      type: object
+      properties:
+        imageUrl:
+          type: string
+          description: The URL of the image to check.
+          example: https://example.com/image.png
+      required:
+      - imageUrl
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false

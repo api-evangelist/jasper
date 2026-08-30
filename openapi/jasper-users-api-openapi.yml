@@ -1,0 +1,127 @@
+openapi: 3.2.0
+info:
+  title: Jasper Users API
+  description: Jasper API
+  version: '1.0'
+  contact: {}
+servers:
+- url: https://api.jasper.ai
+tags:
+- name: Users
+  description: ''
+paths:
+  /v1/users:
+    get:
+      description: Retrieve all users in your workspace
+      operationId: getAllUsers
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: The number of users per page to return in the response
+        schema:
+          example: 50
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: The desired page number of users
+        schema:
+          example: 1
+          type: number
+      responses:
+        '200':
+          description: Retrieve all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsersResponse'
+        '500':
+          description: Internal server error. Unable to get users.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve users
+      tags:
+      - Users
+  /v1/users/{userId}:
+    get:
+      description: Retrieve a specific user in your workspace by ID
+      operationId: getUser
+      parameters:
+      - name: userId
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Retrieve user by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersResponse'
+        '404':
+          description: Not found. May have an incorrect URL path.
+        '500':
+          description: Internal server error. Unable to get specified user.
+      security:
+      - X-API-Key: []
+      - oauth2:
+        - user
+      summary: Retrieve user by ID
+      tags:
+      - Users
+components:
+  schemas:
+    UsersData:
+      type: object
+      properties:
+        id:
+          type: string
+          example: usr_bce766eaa4ef48e59da1d9602bfecf2d
+        firstName:
+          type: string
+          example: Jane
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          description: The email address of the user
+          example: jane.doe@jasper.ai
+    UsersResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: users
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersData'
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Workspace authentication using API key tokens in the X-API-Key header.
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.jasper.ai/oauth2/authorize
+          tokenUrl: https://api.jasper.ai/oauth2/token
+          refreshUrl: https://api.jasper.ai/oauth2/token
+          scopes:
+            user:read: Read user information
+            user: Read and write user information
+      description: User-level authentication using OAuth bearer tokens in the Authorization header.
+x-readme:
+  metrics-enabled: false
