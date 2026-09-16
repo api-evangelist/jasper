@@ -1,17 +1,14 @@
 aid: jasper
 name: Jasper
-description: >-
-  Jasper is an AI platform purpose-built for marketing teams that orchestrates 100+
-  specialized AI agents and connected content pipelines to run end-to-end marketing
-  workflows — content creation, campaign execution, personalization, and SEO/GEO
-  optimization — while holding brand consistency at scale. Jasper IQ is the governance
-  layer that embeds brand voice, style guides, and marketing context into every output.
-  The Jasper API (https://api.jasper.ai/v1) exposes commands, agent tasks, documents,
-  projects, tones, audiences, knowledge/retrieval, and a full image-editing suite,
-  secured with workspace API keys (X-API-Key) or OAuth 2.0 (authorization code + PKCE,
-  Dynamic Client Registration). Jasper also ships a hosted, remote Model Context Protocol
-  (MCP) server at https://mcp.jasper.ai so agents in Claude, ChatGPT, Copilot Studio,
-  OpenAI Agent Builder, and n8n can create on-brand content. API access is available on
+description: Jasper is an AI platform purpose-built for marketing teams that orchestrates 100+ specialized
+  AI agents and connected content pipelines to run end-to-end marketing workflows — content creation,
+  campaign execution, personalization, and SEO/GEO optimization — while holding brand consistency at scale.
+  Jasper IQ is the governance layer that embeds brand voice, style guides, and marketing context into
+  every output. The Jasper API (https://api.jasper.ai/v1) exposes commands, agent tasks, documents, projects,
+  tones, audiences, knowledge/retrieval, and a full image-editing suite, secured with workspace API keys
+  (X-API-Key) or OAuth 2.0 (authorization code + PKCE, Dynamic Client Registration). Jasper also ships
+  a hosted, remote Model Context Protocol (MCP) server at https://mcp.jasper.ai so agents in Claude, ChatGPT,
+  Copilot Studio, OpenAI Agent Builder, and n8n can create on-brand content. API access is available on
   the Jasper Business plan.
 url: https://raw.githubusercontent.com/api-evangelist/jasper/refs/heads/main/apis.yml
 x-type: company
@@ -49,7 +46,7 @@ accessModel:
   method: derived
 specificationVersion: '0.23'
 created: '2026-07-17'
-modified: '2026-08-13'
+modified: '2026-09-16'
 image: https://cdn.prod.website-files.com/6807ee8d73c233fb82842313/681e121f9445a06741087852_Webclip.png
 tags:
 - Company
@@ -566,7 +563,7 @@ common:
 - type: AgentSkill
   url: skills/_index.yml
 - type: OpenAPI
-  url: openapi/jasper-api-openapi.yml
+  url: openapi/_original/jasper-api-openapi.yml
 - type: Overlay
   url: overlays/jasper-api-overlay.yaml
 - type: Examples
