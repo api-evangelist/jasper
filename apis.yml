@@ -462,6 +462,8 @@ apis:
   humanURL: https://developers.jasper.ai/
   baseURL: https://api.jasper.ai/v1
   tags:
+  - Voice
+  tags_raw:
   - Voices
   properties:
   - type: OpenAPI
