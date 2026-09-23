@@ -246,7 +246,7 @@ paths:
       - Projects
 components:
   schemas:
-    ProjectResponseDto:
+    ProjectSingleResponseDto:
       type: object
       properties:
         requestId:
@@ -256,13 +256,70 @@ components:
           type: string
           example: projects
         data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectData'
+          $ref: '#/components/schemas/ProjectData'
       required:
       - requestId
       - resource
       - data
+    ProjectData:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the project
+          example: prj_073D2D49094A4AED991A47B614522579
+        name:
+          type: string
+          description: The name of the project
+          example: My Canvas
+        userId:
+          type: string
+          description: The ID of the user creating the project
+          example: usr_073D2D49094A4AED991A47B614522579
+        appUrl:
+          type: string
+          description: The client URL to view the project in the Jasper app
+          example: https://app.jasper.ai/canvas/edit/962e4d4c-ffdc-4c7a-83e3-8f4e715004cf
+        accessLevel:
+          type: string
+          description: Who currently has access to the project. `WORKSPACE` means every member of the calling workspace can access it; `PRIVATE` means access is limited to the owner (and anyone explicitly shared in).
+          enum:
+          - PRIVATE
+          - WORKSPACE
+          example: PRIVATE
+        settings:
+          description: Project-level defaults (goal, brand voice, audience, style guide, knowledge). Fields are omitted when not configured. Tone, style, and knowledge IDs are returned in their public (`ton_*` / `sty_*` / `kno_*`) form.
+          allOf:
+          - $ref: '#/components/schemas/ProjectSettingsDto'
+        metadata:
+          type: object
+          description: Set of key-value pairs previously attached to the project via create/update. Omitted from the response when no metadata is set.
+          additionalProperties:
+            type: string
+          example:
+            externalId: ext_123
+            source: crm
+      required:
+      - id
+      - name
+      - userId
+      - appUrl
+    ProjectDeleteResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: projects
+        deleted:
+          type: boolean
+          example: true
+      required:
+      - requestId
+      - resource
+      - deleted
     ProjectUpdateRequestDto:
       type: object
       properties:
@@ -328,6 +385,23 @@ components:
       required:
       - userId
       - name
+    ProjectResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: projects
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectData'
+      required:
+      - requestId
+      - resource
+      - data
     ProjectSettingsDto:
       type: object
       properties:
@@ -357,80 +431,6 @@ components:
           type: array
           items:
             type: string
-    ProjectDeleteResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: projects
-        deleted:
-          type: boolean
-          example: true
-      required:
-      - requestId
-      - resource
-      - deleted
-    ProjectData:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the project
-          example: prj_073D2D49094A4AED991A47B614522579
-        name:
-          type: string
-          description: The name of the project
-          example: My Canvas
-        userId:
-          type: string
-          description: The ID of the user creating the project
-          example: usr_073D2D49094A4AED991A47B614522579
-        appUrl:
-          type: string
-          description: The client URL to view the project in the Jasper app
-          example: https://app.jasper.ai/canvas/edit/962e4d4c-ffdc-4c7a-83e3-8f4e715004cf
-        accessLevel:
-          type: string
-          description: Who currently has access to the project. `WORKSPACE` means every member of the calling workspace can access it; `PRIVATE` means access is limited to the owner (and anyone explicitly shared in).
-          enum:
-          - PRIVATE
-          - WORKSPACE
-          example: PRIVATE
-        settings:
-          description: Project-level defaults (goal, brand voice, audience, style guide, knowledge). Fields are omitted when not configured. Tone, style, and knowledge IDs are returned in their public (`ton_*` / `sty_*` / `kno_*`) form.
-          allOf:
-          - $ref: '#/components/schemas/ProjectSettingsDto'
-        metadata:
-          type: object
-          description: Set of key-value pairs previously attached to the project via create/update. Omitted from the response when no metadata is set.
-          additionalProperties:
-            type: string
-          example:
-            externalId: ext_123
-            source: crm
-      required:
-      - id
-      - name
-      - userId
-      - appUrl
-    ProjectSingleResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: projects
-        data:
-          $ref: '#/components/schemas/ProjectData'
-      required:
-      - requestId
-      - resource
-      - data
   securitySchemes:
     X-API-Key:
       type: apiKey

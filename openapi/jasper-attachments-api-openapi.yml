@@ -78,6 +78,40 @@ components:
       required:
       - type
       - value
+    Attachment500Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 500
+        message:
+          type: string
+          example: Couldn't create attachment
+        error:
+          type: string
+          example: Internal Server Error
+      required:
+      - statusCode
+      - message
+      - error
+    CreateAttachmentResource:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The temporary attachment ID. Reference this value in `attachmentIds` on a subsequent `POST /v1/tasks/{id}/run` call.
+          example: tmp_2ee766eaa4ef48e59da1d9602bfecf2d
+        type:
+          type: string
+          enum:
+          - FILE
+          - TEXT
+          - URL
+          description: The attachment type, echoing back the request `type`.
+          example: FILE
+      required:
+      - id
+      - type
     CreateAttachmentResponseDto:
       type: object
       properties:
@@ -105,40 +139,6 @@ components:
         error:
           type: string
           example: Bad Request
-      required:
-      - statusCode
-      - message
-      - error
-    CreateAttachmentResource:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The temporary attachment ID. Reference this value in `attachmentIds` on a subsequent `POST /v1/tasks/{id}/run` call.
-          example: tmp_2ee766eaa4ef48e59da1d9602bfecf2d
-        type:
-          type: string
-          enum:
-          - FILE
-          - TEXT
-          - URL
-          description: The attachment type, echoing back the request `type`.
-          example: FILE
-      required:
-      - id
-      - type
-    Attachment500Error:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          example: 500
-        message:
-          type: string
-          example: Couldn't create attachment
-        error:
-          type: string
-          example: Internal Server Error
       required:
       - statusCode
       - message

@@ -77,6 +77,19 @@ paths:
       - Users
 components:
   schemas:
+    UsersResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: users
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersData'
     UsersData:
       type: object
       properties:
@@ -93,19 +106,6 @@ components:
           type: string
           description: The email address of the user
           example: jane.doe@jasper.ai
-    UsersResponse:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: users
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/UsersData'
   securitySchemes:
     X-API-Key:
       type: apiKey

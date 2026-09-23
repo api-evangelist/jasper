@@ -1,0 +1,48 @@
+{
+  "provider": "jasper",
+  "sources": [
+    "_original/jasper-api-openapi.json"
+  ],
+  "outputs": [
+    "jasper-attachments-api-openapi.yml",
+    "jasper-audiences-api-openapi.yml",
+    "jasper-command-api-openapi.yml",
+    "jasper-documents-api-openapi.yml",
+    "jasper-image-templates-api-openapi.yml",
+    "jasper-images-api-openapi.yml",
+    "jasper-knowledge-api-openapi.yml",
+    "jasper-projects-api-openapi.yml",
+    "jasper-styles-api-openapi.yml",
+    "jasper-tasks-api-openapi.yml",
+    "jasper-templates-api-openapi.yml",
+    "jasper-usage-api-openapi.yml",
+    "jasper-users-api-openapi.yml",
+    "jasper-voices-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "jasper-api-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/jasper-api-openapi.yml: archived document superseded by a larger archived document",
+    "jasper-attachments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-audiences-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-command-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-documents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-image-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-images-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-knowledge-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-styles-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-tasks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-usage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "jasper-voices-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

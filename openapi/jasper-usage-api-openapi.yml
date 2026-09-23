@@ -60,6 +60,15 @@ paths:
       - Usage
 components:
   schemas:
+    Usage:
+      type: object
+      properties:
+        t:
+          type: string
+          example: '2023-09-11T13:28:59.318Z'
+        v:
+          type: number
+          example: 83
     UsageResponseDto:
       type: object
       properties:
@@ -71,15 +80,6 @@ components:
           example: usage
         data:
           $ref: '#/components/schemas/UsageRequest'
-    Usage:
-      type: object
-      properties:
-        t:
-          type: string
-          example: '2023-09-11T13:28:59.318Z'
-        v:
-          type: number
-          example: 83
     UsageRequest:
       type: object
       properties:

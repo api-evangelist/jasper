@@ -239,52 +239,6 @@ paths:
       - Documents
 components:
   schemas:
-    DocumentUpdateDto:
-      type: object
-      properties:
-        userId:
-          type: string
-          description: The ID of the user updating the document
-          example: user123
-        content:
-          type: string
-          description: The updated content of the document
-          example: Updated document content.
-        name:
-          type: string
-          description: The name of the document
-          example: Document Title
-        status:
-          type: string
-          description: The status of the document
-          example: DRAFT
-          enum:
-          - DRAFT
-          - PUBLISHED
-          - IN PROGRESS
-          - IN REVIEW
-          - COMPLETED
-        projectId:
-          type: string
-          description: The ID of the project to associate the document with. Pass an empty string to detach the document from its current project.
-          example: prj_E8F0457A95B04D87A11F6B1DD6AA2356
-      required:
-      - userId
-      - name
-    DocumentDeleteResponse:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: documents
-        deleted:
-          type: boolean
-          example: true
-      required:
-      - deleted
     DocumentCreateDto:
       type: object
       properties:
@@ -318,6 +272,19 @@ components:
       - userId
       - content
       - name
+    DocumentResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: documents
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentsData'
     DocumentsData:
       type: object
       properties:
@@ -367,7 +334,7 @@ components:
       - status
       - userId
       - appUrl
-    DocumentResponse:
+    DocumentDeleteResponse:
       type: object
       properties:
         requestId:
@@ -376,10 +343,43 @@ components:
         resource:
           type: string
           example: documents
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentsData'
+        deleted:
+          type: boolean
+          example: true
+      required:
+      - deleted
+    DocumentUpdateDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The ID of the user updating the document
+          example: user123
+        content:
+          type: string
+          description: The updated content of the document
+          example: Updated document content.
+        name:
+          type: string
+          description: The name of the document
+          example: Document Title
+        status:
+          type: string
+          description: The status of the document
+          example: DRAFT
+          enum:
+          - DRAFT
+          - PUBLISHED
+          - IN PROGRESS
+          - IN REVIEW
+          - COMPLETED
+        projectId:
+          type: string
+          description: The ID of the project to associate the document with. Pass an empty string to detach the document from its current project.
+          example: prj_E8F0457A95B04D87A11F6B1DD6AA2356
+      required:
+      - userId
+      - name
   securitySchemes:
     X-API-Key:
       type: apiKey
