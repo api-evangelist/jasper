@@ -246,80 +246,35 @@ paths:
       - Projects
 components:
   schemas:
-    ProjectSingleResponseDto:
+    ProjectSettingsDto:
       type: object
       properties:
-        requestId:
+        goal:
           type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
+          description: High-level goal/description for the project (free text).
+          example: Launch announcement for Q3 product release
+        toneId:
           type: string
-          example: projects
-        data:
-          $ref: '#/components/schemas/ProjectData'
-      required:
-      - requestId
-      - resource
-      - data
-    ProjectData:
-      type: object
-      properties:
-        id:
+          description: Default Brand Voice (Tone) ID, e.g. `ton_...`. Pass `null` to clear.
+          example: ton_535B1EC15F5F41EAB1B400E9ED4077B6
+          nullable: true
+        audienceId:
           type: string
-          description: The unique identifier of the project
-          example: prj_073D2D49094A4AED991A47B614522579
-        name:
+          description: Default Audience ID, e.g. `aud_...`. Pass `null` to clear.
+          example: aud_535B1EC15F5F41EAB1B400E9ED4077B6
+          nullable: true
+        styleId:
           type: string
-          description: The name of the project
-          example: My Canvas
-        userId:
-          type: string
-          description: The ID of the user creating the project
-          example: usr_073D2D49094A4AED991A47B614522579
-        appUrl:
-          type: string
-          description: The client URL to view the project in the Jasper app
-          example: https://app.jasper.ai/canvas/edit/962e4d4c-ffdc-4c7a-83e3-8f4e715004cf
-        accessLevel:
-          type: string
-          description: Who currently has access to the project. `WORKSPACE` means every member of the calling workspace can access it; `PRIVATE` means access is limited to the owner (and anyone explicitly shared in).
-          enum:
-          - PRIVATE
-          - WORKSPACE
-          example: PRIVATE
-        settings:
-          description: Project-level defaults (goal, brand voice, audience, style guide, knowledge). Fields are omitted when not configured. Tone, style, and knowledge IDs are returned in their public (`ton_*` / `sty_*` / `kno_*`) form.
-          allOf:
-          - $ref: '#/components/schemas/ProjectSettingsDto'
-        metadata:
-          type: object
-          description: Set of key-value pairs previously attached to the project via create/update. Omitted from the response when no metadata is set.
-          additionalProperties:
-            type: string
+          description: Default Style Guide ID, e.g. `sty_...`. Pass `null` to clear.
+          example: sty_535B1EC15F5F41EAB1B400E9ED4077B6
+          nullable: true
+        knowledgeIds:
+          description: Knowledge IDs (`kno_*`) to attach to the project. Replaces the existing set of knowledge attachments; pass an empty array to clear them. Non-knowledge attachments are not affected.
           example:
-            externalId: ext_123
-            source: crm
-      required:
-      - id
-      - name
-      - userId
-      - appUrl
-    ProjectDeleteResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: projects
-        deleted:
-          type: boolean
-          example: true
-      required:
-      - requestId
-      - resource
-      - deleted
+          - kno_535B1EC15F5F41EAB1B400E9ED4077B6
+          type: array
+          items:
+            type: string
     ProjectUpdateRequestDto:
       type: object
       properties:
@@ -385,6 +340,37 @@ components:
       required:
       - userId
       - name
+    ProjectSingleResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: projects
+        data:
+          $ref: '#/components/schemas/ProjectData'
+      required:
+      - requestId
+      - resource
+      - data
+    ProjectDeleteResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: projects
+        deleted:
+          type: boolean
+          example: true
+      required:
+      - requestId
+      - resource
+      - deleted
     ProjectResponseDto:
       type: object
       properties:
@@ -402,35 +388,49 @@ components:
       - requestId
       - resource
       - data
-    ProjectSettingsDto:
+    ProjectData:
       type: object
       properties:
-        goal:
+        id:
           type: string
-          description: High-level goal/description for the project (free text).
-          example: Launch announcement for Q3 product release
-        toneId:
+          description: The unique identifier of the project
+          example: prj_073D2D49094A4AED991A47B614522579
+        name:
           type: string
-          description: Default Brand Voice (Tone) ID, e.g. `ton_...`. Pass `null` to clear.
-          example: ton_535B1EC15F5F41EAB1B400E9ED4077B6
-          nullable: true
-        audienceId:
+          description: The name of the project
+          example: My Canvas
+        userId:
           type: string
-          description: Default Audience ID, e.g. `aud_...`. Pass `null` to clear.
-          example: aud_535B1EC15F5F41EAB1B400E9ED4077B6
-          nullable: true
-        styleId:
+          description: The ID of the user creating the project
+          example: usr_073D2D49094A4AED991A47B614522579
+        appUrl:
           type: string
-          description: Default Style Guide ID, e.g. `sty_...`. Pass `null` to clear.
-          example: sty_535B1EC15F5F41EAB1B400E9ED4077B6
-          nullable: true
-        knowledgeIds:
-          description: Knowledge IDs (`kno_*`) to attach to the project. Replaces the existing set of knowledge attachments; pass an empty array to clear them. Non-knowledge attachments are not affected.
-          example:
-          - kno_535B1EC15F5F41EAB1B400E9ED4077B6
-          type: array
-          items:
+          description: The client URL to view the project in the Jasper app
+          example: https://app.jasper.ai/canvas/edit/962e4d4c-ffdc-4c7a-83e3-8f4e715004cf
+        accessLevel:
+          type: string
+          description: Who currently has access to the project. `WORKSPACE` means every member of the calling workspace can access it; `PRIVATE` means access is limited to the owner (and anyone explicitly shared in).
+          enum:
+          - PRIVATE
+          - WORKSPACE
+          example: PRIVATE
+        settings:
+          description: Project-level defaults (goal, brand voice, audience, style guide, knowledge). Fields are omitted when not configured. Tone, style, and knowledge IDs are returned in their public (`ton_*` / `sty_*` / `kno_*`) form.
+          allOf:
+          - $ref: '#/components/schemas/ProjectSettingsDto'
+        metadata:
+          type: object
+          description: Set of key-value pairs previously attached to the project via create/update. Omitted from the response when no metadata is set.
+          additionalProperties:
             type: string
+          example:
+            externalId: ext_123
+            source: crm
+      required:
+      - id
+      - name
+      - userId
+      - appUrl
   securitySchemes:
     X-API-Key:
       type: apiKey

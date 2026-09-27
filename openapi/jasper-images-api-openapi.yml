@@ -474,20 +474,6 @@ paths:
       - Images
 components:
   schemas:
-    ImageAnalysisRequestDto:
-      type: object
-      properties:
-        imageUrl:
-          type: string
-          description: The URL of the image to check.
-          example: https://example.com/image.png
-        question:
-          type: string
-          description: The expected analysis to perform on the image.
-          example: Is the main object centered and fully visible?
-      required:
-      - imageUrl
-      - question
     ImageAnalysisResponseDto:
       type: object
       properties:
@@ -506,6 +492,20 @@ components:
           example: https://example.com/image.png
       required:
       - imageUrl
+    ImageAnalysisRequestDto:
+      type: object
+      properties:
+        imageUrl:
+          type: string
+          description: The URL of the image to check.
+          example: https://example.com/image.png
+        question:
+          type: string
+          description: The expected analysis to perform on the image.
+          example: Is the main object centered and fully visible?
+      required:
+      - imageUrl
+      - question
     ImageAltTextResponseDto:
       type: object
       properties:

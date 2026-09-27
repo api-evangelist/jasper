@@ -272,7 +272,7 @@ components:
       - userId
       - content
       - name
-    DocumentResponse:
+    DocumentDeleteResponse:
       type: object
       properties:
         requestId:
@@ -281,10 +281,11 @@ components:
         resource:
           type: string
           example: documents
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentsData'
+        deleted:
+          type: boolean
+          example: true
+      required:
+      - deleted
     DocumentsData:
       type: object
       properties:
@@ -334,7 +335,7 @@ components:
       - status
       - userId
       - appUrl
-    DocumentDeleteResponse:
+    DocumentResponse:
       type: object
       properties:
         requestId:
@@ -343,11 +344,10 @@ components:
         resource:
           type: string
           example: documents
-        deleted:
-          type: boolean
-          example: true
-      required:
-      - deleted
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentsData'
     DocumentUpdateDto:
       type: object
       properties:

@@ -55,6 +55,71 @@ paths:
       - Attachments
 components:
   schemas:
+    Attachment500Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 500
+        message:
+          type: string
+          example: Couldn't create attachment
+        error:
+          type: string
+          example: Internal Server Error
+      required:
+      - statusCode
+      - message
+      - error
+    Attachment400Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 400
+        message:
+          type: string
+          example: 'Unsupported file type "exe". Supported extensions: pdf, docx, txt, md, png, …'
+        error:
+          type: string
+          example: Bad Request
+      required:
+      - statusCode
+      - message
+      - error
+    CreateAttachmentResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: 8393f82b3f6a4f6e8a405777b9305254
+        resource:
+          type: string
+          example: knowledge
+        data:
+          $ref: '#/components/schemas/CreateAttachmentResource'
+      required:
+      - requestId
+      - resource
+      - data
+    CreateAttachmentResource:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The temporary attachment ID. Reference this value in `attachmentIds` on a subsequent `POST /v1/tasks/{id}/run` call.
+          example: tmp_2ee766eaa4ef48e59da1d9602bfecf2d
+        type:
+          type: string
+          enum:
+          - FILE
+          - TEXT
+          - URL
+          description: The attachment type, echoing back the request `type`.
+          example: FILE
+      required:
+      - id
+      - type
     CreateAttachmentDto:
       type: object
       properties:
@@ -78,71 +143,6 @@ components:
       required:
       - type
       - value
-    Attachment500Error:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          example: 500
-        message:
-          type: string
-          example: Couldn't create attachment
-        error:
-          type: string
-          example: Internal Server Error
-      required:
-      - statusCode
-      - message
-      - error
-    CreateAttachmentResource:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The temporary attachment ID. Reference this value in `attachmentIds` on a subsequent `POST /v1/tasks/{id}/run` call.
-          example: tmp_2ee766eaa4ef48e59da1d9602bfecf2d
-        type:
-          type: string
-          enum:
-          - FILE
-          - TEXT
-          - URL
-          description: The attachment type, echoing back the request `type`.
-          example: FILE
-      required:
-      - id
-      - type
-    CreateAttachmentResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: 8393f82b3f6a4f6e8a405777b9305254
-        resource:
-          type: string
-          example: knowledge
-        data:
-          $ref: '#/components/schemas/CreateAttachmentResource'
-      required:
-      - requestId
-      - resource
-      - data
-    Attachment400Error:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          example: 400
-        message:
-          type: string
-          example: 'Unsupported file type "exe". Supported extensions: pdf, docx, txt, md, png, …'
-        error:
-          type: string
-          example: Bad Request
-      required:
-      - statusCode
-      - message
-      - error
   securitySchemes:
     X-API-Key:
       type: apiKey

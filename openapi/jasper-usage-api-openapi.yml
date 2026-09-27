@@ -60,6 +60,20 @@ paths:
       - Usage
 components:
   schemas:
+    UsageRequest:
+      type: object
+      properties:
+        requests:
+          example:
+          - t: '2023-09-11T13:28:59.318Z'
+            v: 83
+          - t: '2023-09-11T14:28:59.318Z'
+            v: 173
+          - t: '2023-09-11T15:28:59.318Z'
+            v: 162
+          type: array
+          items:
+            $ref: '#/components/schemas/Usage'
     Usage:
       type: object
       properties:
@@ -80,20 +94,6 @@ components:
           example: usage
         data:
           $ref: '#/components/schemas/UsageRequest'
-    UsageRequest:
-      type: object
-      properties:
-        requests:
-          example:
-          - t: '2023-09-11T13:28:59.318Z'
-            v: 83
-          - t: '2023-09-11T14:28:59.318Z'
-            v: 173
-          - t: '2023-09-11T15:28:59.318Z'
-            v: 162
-          type: array
-          items:
-            $ref: '#/components/schemas/Usage'
   securitySchemes:
     X-API-Key:
       type: apiKey

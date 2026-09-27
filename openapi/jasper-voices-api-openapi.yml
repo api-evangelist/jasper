@@ -178,58 +178,17 @@ paths:
       - Voices
 components:
   schemas:
-    DeleteToneResponseDto:
+    ToneSettingsDto:
       type: object
       properties:
-        requestId:
+        appVisibility:
           type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: tone
-        deleted:
-          type: boolean
-      required:
-      - deleted
-    TonePaginationDto:
-      type: object
-      properties:
-        totalRecords:
-          type: number
-          description: Total number of records
-        page:
-          type: number
-          description: Current page
-        pageSize:
-          type: number
-          description: Page size
-        next:
-          type: object
-          description: URL for requesting the next page
-        prev:
-          type: object
-          description: URL for requesting the previous page
-    CreateToneDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The friendly name of the voice.
-          example: It's-a me, Mario!
-        value:
-          type: string
-          description: The voice's description
-          example: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident, charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage and entertain the audience.
-        metadata:
-          type: object
-          description: An optional set of key-value pairs to attach any data you wish to the voice, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long.
-        settings:
-          description: Additional configuration options.
-          allOf:
-          - $ref: '#/components/schemas/ToneSettingsDto'
-      required:
-      - name
-      - value
+          description: Whether the brand is available in the Jasper app. Provides a way to omit voices created from the API, from being available in the Jasper app experience. One of "visible" or "hidden". Defaults to "visible".
+          default: visible
+          example: visible
+          enum:
+          - visible
+          - hidden
     GetAllTonesResponseDto:
       type: object
       properties:
@@ -243,6 +202,24 @@ components:
           $ref: '#/components/schemas/ToneDto'
         pagination:
           $ref: '#/components/schemas/TonePaginationDto'
+    UpdateToneDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The friendly name of the voice.
+          example: It's-a me, Mario!
+        value:
+          type: string
+          description: The voices's description.
+          example: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident, charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage and entertain the audience.
+        metadata:
+          type: object
+          description: An optional set of key-value pairs to attach any data you wish to the voice, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long.
+        settings:
+          description: Additional configuration options.
+          allOf:
+          - $ref: '#/components/schemas/ToneSettingsDto'
     ToneDto:
       type: object
       properties:
@@ -277,7 +254,7 @@ components:
       required:
       - name
       - value
-    UpdateToneDto:
+    CreateToneDto:
       type: object
       properties:
         name:
@@ -286,7 +263,7 @@ components:
           example: It's-a me, Mario!
         value:
           type: string
-          description: The voices's description.
+          description: The voice's description
           example: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident, charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage and entertain the audience.
         metadata:
           type: object
@@ -295,17 +272,27 @@ components:
           description: Additional configuration options.
           allOf:
           - $ref: '#/components/schemas/ToneSettingsDto'
-    ToneSettingsDto:
+      required:
+      - name
+      - value
+    TonePaginationDto:
       type: object
       properties:
-        appVisibility:
-          type: string
-          description: Whether the brand is available in the Jasper app. Provides a way to omit voices created from the API, from being available in the Jasper app experience. One of "visible" or "hidden". Defaults to "visible".
-          default: visible
-          example: visible
-          enum:
-          - visible
-          - hidden
+        totalRecords:
+          type: number
+          description: Total number of records
+        page:
+          type: number
+          description: Current page
+        pageSize:
+          type: number
+          description: Page size
+        next:
+          type: object
+          description: URL for requesting the next page
+        prev:
+          type: object
+          description: URL for requesting the previous page
     GetToneResponseDto:
       type: object
       properties:
@@ -317,6 +304,19 @@ components:
           example: tone
         data:
           $ref: '#/components/schemas/ToneDto'
+    DeleteToneResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: tone
+        deleted:
+          type: boolean
+      required:
+      - deleted
   securitySchemes:
     X-API-Key:
       type: apiKey
