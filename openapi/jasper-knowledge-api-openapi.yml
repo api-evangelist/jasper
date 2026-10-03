@@ -262,6 +262,170 @@ paths:
       - Knowledge
 components:
   schemas:
+    RelevantChunkDto:
+      type: object
+      properties:
+        content:
+          type: string
+          description: The content of the relevant chunk from the Knowledge item
+          example: Brand guidelines specify that our logo should always maintain a minimum clear space equivalent to the height of the "J" in our wordmark.
+        score:
+          type: number
+          description: The relevance score of this chunk (0-1, where 1 is most relevant)
+          example: 0.85
+      required:
+      - content
+      - score
+    SearchKnowledgeRequestDto:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The search query to find relevant Knowledge items. Supports natural language search.
+          example: What are my brand guidelines for social media posts?
+      required:
+      - query
+    GetKnowledgeResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: knowledge
+        data:
+          $ref: '#/components/schemas/KnowledgeResponseDto'
+    GetAllKnowledgeResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: knowledge
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/KnowledgeResponseDto'
+        pagination:
+          $ref: '#/components/schemas/KnowledgePaginationResponseDto'
+    Settings:
+      type: object
+      properties:
+        appVisibility:
+          type: string
+          description: Whether the Knowledge is available in the Jasper app. Provides a way to omit Knowledge items created from the API, from being available in the Jasper app experience. One of "visible" or "hidden". Defaults to "visible".
+          enum:
+          - visible
+          - hidden
+          default: visible
+        autoSummary:
+          type: boolean
+          description: Specify if the summary should be created manually or automatically.
+          default: true
+    CreateOrUpdateKnowledgeResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: knowledge
+        data:
+          $ref: '#/components/schemas/KnowledgeResponseDto'
+    KnowledgeUpdateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The friendly name of the Knowledge item. Up to 100 characters.
+          example: Product Release Monthly Webinar - May 2023
+        file:
+          type: string
+          format: binary
+          description: The file containing content you want to create a Knowledge item from. Supported file types are .txt, .pdf, .doc, .docx, .pptx, .mp3, .wav, .m4a, .aac, .mp4, .mov, .csv, .xlsx, .xls, .png, .jpeg, .jpg, .md, up to 300MB (or 2GB for video files).
+          example: jasperbrandvoice.pdf
+        metadata:
+          type: string
+          description: Set of key-value pairs for storing additional structured information.
+          format: json
+          example: '{"NewKey": "New Value", "AnotherKey": "Another Value"}'
+        settings:
+          type: string
+          description: Additional configuration options.
+          format: json
+          default: '{"appVisibility": "visible", "autoSummary": true}'
+          example: '{"appVisibility": "visible", "autoSummary": true}'
+        summary:
+          type: string
+          description: The manually created Knowledge item summary.
+          example: This Knowledge item outlines guidelines for using the Jasper logo
+        tags:
+          description: The tags associated with the Knowledge item. Tags are searchable via the Jasper app.
+          example:
+          - tag1
+          - tag2
+          type: array
+          items:
+            type: string
+    Knowledge400Error:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: knowledge
+        errors:
+          example:
+          - error message
+          type: array
+          items:
+            type: array
+    ScoredKnowledgeDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the Knowledge item
+          example: kno_2ee766eaa4ef48e59da1d9602bfecf2d
+        name:
+          type: string
+          description: The name of the Knowledge item
+          example: Brand Guidelines Document
+        summary:
+          type: string
+          description: The summary of the Knowledge item
+          example: Comprehensive brand guidelines including logo usage, color palette, and typography standards.
+        tags:
+          description: Tags associated with the Knowledge item
+          example:
+          - branding
+          - guidelines
+          - logo
+          type: array
+          items:
+            type: string
+        appUrl:
+          type: string
+          description: The client URL to view the Knowledge item in the Jasper app. Empty when no link can be resolved.
+          example: https://app.jasper.ai/jasper-iq/knowledge-base/kno_2ee766eaa4ef48e59da1d9602bfecf2d
+        relevantChunks:
+          description: Array of relevant content chunks from the Knowledge item, ordered by relevance score
+          type: array
+          items:
+            $ref: '#/components/schemas/RelevantChunkDto'
+      required:
+      - id
+      - name
+      - summary
+      - tags
+      - appUrl
+      - relevantChunks
     Knowledge500Error:
       type: object
       properties:
@@ -276,6 +440,75 @@ components:
           type: array
           items:
             type: string
+    KnowledgeInputDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The friendly name of the Knowledge item. Up to 100 characters.
+          example: Product Release Monthly Webinar - May 2023
+        file:
+          type: string
+          format: binary
+          description: The file containing content you want to create a Knowledge item from. Supported file types are .txt, .pdf, .doc, .docx, .pptx, .mp3, .wav, .m4a, .aac, .mp4, .mov, .csv, .xlsx, .xls, .png, .jpeg, .jpg, .md, up to 300MB (or 2GB for video files).
+          example: jasperbrandvoice.pdf
+        metadata:
+          type: string
+          description: Set of key-value pairs for storing additional structured information.
+          format: json
+          example: '{"NewKey": "New Value", "AnotherKey": "Another Value"}'
+        settings:
+          type: string
+          description: Additional configuration options.
+          format: json
+          default: '{"appVisibility": "visible", "autoSummary": true}'
+          example: '{"appVisibility": "visible", "autoSummary": true}'
+        summary:
+          type: string
+          description: The manually created Knowledge item summary.
+          example: This Knowledge item outlines guidelines for using the Jasper logo
+        tags:
+          description: The tags associated with the Knowledge item. Tags are searchable via the Jasper app.
+          example:
+          - tag1
+          - tag2
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - file
+    KnowledgePaginationResponseDto:
+      type: object
+      properties:
+        totalRecords:
+          type: number
+          description: The total number of Knowledge items in the response
+          example: 1
+        page:
+          type: number
+          description: The current page number of Knowledge items in the response
+          example: 1
+          default: 1
+        size:
+          type: number
+          description: The number of Knowledge items per page in the response
+          example: 10
+          default: 10
+        next:
+          type: object
+          description: The URL to the next page of Knowledge items in the response
+          example: null
+        prev:
+          type: object
+          description: The URL to the previous page of Knowledge items in the response
+          example: null
+      required:
+      - totalRecords
+      - page
+      - size
+      - next
+      - prev
     KnowledgeResponseDto:
       type: object
       properties:
@@ -323,139 +556,6 @@ components:
       required:
       - name
       - file
-    ScoredKnowledgeDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the Knowledge item
-          example: kno_2ee766eaa4ef48e59da1d9602bfecf2d
-        name:
-          type: string
-          description: The name of the Knowledge item
-          example: Brand Guidelines Document
-        summary:
-          type: string
-          description: The summary of the Knowledge item
-          example: Comprehensive brand guidelines including logo usage, color palette, and typography standards.
-        tags:
-          description: Tags associated with the Knowledge item
-          example:
-          - branding
-          - guidelines
-          - logo
-          type: array
-          items:
-            type: string
-        appUrl:
-          type: string
-          description: The client URL to view the Knowledge item in the Jasper app. Empty when no link can be resolved.
-          example: https://app.jasper.ai/jasper-iq/knowledge-base/kno_2ee766eaa4ef48e59da1d9602bfecf2d
-        relevantChunks:
-          description: Array of relevant content chunks from the Knowledge item, ordered by relevance score
-          type: array
-          items:
-            $ref: '#/components/schemas/RelevantChunkDto'
-      required:
-      - id
-      - name
-      - summary
-      - tags
-      - appUrl
-      - relevantChunks
-    KnowledgeInputDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The friendly name of the Knowledge item. Up to 100 characters.
-          example: Product Release Monthly Webinar - May 2023
-        file:
-          type: string
-          format: binary
-          description: The file containing content you want to create a Knowledge item from. Supported file types are .txt, .pdf, .doc, .docx, .pptx, .mp3, .wav, .m4a, .aac, .mp4, .mov, .csv, .xlsx, .xls, .png, .jpeg, .jpg, .md, up to 300MB (or 2GB for video files).
-          example: jasperbrandvoice.pdf
-        metadata:
-          type: string
-          description: Set of key-value pairs for storing additional structured information.
-          format: json
-          example: '{"NewKey": "New Value", "AnotherKey": "Another Value"}'
-        settings:
-          type: string
-          description: Additional configuration options.
-          format: json
-          default: '{"appVisibility": "visible", "autoSummary": true}'
-          example: '{"appVisibility": "visible", "autoSummary": true}'
-        summary:
-          type: string
-          description: The manually created Knowledge item summary.
-          example: This Knowledge item outlines guidelines for using the Jasper logo
-        tags:
-          description: The tags associated with the Knowledge item. Tags are searchable via the Jasper app.
-          example:
-          - tag1
-          - tag2
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - file
-    CreateOrUpdateKnowledgeResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: knowledge
-        data:
-          $ref: '#/components/schemas/KnowledgeResponseDto'
-    DeleteKnowledgeResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: knowledge
-        deleted:
-          type: boolean
-          example: true
-      required:
-      - deleted
-    GetAllKnowledgeResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: knowledge
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/KnowledgeResponseDto'
-        pagination:
-          $ref: '#/components/schemas/KnowledgePaginationResponseDto'
-    Knowledge400Error:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: knowledge
-        errors:
-          example:
-          - error message
-          type: array
-          items:
-            type: array
     SearchKnowledgeResponseDto:
       type: object
       properties:
@@ -470,87 +570,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ScoredKnowledgeDto'
-    KnowledgeUpdateInput:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The friendly name of the Knowledge item. Up to 100 characters.
-          example: Product Release Monthly Webinar - May 2023
-        file:
-          type: string
-          format: binary
-          description: The file containing content you want to create a Knowledge item from. Supported file types are .txt, .pdf, .doc, .docx, .pptx, .mp3, .wav, .m4a, .aac, .mp4, .mov, .csv, .xlsx, .xls, .png, .jpeg, .jpg, .md, up to 300MB (or 2GB for video files).
-          example: jasperbrandvoice.pdf
-        metadata:
-          type: string
-          description: Set of key-value pairs for storing additional structured information.
-          format: json
-          example: '{"NewKey": "New Value", "AnotherKey": "Another Value"}'
-        settings:
-          type: string
-          description: Additional configuration options.
-          format: json
-          default: '{"appVisibility": "visible", "autoSummary": true}'
-          example: '{"appVisibility": "visible", "autoSummary": true}'
-        summary:
-          type: string
-          description: The manually created Knowledge item summary.
-          example: This Knowledge item outlines guidelines for using the Jasper logo
-        tags:
-          description: The tags associated with the Knowledge item. Tags are searchable via the Jasper app.
-          example:
-          - tag1
-          - tag2
-          type: array
-          items:
-            type: string
-    Settings:
-      type: object
-      properties:
-        appVisibility:
-          type: string
-          description: Whether the Knowledge is available in the Jasper app. Provides a way to omit Knowledge items created from the API, from being available in the Jasper app experience. One of "visible" or "hidden". Defaults to "visible".
-          enum:
-          - visible
-          - hidden
-          default: visible
-        autoSummary:
-          type: boolean
-          description: Specify if the summary should be created manually or automatically.
-          default: true
-    KnowledgePaginationResponseDto:
-      type: object
-      properties:
-        totalRecords:
-          type: number
-          description: The total number of Knowledge items in the response
-          example: 1
-        page:
-          type: number
-          description: The current page number of Knowledge items in the response
-          example: 1
-          default: 1
-        size:
-          type: number
-          description: The number of Knowledge items per page in the response
-          example: 10
-          default: 10
-        next:
-          type: object
-          description: The URL to the next page of Knowledge items in the response
-          example: null
-        prev:
-          type: object
-          description: The URL to the previous page of Knowledge items in the response
-          example: null
-      required:
-      - totalRecords
-      - page
-      - size
-      - next
-      - prev
-    GetKnowledgeResponseDto:
+    DeleteKnowledgeResponseDto:
       type: object
       properties:
         requestId:
@@ -559,31 +579,11 @@ components:
         resource:
           type: string
           example: knowledge
-        data:
-          $ref: '#/components/schemas/KnowledgeResponseDto'
-    SearchKnowledgeRequestDto:
-      type: object
-      properties:
-        query:
-          type: string
-          description: The search query to find relevant Knowledge items. Supports natural language search.
-          example: What are my brand guidelines for social media posts?
+        deleted:
+          type: boolean
+          example: true
       required:
-      - query
-    RelevantChunkDto:
-      type: object
-      properties:
-        content:
-          type: string
-          description: The content of the relevant chunk from the Knowledge item
-          example: Brand guidelines specify that our logo should always maintain a minimum clear space equivalent to the height of the "J" in our wordmark.
-        score:
-          type: number
-          description: The relevance score of this chunk (0-1, where 1 is most relevant)
-          example: 0.85
-      required:
-      - content
-      - score
+      - deleted
   securitySchemes:
     X-API-Key:
       type: apiKey

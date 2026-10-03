@@ -474,15 +474,6 @@ paths:
       - Images
 components:
   schemas:
-    ImageAnalysisResponseDto:
-      type: object
-      properties:
-        analysis:
-          type: string
-          description: The result of the analysis of the image.
-          example: Yes the main object is centered and fully visible.
-      required:
-      - analysis
     ImageAltTextRequestDto:
       type: object
       properties:
@@ -492,6 +483,15 @@ components:
           example: https://example.com/image.png
       required:
       - imageUrl
+    ImageAnalysisResponseDto:
+      type: object
+      properties:
+        analysis:
+          type: string
+          description: The result of the analysis of the image.
+          example: Yes the main object is centered and fully visible.
+      required:
+      - analysis
     ImageAnalysisRequestDto:
       type: object
       properties:

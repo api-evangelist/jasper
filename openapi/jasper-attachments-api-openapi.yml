@@ -87,21 +87,6 @@ components:
       - statusCode
       - message
       - error
-    CreateAttachmentResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: 8393f82b3f6a4f6e8a405777b9305254
-        resource:
-          type: string
-          example: knowledge
-        data:
-          $ref: '#/components/schemas/CreateAttachmentResource'
-      required:
-      - requestId
-      - resource
-      - data
     CreateAttachmentResource:
       type: object
       properties:
@@ -143,6 +128,21 @@ components:
       required:
       - type
       - value
+    CreateAttachmentResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: 8393f82b3f6a4f6e8a405777b9305254
+        resource:
+          type: string
+          example: knowledge
+        data:
+          $ref: '#/components/schemas/CreateAttachmentResource'
+      required:
+      - requestId
+      - resource
+      - data
   securitySchemes:
     X-API-Key:
       type: apiKey

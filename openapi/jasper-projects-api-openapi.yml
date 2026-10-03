@@ -246,6 +246,21 @@ paths:
       - Projects
 components:
   schemas:
+    ProjectSingleResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: projects
+        data:
+          $ref: '#/components/schemas/ProjectData'
+      required:
+      - requestId
+      - resource
+      - data
     ProjectSettingsDto:
       type: object
       properties:
@@ -275,86 +290,6 @@ components:
           type: array
           items:
             type: string
-    ProjectUpdateRequestDto:
-      type: object
-      properties:
-        userId:
-          type: string
-          description: The ID of the user updating the project
-          example: usr_535B1EC15F5F41EAB1B400E9ED4077B6
-        name:
-          type: string
-          description: The name of the project
-          example: Updated Project name
-        accessLevel:
-          type: string
-          description: Who can access the project. `PRIVATE` restricts access to the owning user (plus anyone explicitly shared in); `WORKSPACE` shares the project with every member of the calling workspace. Omit to leave the current access level unchanged.
-          enum:
-          - PRIVATE
-          - WORKSPACE
-          example: PRIVATE
-        settings:
-          description: Updated default settings for the project (goal, brand voice, audience, style, knowledge). Omit a field to leave it unchanged.
-          allOf:
-          - $ref: '#/components/schemas/ProjectSettingsDto'
-        metadata:
-          type: object
-          description: An optional set of key-value pairs to attach any data you wish to the project, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long. Provided string values upsert that key; pass `null` for a key to remove it; omit this field entirely to leave the existing metadata unchanged.
-          additionalProperties:
-            type: string
-            nullable: true
-          example:
-            externalId: ext_123
-            source: null
-    ProjectCreateRequestDto:
-      type: object
-      properties:
-        userId:
-          type: string
-          description: The ID of the user creating the project
-          example: usr_535B1EC15F5F41EAB1B400E9ED4077B6
-        name:
-          type: string
-          description: The name of the project
-          example: My Project
-        accessLevel:
-          type: string
-          description: Who can access the new project. `PRIVATE` (default) restricts access to the owning user; `WORKSPACE` shares the project with all members of the calling workspace.
-          enum:
-          - PRIVATE
-          - WORKSPACE
-          example: PRIVATE
-        settings:
-          description: Optional default settings to seed on the project (goal, brand voice, audience, style, knowledge).
-          allOf:
-          - $ref: '#/components/schemas/ProjectSettingsDto'
-        metadata:
-          type: object
-          description: An optional set of key-value pairs to attach any data you wish to the project, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long. `null` values are accepted but ignored on create (there is nothing to clear yet) and are supported for symmetry with the update endpoint.
-          additionalProperties:
-            type: string
-            nullable: true
-          example:
-            externalId: ext_123
-            source: crm
-      required:
-      - userId
-      - name
-    ProjectSingleResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: projects
-        data:
-          $ref: '#/components/schemas/ProjectData'
-      required:
-      - requestId
-      - resource
-      - data
     ProjectDeleteResponseDto:
       type: object
       properties:
@@ -371,23 +306,6 @@ components:
       - requestId
       - resource
       - deleted
-    ProjectResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: projects
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectData'
-      required:
-      - requestId
-      - resource
-      - data
     ProjectData:
       type: object
       properties:
@@ -431,6 +349,88 @@ components:
       - name
       - userId
       - appUrl
+    ProjectResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: projects
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectData'
+      required:
+      - requestId
+      - resource
+      - data
+    ProjectCreateRequestDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The ID of the user creating the project
+          example: usr_535B1EC15F5F41EAB1B400E9ED4077B6
+        name:
+          type: string
+          description: The name of the project
+          example: My Project
+        accessLevel:
+          type: string
+          description: Who can access the new project. `PRIVATE` (default) restricts access to the owning user; `WORKSPACE` shares the project with all members of the calling workspace.
+          enum:
+          - PRIVATE
+          - WORKSPACE
+          example: PRIVATE
+        settings:
+          description: Optional default settings to seed on the project (goal, brand voice, audience, style, knowledge).
+          allOf:
+          - $ref: '#/components/schemas/ProjectSettingsDto'
+        metadata:
+          type: object
+          description: An optional set of key-value pairs to attach any data you wish to the project, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long. `null` values are accepted but ignored on create (there is nothing to clear yet) and are supported for symmetry with the update endpoint.
+          additionalProperties:
+            type: string
+            nullable: true
+          example:
+            externalId: ext_123
+            source: crm
+      required:
+      - userId
+      - name
+    ProjectUpdateRequestDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The ID of the user updating the project
+          example: usr_535B1EC15F5F41EAB1B400E9ED4077B6
+        name:
+          type: string
+          description: The name of the project
+          example: Updated Project name
+        accessLevel:
+          type: string
+          description: Who can access the project. `PRIVATE` restricts access to the owning user (plus anyone explicitly shared in); `WORKSPACE` shares the project with every member of the calling workspace. Omit to leave the current access level unchanged.
+          enum:
+          - PRIVATE
+          - WORKSPACE
+          example: PRIVATE
+        settings:
+          description: Updated default settings for the project (goal, brand voice, audience, style, knowledge). Omit a field to leave it unchanged.
+          allOf:
+          - $ref: '#/components/schemas/ProjectSettingsDto'
+        metadata:
+          type: object
+          description: An optional set of key-value pairs to attach any data you wish to the project, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long. Provided string values upsert that key; pass `null` for a key to remove it; omit this field entirely to leave the existing metadata unchanged.
+          additionalProperties:
+            type: string
+            nullable: true
+          example:
+            externalId: ext_123
+            source: null
   securitySchemes:
     X-API-Key:
       type: apiKey

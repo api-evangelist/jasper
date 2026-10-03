@@ -239,6 +239,20 @@ paths:
       - Documents
 components:
   schemas:
+    DocumentDeleteResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: documents
+        deleted:
+          type: boolean
+          example: true
+      required:
+      - deleted
     DocumentCreateDto:
       type: object
       properties:
@@ -272,20 +286,6 @@ components:
       - userId
       - content
       - name
-    DocumentDeleteResponse:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: documents
-        deleted:
-          type: boolean
-          example: true
-      required:
-      - deleted
     DocumentsData:
       type: object
       properties:
@@ -335,19 +335,6 @@ components:
       - status
       - userId
       - appUrl
-    DocumentResponse:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: documents
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentsData'
     DocumentUpdateDto:
       type: object
       properties:
@@ -380,6 +367,19 @@ components:
       required:
       - userId
       - name
+    DocumentResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: documents
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentsData'
   securitySchemes:
     X-API-Key:
       type: apiKey
