@@ -55,38 +55,6 @@ paths:
       - Attachments
 components:
   schemas:
-    Attachment500Error:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          example: 500
-        message:
-          type: string
-          example: Couldn't create attachment
-        error:
-          type: string
-          example: Internal Server Error
-      required:
-      - statusCode
-      - message
-      - error
-    Attachment400Error:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          example: 400
-        message:
-          type: string
-          example: 'Unsupported file type "exe". Supported extensions: pdf, docx, txt, md, png, …'
-        error:
-          type: string
-          example: Bad Request
-      required:
-      - statusCode
-      - message
-      - error
     CreateAttachmentResource:
       type: object
       properties:
@@ -105,6 +73,22 @@ components:
       required:
       - id
       - type
+    Attachment500Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 500
+        message:
+          type: string
+          example: Couldn't create attachment
+        error:
+          type: string
+          example: Internal Server Error
+      required:
+      - statusCode
+      - message
+      - error
     CreateAttachmentDto:
       type: object
       properties:
@@ -128,6 +112,22 @@ components:
       required:
       - type
       - value
+    Attachment400Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 400
+        message:
+          type: string
+          example: 'Unsupported file type "exe". Supported extensions: pdf, docx, txt, md, png, …'
+        error:
+          type: string
+          example: Bad Request
+      required:
+      - statusCode
+      - message
+      - error
     CreateAttachmentResponseDto:
       type: object
       properties:

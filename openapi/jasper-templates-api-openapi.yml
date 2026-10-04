@@ -101,29 +101,59 @@ paths:
       - Templates
 components:
   schemas:
-    WebSearchOptions:
+    WebScraperOptions:
       type: object
       properties:
-        siteBlockList:
-          description: An optional list of domains for Jasper to omit from the search results. For example, providing mycompetor.com will filter out results returned with that domain and it’s subdomains, such as blog.mycompetitor.com. If nothing is provided, all search results will be used for the generation.
+        urls:
+          description: An optional list of URLs for Jasper to scrape during generation to use as context. Max of 3 per request. If nothing is provided, Jasper will automatically detect URLs in the request inputs to use as context for the generation.
           example:
-          - https://en.wikipedia.org
+          - https://en.wikipedia.org/wiki/Rabbit
+          - https://en.wikipedia.org/wiki/Lagomorpha
           type: array
           items:
             type: string
-        searchQuery:
+    GetTemplateResponseDto:
+      type: object
+      properties:
+        requestId:
           type: string
-          description: A query to override the default behavior for how Jasper searches the web. If nothing is provided, Jasper will automatically define an appropriate query based on the inputs supplied.
-          example: Recent bear attacks in Alaska
-        maxResults:
-          type: number
-          description: The number of search results to use for additional context when generating a response
-          enum:
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: template
+        data:
+          $ref: '#/components/schemas/Template'
+      required:
+      - data
+    CompleteTemplateResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: content
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeneratedText'
+    GeneratedText:
+      type: object
+      properties:
+        text:
+          type: string
+          example: '
+
+
+            Furry friends so sweet,
+
+            Nibbling on fresh kale leaves,
+
+            Soft hops fill the breeze.'
+        id:
+          type: string
+          example: txt_bce766eaa4ef48e59da1d9602bfecf2d
     InputSchemaItem:
       type: object
       properties:
@@ -166,57 +196,34 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InputItemOption'
-    CompleteTemplateResponse:
+    Template:
       type: object
       properties:
-        requestId:
+        id:
           type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
+          description: The template's unique identifier.
+          example: skl_03a2b34578094db09dd806e49f2e15d1
+        name:
           type: string
-          example: content
-        data:
+          description: The template's name.
+          example: Product Descriptions
+        description:
+          type: string
+          description: The template's description.
+          example: Create compelling product descriptions to be used on websites, emails and social media.
+        responseFormats:
+          description: The template's supported response formats.
+          example:
+          - text
+          - json
           type: array
           items:
-            $ref: '#/components/schemas/GeneratedText'
-    InputItemOption:
-      type: object
-      properties:
-        label:
-          type: string
-          description: The displayed value in a select input's dropdown.
-          example: First Option
-        value:
-          type: string
-          description: The value to use in the associated input when completing the template.
-          example: option1
-    CompleteTemplateRequest:
-      type: object
-      properties:
-        inputs:
-          description: A template's inputs. The required inputs for the given template should match it's inputKey values, which are available in the response from a GET request to templates. In addition, a tone can be optionally applied to any template.
-          example:
-            productName: Snazzy Snooze Machine
-            productDescription: Hits snooze on your alarm for you
-            tone: Clever, Witty
-            knowledgeIds:
-            - kno_bce766eaa4ef48e59da1d9602bfecf2d
-            - kno_61cb0d23f2cd4cc2b4e6fd25057dfc1a
-            styleId: sty_2ee766eaa4ef48e59da1d9602bfecf2d
-            audienceId: aud_2ee766eaa4ef48e59da1d9602bfecf2d
-            toneId: ton_2ee766eaa4ef48e59d9602bfecf2d
-            retrievalAddOn: webScraper
-          additionalProperties:
-            oneOf:
-            - type: string
-          allOf:
-          - $ref: '#/components/schemas/CompleteTemplateInputs'
-        options:
+            type: string
+        inputSchema:
           description: The schema of a template's allowed inputs.
-          allOf:
-          - $ref: '#/components/schemas/RequestOptionsDto'
-      required:
-      - inputs
+          type: array
+          items:
+            $ref: '#/components/schemas/InputSchemaItem'
     RequestOptionsDto:
       type: object
       properties:
@@ -266,35 +273,6 @@ components:
           description: Optional parameters for further customizing the behavior of the webSearch add-on.
           allOf:
           - $ref: '#/components/schemas/WebSearchOptions'
-    GetTemplateResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: template
-        data:
-          $ref: '#/components/schemas/Template'
-      required:
-      - data
-    GeneratedText:
-      type: object
-      properties:
-        text:
-          type: string
-          example: '
-
-
-            Furry friends so sweet,
-
-            Nibbling on fresh kale leaves,
-
-            Soft hops fill the breeze.'
-        id:
-          type: string
-          example: txt_bce766eaa4ef48e59da1d9602bfecf2d
     CompleteTemplateInputs:
       type: object
       properties:
@@ -330,45 +308,40 @@ components:
           enum:
           - webScraper
           - webSearch
-    Template:
+    InputItemOption:
       type: object
       properties:
-        id:
+        label:
           type: string
-          description: The template's unique identifier.
-          example: skl_03a2b34578094db09dd806e49f2e15d1
-        name:
+          description: The displayed value in a select input's dropdown.
+          example: First Option
+        value:
           type: string
-          description: The template's name.
-          example: Product Descriptions
-        description:
-          type: string
-          description: The template's description.
-          example: Create compelling product descriptions to be used on websites, emails and social media.
-        responseFormats:
-          description: The template's supported response formats.
+          description: The value to use in the associated input when completing the template.
+          example: option1
+    WebSearchOptions:
+      type: object
+      properties:
+        siteBlockList:
+          description: An optional list of domains for Jasper to omit from the search results. For example, providing mycompetor.com will filter out results returned with that domain and it’s subdomains, such as blog.mycompetitor.com. If nothing is provided, all search results will be used for the generation.
           example:
-          - text
-          - json
+          - https://en.wikipedia.org
           type: array
           items:
             type: string
-        inputSchema:
-          description: The schema of a template's allowed inputs.
-          type: array
-          items:
-            $ref: '#/components/schemas/InputSchemaItem'
-    WebScraperOptions:
-      type: object
-      properties:
-        urls:
-          description: An optional list of URLs for Jasper to scrape during generation to use as context. Max of 3 per request. If nothing is provided, Jasper will automatically detect URLs in the request inputs to use as context for the generation.
-          example:
-          - https://en.wikipedia.org/wiki/Rabbit
-          - https://en.wikipedia.org/wiki/Lagomorpha
-          type: array
-          items:
-            type: string
+        searchQuery:
+          type: string
+          description: A query to override the default behavior for how Jasper searches the web. If nothing is provided, Jasper will automatically define an appropriate query based on the inputs supplied.
+          example: Recent bear attacks in Alaska
+        maxResults:
+          type: number
+          description: The number of search results to use for additional context when generating a response
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
     GetAllTemplatesResponseDto:
       type: object
       properties:
@@ -382,6 +355,33 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Template'
+    CompleteTemplateRequest:
+      type: object
+      properties:
+        inputs:
+          description: A template's inputs. The required inputs for the given template should match it's inputKey values, which are available in the response from a GET request to templates. In addition, a tone can be optionally applied to any template.
+          example:
+            productName: Snazzy Snooze Machine
+            productDescription: Hits snooze on your alarm for you
+            tone: Clever, Witty
+            knowledgeIds:
+            - kno_bce766eaa4ef48e59da1d9602bfecf2d
+            - kno_61cb0d23f2cd4cc2b4e6fd25057dfc1a
+            styleId: sty_2ee766eaa4ef48e59da1d9602bfecf2d
+            audienceId: aud_2ee766eaa4ef48e59da1d9602bfecf2d
+            toneId: ton_2ee766eaa4ef48e59d9602bfecf2d
+            retrievalAddOn: webScraper
+          additionalProperties:
+            oneOf:
+            - type: string
+          allOf:
+          - $ref: '#/components/schemas/CompleteTemplateInputs'
+        options:
+          description: The schema of a template's allowed inputs.
+          allOf:
+          - $ref: '#/components/schemas/RequestOptionsDto'
+      required:
+      - inputs
   securitySchemes:
     X-API-Key:
       type: apiKey

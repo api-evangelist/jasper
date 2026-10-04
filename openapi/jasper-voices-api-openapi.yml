@@ -178,53 +178,6 @@ paths:
       - Voices
 components:
   schemas:
-    ToneDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The friendly name of the voice.
-          example: It's-a me, Mario!
-        value:
-          type: string
-          description: The voice's description
-          example: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident, charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage and entertain the audience.
-        metadata:
-          type: object
-          description: An optional set of key-value pairs to attach any data you wish to the voice, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long.
-        settings:
-          description: Additional configuration options.
-          allOf:
-          - $ref: '#/components/schemas/ToneSettingsDto'
-        id:
-          type: string
-          example: ton_2ee766eaa4ef48e59da1d9602bfecf2d
-        createdAt:
-          type: string
-          example: '2023-09-21T15:38:00.474Z'
-        updatedAt:
-          type: string
-          example: '2023-09-21T15:38:00.474Z'
-        appUrl:
-          type: string
-          description: The client URL to view the voice in the Jasper app. Empty when no link can be resolved.
-          example: https://app.jasper.ai/jasper-iq/brand-voice/ton_2ee766eaa4ef48e59da1d9602bfecf2d
-      required:
-      - name
-      - value
-    DeleteToneResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: tone
-        deleted:
-          type: boolean
-      required:
-      - deleted
     GetAllTonesResponseDto:
       type: object
       properties:
@@ -259,6 +212,19 @@ components:
       required:
       - name
       - value
+    DeleteToneResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: tone
+        deleted:
+          type: boolean
+      required:
+      - deleted
     ToneSettingsDto:
       type: object
       properties:
@@ -270,6 +236,51 @@ components:
           enum:
           - visible
           - hidden
+    GetToneResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: tone
+        data:
+          $ref: '#/components/schemas/ToneDto'
+    ToneDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The friendly name of the voice.
+          example: It's-a me, Mario!
+        value:
+          type: string
+          description: The voice's description
+          example: This voice is energetic, playful, and humorous, characterized by exclamations, wordplay, and a confident, charismatic character, with techniques including catchphrases, direct address, and hyperbole to engage and entertain the audience.
+        metadata:
+          type: object
+          description: An optional set of key-value pairs to attach any data you wish to the voice, in a structured format. You can specify up to 10 keys, with key names up to 40 characters long and values up to 500 characters long.
+        settings:
+          description: Additional configuration options.
+          allOf:
+          - $ref: '#/components/schemas/ToneSettingsDto'
+        id:
+          type: string
+          example: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+        createdAt:
+          type: string
+          example: '2023-09-21T15:38:00.474Z'
+        updatedAt:
+          type: string
+          example: '2023-09-21T15:38:00.474Z'
+        appUrl:
+          type: string
+          description: The client URL to view the voice in the Jasper app. Empty when no link can be resolved.
+          example: https://app.jasper.ai/jasper-iq/brand-voice/ton_2ee766eaa4ef48e59da1d9602bfecf2d
+      required:
+      - name
+      - value
     UpdateToneDto:
       type: object
       properties:
@@ -288,17 +299,6 @@ components:
           description: Additional configuration options.
           allOf:
           - $ref: '#/components/schemas/ToneSettingsDto'
-    GetToneResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: tone
-        data:
-          $ref: '#/components/schemas/ToneDto'
     TonePaginationDto:
       type: object
       properties:

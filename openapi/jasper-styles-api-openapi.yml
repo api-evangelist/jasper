@@ -73,21 +73,6 @@ paths:
       - Styles
 components:
   schemas:
-    StyleError:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: 000000-0000-0000-0000-000000000000
-        resource:
-          type: string
-          example: style
-        errors:
-          example:
-          - error message
-          type: array
-          items:
-            type: array
     StyleResponseDto:
       type: object
       properties:
@@ -211,6 +196,21 @@ components:
       - appUrl
       - terms
       - rules
+    StyleError:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: 000000-0000-0000-0000-000000000000
+        resource:
+          type: string
+          example: style
+        errors:
+          example:
+          - error message
+          type: array
+          items:
+            type: array
   securitySchemes:
     X-API-Key:
       type: apiKey

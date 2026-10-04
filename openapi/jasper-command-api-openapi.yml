@@ -41,42 +41,33 @@ paths:
       - Command
 components:
   schemas:
-    WebSearchOptions:
+    WebScraperOptions:
       type: object
       properties:
-        siteBlockList:
-          description: An optional list of domains for Jasper to omit from the search results. For example, providing mycompetor.com will filter out results returned with that domain and it’s subdomains, such as blog.mycompetitor.com. If nothing is provided, all search results will be used for the generation.
+        urls:
+          description: An optional list of URLs for Jasper to scrape during generation to use as context. Max of 3 per request. If nothing is provided, Jasper will automatically detect URLs in the request inputs to use as context for the generation.
           example:
-          - https://en.wikipedia.org
+          - https://en.wikipedia.org/wiki/Rabbit
+          - https://en.wikipedia.org/wiki/Lagomorpha
           type: array
           items:
             type: string
-        searchQuery:
-          type: string
-          description: A query to override the default behavior for how Jasper searches the web. If nothing is provided, Jasper will automatically define an appropriate query based on the inputs supplied.
-          example: Recent bear attacks in Alaska
-        maxResults:
-          type: number
-          description: The number of search results to use for additional context when generating a response
-          enum:
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-    CommandDto:
+    GeneratedText:
       type: object
       properties:
-        inputs:
-          description: Inputs for generating a command
-          allOf:
-          - $ref: '#/components/schemas/CommandInputs'
-        options:
-          description: Options for generating a command
-          allOf:
-          - $ref: '#/components/schemas/CommandOptions'
-      required:
-      - inputs
+        text:
+          type: string
+          example: '
+
+
+            Furry friends so sweet,
+
+            Nibbling on fresh kale leaves,
+
+            Soft hops fill the breeze.'
+        id:
+          type: string
+          example: txt_bce766eaa4ef48e59da1d9602bfecf2d
     CommandOptions:
       type: object
       properties:
@@ -133,6 +124,42 @@ components:
           - performance
           - quality
           default: performance
+    WebSearchOptions:
+      type: object
+      properties:
+        siteBlockList:
+          description: An optional list of domains for Jasper to omit from the search results. For example, providing mycompetor.com will filter out results returned with that domain and it’s subdomains, such as blog.mycompetitor.com. If nothing is provided, all search results will be used for the generation.
+          example:
+          - https://en.wikipedia.org
+          type: array
+          items:
+            type: string
+        searchQuery:
+          type: string
+          description: A query to override the default behavior for how Jasper searches the web. If nothing is provided, Jasper will automatically define an appropriate query based on the inputs supplied.
+          example: Recent bear attacks in Alaska
+        maxResults:
+          type: number
+          description: The number of search results to use for additional context when generating a response
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+    CommandDto:
+      type: object
+      properties:
+        inputs:
+          description: Inputs for generating a command
+          allOf:
+          - $ref: '#/components/schemas/CommandInputs'
+        options:
+          description: Options for generating a command
+          allOf:
+          - $ref: '#/components/schemas/CommandOptions'
+      required:
+      - inputs
     CommandInputs:
       type: object
       properties:
@@ -178,33 +205,6 @@ components:
           - webSearch
       required:
       - command
-    WebScraperOptions:
-      type: object
-      properties:
-        urls:
-          description: An optional list of URLs for Jasper to scrape during generation to use as context. Max of 3 per request. If nothing is provided, Jasper will automatically detect URLs in the request inputs to use as context for the generation.
-          example:
-          - https://en.wikipedia.org/wiki/Rabbit
-          - https://en.wikipedia.org/wiki/Lagomorpha
-          type: array
-          items:
-            type: string
-    GeneratedText:
-      type: object
-      properties:
-        text:
-          type: string
-          example: '
-
-
-            Furry friends so sweet,
-
-            Nibbling on fresh kale leaves,
-
-            Soft hops fill the breeze.'
-        id:
-          type: string
-          example: txt_bce766eaa4ef48e59da1d9602bfecf2d
     CommandResponseDto:
       type: object
       properties:

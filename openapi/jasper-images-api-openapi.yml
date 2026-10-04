@@ -474,6 +474,15 @@ paths:
       - Images
 components:
   schemas:
+    ImageAltTextResponseDto:
+      type: object
+      properties:
+        altText:
+          type: string
+          description: The alt text of the image.
+          example: A dog running in a field.
+      required:
+      - altText
     ImageAltTextRequestDto:
       type: object
       properties:
@@ -506,15 +515,6 @@ components:
       required:
       - imageUrl
       - question
-    ImageAltTextResponseDto:
-      type: object
-      properties:
-        altText:
-          type: string
-          description: The alt text of the image.
-          example: A dog running in a field.
-      required:
-      - altText
   securitySchemes:
     X-API-Key:
       type: apiKey
