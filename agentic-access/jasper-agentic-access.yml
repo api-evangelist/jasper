@@ -1,17 +1,21 @@
-generated: '2026-08-13'
+generated: '2026-09-23'
 method: generated
-source: openapi/jasper-api-openapi.yml
+source: openapi/jasper-attachments-api-openapi.yml, openapi/jasper-audiences-api-openapi.yml,
+  openapi/jasper-command-api-openapi.yml, openapi/jasper-documents-api-openapi.yml, openapi/jasper-image-templates-api-openapi.yml,
+  openapi/jasper-images-api-openapi.yml, openapi/jasper-knowledge-api-openapi.yml, openapi/jasper-projects-api-openapi.yml,
+  openapi/jasper-styles-api-openapi.yml, openapi/jasper-tasks-api-openapi.yml, openapi/jasper-templates-api-openapi.yml,
+  openapi/jasper-usage-api-openapi.yml, openapi/jasper-users-api-openapi.yml, openapi/jasper-voices-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 50
   by_action_class:
-    acting: 30
-    connected: 20
+    acting: 29
+    connected: 21
   by_consequence:
-    write: 30
-    read: 20
+    write: 29
+    read: 21
   human_in_the_loop_required: 0
 operations:
 - path: /v1/attachments
@@ -32,66 +36,30 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /v1/tasks
+- path: /v1/audiences/{audienceId}
   method: get
-  operationId: listTasks
+  operationId: getAudienceById
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
     scope:
-    - user:read
+    - user
     token:
       max-ttl: 3600
     audit: none
-- path: /v1/tasks/{id}
+- path: /v1/audiences
   method: get
-  operationId: getTaskById
+  operationId: getAllAudiences
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
     scope:
-    - user:read
+    - user
     token:
       max-ttl: 3600
     audit: none
-- path: /v1/tasks/{id}/run
-  method: post
-  operationId: runTask
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - user
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/tasks/{id}/run/stream
-  method: post
-  operationId: runTaskStream
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - user
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /v1/command
   method: post
   operationId: command
@@ -110,204 +78,6 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /v1/knowledge
-  method: post
-  operationId: uploadKnowledgeDocument
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - user
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/knowledge
-  method: get
-  operationId: getKnowledgeDocuments
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - user
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/knowledge/{knowledgeId}
-  method: get
-  operationId: getKnowledgeDocument
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - user
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/knowledge/{knowledgeId}
-  method: patch
-  operationId: updateKnowledgeDocument
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - user
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/knowledge/{knowledgeId}
-  method: delete
-  operationId: deleteKnowledgeDocument
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - user
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/knowledge/search
-  method: post
-  operationId: searchKnowledge
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - user
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/tones
-  method: post
-  operationId: createTone
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - user
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/tones
-  method: get
-  operationId: getAllTones
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - user
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/tones/{toneId}
-  method: get
-  operationId: getTone
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - user
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/tones/{toneId}
-  method: patch
-  operationId: updateTone
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - user
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/tones/{toneId}
-  method: delete
-  operationId: deleteTone
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - user
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/styles
-  method: get
-  operationId: getStyle
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - user
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/styles/{styleId}
-  method: get
-  operationId: getStyleById
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - user
-    token:
-      max-ttl: 3600
-    audit: none
 - path: /v1/documents
   method: get
   operationId: getAllDocuments
@@ -386,30 +156,52 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /v1/users
+- path: /beta/image-template
+  method: post
+  operationId: createImageTemplate
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - user
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /beta/image-template/{template_id}
   method: get
-  operationId: getAllUsers
+  operationId: getImageTemplate
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
-    scope:
-    - user
     token:
       max-ttl: 3600
     audit: none
-- path: /v1/users/{userId}
-  method: get
-  operationId: getUser
+- path: /beta/image-template/render
+  method: post
+  operationId: renderImageTemplate
   x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
+    action-class: acting
+    consequence: write
+    subject: required
     scope:
     - user
+    audience: null
     token:
-      max-ttl: 3600
-    audit: none
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /v1/image/remove-background
   method: post
   operationId: removeBackground
@@ -590,9 +382,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /beta/image-template
+- path: /v1/knowledge
   method: post
-  operationId: createImageTemplate
+  operationId: uploadKnowledgeDocument
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -608,19 +400,33 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /beta/image-template/{template_id}
+- path: /v1/knowledge
   method: get
-  operationId: getImageTemplate
+  operationId: getKnowledgeDocuments
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
+    scope:
+    - user
     token:
       max-ttl: 3600
     audit: none
-- path: /beta/image-template/render
-  method: post
-  operationId: renderImageTemplate
+- path: /v1/knowledge/{knowledgeId}
+  method: get
+  operationId: getKnowledgeDocument
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - user
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/knowledge/{knowledgeId}
+  method: patch
+  operationId: updateKnowledgeDocument
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -636,6 +442,36 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /v1/knowledge/{knowledgeId}
+  method: delete
+  operationId: deleteKnowledgeDocument
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - user
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/knowledge/search
+  method: post
+  operationId: searchKnowledge
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - user
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /v1/projects
   method: post
   operationId: createProject
@@ -714,6 +550,90 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /v1/styles
+  method: get
+  operationId: getStyle
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - user
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/styles/{styleId}
+  method: get
+  operationId: getStyleById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - user
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/tasks
+  method: get
+  operationId: listTasks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - user:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/tasks/{id}
+  method: get
+  operationId: getTaskById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - user:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/tasks/{id}/run
+  method: post
+  operationId: runTask
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - user
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/tasks/{id}/run/stream
+  method: post
+  operationId: runTaskStream
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - user
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /v1/templates
   method: get
   operationId: getAllTemplates
@@ -768,9 +688,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /v1/audiences/{audienceId}
+- path: /v1/users
   method: get
-  operationId: getAudienceById
+  operationId: getAllUsers
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -780,9 +700,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /v1/audiences
+- path: /v1/users/{userId}
   method: get
-  operationId: getAllAudiences
+  operationId: getUser
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -792,3 +712,81 @@ operations:
     token:
       max-ttl: 3600
     audit: none
+- path: /v1/tones
+  method: post
+  operationId: createTone
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - user
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/tones
+  method: get
+  operationId: getAllTones
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - user
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/tones/{toneId}
+  method: get
+  operationId: getTone
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - user
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/tones/{toneId}
+  method: patch
+  operationId: updateTone
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - user
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/tones/{toneId}
+  method: delete
+  operationId: deleteTone
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - user
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required

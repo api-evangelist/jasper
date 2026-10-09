@@ -50,3 +50,25 @@ plans:
   note: >-
     "API access" is listed as a Business-plan line item, and the Jasper authentication docs confirm
     API tokens require the Business plan. There is no self-serve path to the API.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - negotiated
+  - seat
+  units:
+  - seat
+  plans:
+  - name: Pro
+    access: other
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods: []
+  - name: Business
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
