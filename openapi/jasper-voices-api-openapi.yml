@@ -178,19 +178,6 @@ paths:
       - Voices
 components:
   schemas:
-    GetAllTonesResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: tone
-        data:
-          $ref: '#/components/schemas/ToneDto'
-        pagination:
-          $ref: '#/components/schemas/TonePaginationDto'
     CreateToneDto:
       type: object
       properties:
@@ -225,28 +212,6 @@ components:
           type: boolean
       required:
       - deleted
-    ToneSettingsDto:
-      type: object
-      properties:
-        appVisibility:
-          type: string
-          description: Whether the brand is available in the Jasper app. Provides a way to omit voices created from the API, from being available in the Jasper app experience. One of "visible" or "hidden". Defaults to "visible".
-          default: visible
-          example: visible
-          enum:
-          - visible
-          - hidden
-    GetToneResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: tone
-        data:
-          $ref: '#/components/schemas/ToneDto'
     ToneDto:
       type: object
       properties:
@@ -281,6 +246,17 @@ components:
       required:
       - name
       - value
+    ToneSettingsDto:
+      type: object
+      properties:
+        appVisibility:
+          type: string
+          description: Whether the brand is available in the Jasper app. Provides a way to omit voices created from the API, from being available in the Jasper app experience. One of "visible" or "hidden". Defaults to "visible".
+          default: visible
+          example: visible
+          enum:
+          - visible
+          - hidden
     UpdateToneDto:
       type: object
       properties:
@@ -299,6 +275,17 @@ components:
           description: Additional configuration options.
           allOf:
           - $ref: '#/components/schemas/ToneSettingsDto'
+    GetToneResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: tone
+        data:
+          $ref: '#/components/schemas/ToneDto'
     TonePaginationDto:
       type: object
       properties:
@@ -317,6 +304,19 @@ components:
         prev:
           type: object
           description: URL for requesting the previous page
+    GetAllTonesResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: tone
+        data:
+          $ref: '#/components/schemas/ToneDto'
+        pagination:
+          $ref: '#/components/schemas/TonePaginationDto'
   securitySchemes:
     X-API-Key:
       type: apiKey

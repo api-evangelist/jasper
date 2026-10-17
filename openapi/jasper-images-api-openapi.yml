@@ -483,15 +483,6 @@ components:
           example: A dog running in a field.
       required:
       - altText
-    ImageAltTextRequestDto:
-      type: object
-      properties:
-        imageUrl:
-          type: string
-          description: The URL of the image to check.
-          example: https://example.com/image.png
-      required:
-      - imageUrl
     ImageAnalysisResponseDto:
       type: object
       properties:
@@ -515,6 +506,15 @@ components:
       required:
       - imageUrl
       - question
+    ImageAltTextRequestDto:
+      type: object
+      properties:
+        imageUrl:
+          type: string
+          description: The URL of the image to check.
+          example: https://example.com/image.png
+      required:
+      - imageUrl
   securitySchemes:
     X-API-Key:
       type: apiKey

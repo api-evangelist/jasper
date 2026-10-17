@@ -90,6 +90,38 @@ paths:
       - Audiences
 components:
   schemas:
+    AdditionalCharacteristicDto:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+      required:
+      - key
+      - value
+    ObjectionResponseDto:
+      type: object
+      properties:
+        objection:
+          type: string
+        response:
+          type: string
+      required:
+      - objection
+      - response
+    ContentChecklistDto:
+      type: object
+      properties:
+        category:
+          type: string
+        checklistItems:
+          type: array
+          items:
+            type: string
+      required:
+      - category
+      - checklistItems
     AudiencesResponse:
       type: object
       properties:
@@ -103,16 +135,53 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/GetAudienceResponseDto'
-    AdditionalCharacteristicDto:
+    AudienceResponse:
       type: object
       properties:
-        key:
+        requestId:
           type: string
-        value:
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: audience
+        data:
+          $ref: '#/components/schemas/GetAudienceResponseDto'
+    CoreMessagingDto:
+      type: object
+      properties:
+        valuePropositions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValuePropositionDto'
+        positioningStatement:
           type: string
       required:
-      - key
-      - value
+      - valuePropositions
+      - positioningStatement
+    ContentEngagementPatternsDto:
+      type: object
+      properties:
+        proofPoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProofPointDto'
+        attentionHooks:
+          type: array
+          items:
+            type: string
+        engagementTriggers:
+          type: array
+          items:
+            type: string
+        objectionResponses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObjectionResponseDto'
+      required:
+      - proofPoints
+      - attentionHooks
+      - engagementTriggers
+      - objectionResponses
     ProofPointDto:
       type: object
       properties:
@@ -125,18 +194,6 @@ components:
       required:
       - category
       - examples
-    ContentChecklistDto:
-      type: object
-      properties:
-        category:
-          type: string
-        checklistItems:
-          type: array
-          items:
-            type: string
-      required:
-      - category
-      - checklistItems
     LanguagePatternsDto:
       type: object
       properties:
@@ -166,6 +223,16 @@ components:
       - powerWords
       - powerPhrases
       - technicalLevel
+    ContextSourceDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - id
+      - name
     GetAudienceResponseDto:
       type: object
       properties:
@@ -239,53 +306,6 @@ components:
       - updatedAt
       - contextSources
       - appUrl
-    ContentEngagementPatternsDto:
-      type: object
-      properties:
-        proofPoints:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProofPointDto'
-        attentionHooks:
-          type: array
-          items:
-            type: string
-        engagementTriggers:
-          type: array
-          items:
-            type: string
-        objectionResponses:
-          type: array
-          items:
-            $ref: '#/components/schemas/ObjectionResponseDto'
-      required:
-      - proofPoints
-      - attentionHooks
-      - engagementTriggers
-      - objectionResponses
-    CoreMessagingDto:
-      type: object
-      properties:
-        valuePropositions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValuePropositionDto'
-        positioningStatement:
-          type: string
-      required:
-      - valuePropositions
-      - positioningStatement
-    AudienceResponse:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: audience
-        data:
-          $ref: '#/components/schemas/GetAudienceResponseDto'
     ValuePropositionDto:
       type: object
       properties:
@@ -296,26 +316,6 @@ components:
       required:
       - title
       - description
-    ObjectionResponseDto:
-      type: object
-      properties:
-        objection:
-          type: string
-        response:
-          type: string
-      required:
-      - objection
-      - response
-    ContextSourceDto:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-      required:
-      - id
-      - name
   securitySchemes:
     X-API-Key:
       type: apiKey

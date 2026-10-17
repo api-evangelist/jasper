@@ -55,6 +55,37 @@ paths:
       - Attachments
 components:
   schemas:
+    CreateAttachmentResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: 8393f82b3f6a4f6e8a405777b9305254
+        resource:
+          type: string
+          example: knowledge
+        data:
+          $ref: '#/components/schemas/CreateAttachmentResource'
+      required:
+      - requestId
+      - resource
+      - data
+    Attachment500Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 500
+        message:
+          type: string
+          example: Couldn't create attachment
+        error:
+          type: string
+          example: Internal Server Error
+      required:
+      - statusCode
+      - message
+      - error
     CreateAttachmentResource:
       type: object
       properties:
@@ -73,22 +104,6 @@ components:
       required:
       - id
       - type
-    Attachment500Error:
-      type: object
-      properties:
-        statusCode:
-          type: number
-          example: 500
-        message:
-          type: string
-          example: Couldn't create attachment
-        error:
-          type: string
-          example: Internal Server Error
-      required:
-      - statusCode
-      - message
-      - error
     CreateAttachmentDto:
       type: object
       properties:
@@ -128,21 +143,6 @@ components:
       - statusCode
       - message
       - error
-    CreateAttachmentResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: 8393f82b3f6a4f6e8a405777b9305254
-        resource:
-          type: string
-          example: knowledge
-        data:
-          $ref: '#/components/schemas/CreateAttachmentResource'
-      required:
-      - requestId
-      - resource
-      - data
   securitySchemes:
     X-API-Key:
       type: apiKey

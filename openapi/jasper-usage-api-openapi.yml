@@ -60,6 +60,17 @@ paths:
       - Usage
 components:
   schemas:
+    UsageResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: usage
+        data:
+          $ref: '#/components/schemas/UsageRequest'
     Usage:
       type: object
       properties:
@@ -83,17 +94,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Usage'
-    UsageResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: usage
-        data:
-          $ref: '#/components/schemas/UsageRequest'
   securitySchemes:
     X-API-Key:
       type: apiKey

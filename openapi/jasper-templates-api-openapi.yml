@@ -101,101 +101,64 @@ paths:
       - Templates
 components:
   schemas:
-    WebScraperOptions:
+    CompleteTemplateInputs:
       type: object
       properties:
-        urls:
-          description: An optional list of URLs for Jasper to scrape during generation to use as context. Max of 3 per request. If nothing is provided, Jasper will automatically detect URLs in the request inputs to use as context for the generation.
-          example:
-          - https://en.wikipedia.org/wiki/Rabbit
-          - https://en.wikipedia.org/wiki/Lagomorpha
+        knowledgeIds:
+          description: A list of knowledge items to use when generating content. Up to 3 knowledge items are allowed.
+          example: '[kno_bce766eaa4ef48e59da1d9602bfecf2d, kno_61cb0d23f2cd4cc2b4e6fd25057dfc1a]'
           type: array
           items:
             type: string
-    GetTemplateResponseDto:
-      type: object
-      properties:
-        requestId:
+        toneId:
           type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
+          description: Tone to use when running the template
+          example: ton_2ee766eaa4ef48e59da1d9602bfecf2d
+        styleId:
           type: string
-          example: template
-        data:
-          $ref: '#/components/schemas/Template'
-      required:
-      - data
-    CompleteTemplateResponse:
-      type: object
-      properties:
-        requestId:
+          description: Style to use when running the template
+          example: sty_2ee766eaa4ef48e59da1d9602bfecf2d
+        audienceId:
           type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: content
-        data:
+          description: The primary audience ID to use when running the template.
+          example: aud_2ee766eaa4ef48e59da1d9602bfecf2d
+        additionalAudienceIds:
+          description: Additional audience IDs to include alongside the primary `audienceId` when running the template.
+          example:
+          - aud_7c1f0b9d2e4a4f6b8d3c5a1e9f0b2c4d
+          - aud_3a9e5d1c8b7f4062a1d3e6c9b0f8a2e7
           type: array
           items:
-            $ref: '#/components/schemas/GeneratedText'
-    GeneratedText:
-      type: object
-      properties:
-        text:
+            type: string
+        retrievalAddOn:
           type: string
-          example: '
-
-
-            Furry friends so sweet,
-
-            Nibbling on fresh kale leaves,
-
-            Soft hops fill the breeze.'
-        id:
-          type: string
-          example: txt_bce766eaa4ef48e59da1d9602bfecf2d
-    InputSchemaItem:
-      type: object
-      properties:
-        inputKey:
-          type: string
-          description: The key to be used in the request body's inputs when using the `Run Template` endpoint to complete the template generation.
-          example: productName
-        type:
-          type: string
-          description: The expected type of the input's value
+          description: The add-on to use to further enhance your generation with information that lives outside of Jasper. You can further customize the behavior of the add-on with the associated parameter in the options portion of your request body.
           enum:
-          - string
-          - boolean
-          - number
-          - string[]
-          - knowledge[]
-          example: string
-        required:
-          type: boolean
-          description: Indicates if an input is required to complete the template.
-          example: true
-        maxLength:
-          type: number
-          description: The maximum character count accepted for this input's value
-          example: '800'
-        label:
-          type: string
-          description: The suggested input label.
-          example: Product Name
-        placeholder:
-          type: string
-          description: An input's placeholder that acts as an example input value.
-          example: Sherlock Holmes Adventure Escape Room
-        tooltip:
-          type: string
-          description: An input's tooltip to add additional context for the user.
-          example: This should match the product name found in our company catalog.
-        options:
-          description: '"options" will only be present when type is "select".'
+          - webScraper
+          - webSearch
+    WebSearchOptions:
+      type: object
+      properties:
+        siteBlockList:
+          description: An optional list of domains for Jasper to omit from the search results. For example, providing mycompetor.com will filter out results returned with that domain and it’s subdomains, such as blog.mycompetitor.com. If nothing is provided, all search results will be used for the generation.
+          example:
+          - https://en.wikipedia.org
           type: array
           items:
-            $ref: '#/components/schemas/InputItemOption'
+            type: string
+        searchQuery:
+          type: string
+          description: A query to override the default behavior for how Jasper searches the web. If nothing is provided, Jasper will automatically define an appropriate query based on the inputs supplied.
+          example: Recent bear attacks in Alaska
+        maxResults:
+          type: number
+          description: The number of search results to use for additional context when generating a response
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
     Template:
       type: object
       properties:
@@ -273,41 +236,6 @@ components:
           description: Optional parameters for further customizing the behavior of the webSearch add-on.
           allOf:
           - $ref: '#/components/schemas/WebSearchOptions'
-    CompleteTemplateInputs:
-      type: object
-      properties:
-        knowledgeIds:
-          description: A list of knowledge items to use when generating content. Up to 3 knowledge items are allowed.
-          example: '[kno_bce766eaa4ef48e59da1d9602bfecf2d, kno_61cb0d23f2cd4cc2b4e6fd25057dfc1a]'
-          type: array
-          items:
-            type: string
-        toneId:
-          type: string
-          description: Tone to use when running the template
-          example: ton_2ee766eaa4ef48e59da1d9602bfecf2d
-        styleId:
-          type: string
-          description: Style to use when running the template
-          example: sty_2ee766eaa4ef48e59da1d9602bfecf2d
-        audienceId:
-          type: string
-          description: The primary audience ID to use when running the template.
-          example: aud_2ee766eaa4ef48e59da1d9602bfecf2d
-        additionalAudienceIds:
-          description: Additional audience IDs to include alongside the primary `audienceId` when running the template.
-          example:
-          - aud_7c1f0b9d2e4a4f6b8d3c5a1e9f0b2c4d
-          - aud_3a9e5d1c8b7f4062a1d3e6c9b0f8a2e7
-          type: array
-          items:
-            type: string
-        retrievalAddOn:
-          type: string
-          description: The add-on to use to further enhance your generation with information that lives outside of Jasper. You can further customize the behavior of the add-on with the associated parameter in the options portion of your request body.
-          enum:
-          - webScraper
-          - webSearch
     InputItemOption:
       type: object
       properties:
@@ -319,42 +247,6 @@ components:
           type: string
           description: The value to use in the associated input when completing the template.
           example: option1
-    WebSearchOptions:
-      type: object
-      properties:
-        siteBlockList:
-          description: An optional list of domains for Jasper to omit from the search results. For example, providing mycompetor.com will filter out results returned with that domain and it’s subdomains, such as blog.mycompetitor.com. If nothing is provided, all search results will be used for the generation.
-          example:
-          - https://en.wikipedia.org
-          type: array
-          items:
-            type: string
-        searchQuery:
-          type: string
-          description: A query to override the default behavior for how Jasper searches the web. If nothing is provided, Jasper will automatically define an appropriate query based on the inputs supplied.
-          example: Recent bear attacks in Alaska
-        maxResults:
-          type: number
-          description: The number of search results to use for additional context when generating a response
-          enum:
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-    GetAllTemplatesResponseDto:
-      type: object
-      properties:
-        requestId:
-          type: string
-          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
-        resource:
-          type: string
-          example: template
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Template'
     CompleteTemplateRequest:
       type: object
       properties:
@@ -382,6 +274,114 @@ components:
           - $ref: '#/components/schemas/RequestOptionsDto'
       required:
       - inputs
+    GeneratedText:
+      type: object
+      properties:
+        text:
+          type: string
+          example: '
+
+
+            Furry friends so sweet,
+
+            Nibbling on fresh kale leaves,
+
+            Soft hops fill the breeze.'
+        id:
+          type: string
+          example: txt_bce766eaa4ef48e59da1d9602bfecf2d
+    GetTemplateResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: template
+        data:
+          $ref: '#/components/schemas/Template'
+      required:
+      - data
+    GetAllTemplatesResponseDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: template
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Template'
+    WebScraperOptions:
+      type: object
+      properties:
+        urls:
+          description: An optional list of URLs for Jasper to scrape during generation to use as context. Max of 3 per request. If nothing is provided, Jasper will automatically detect URLs in the request inputs to use as context for the generation.
+          example:
+          - https://en.wikipedia.org/wiki/Rabbit
+          - https://en.wikipedia.org/wiki/Lagomorpha
+          type: array
+          items:
+            type: string
+    CompleteTemplateResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          example: bce766ea-a4ef-48e5-9da1-d9602bfecf2d
+        resource:
+          type: string
+          example: content
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeneratedText'
+    InputSchemaItem:
+      type: object
+      properties:
+        inputKey:
+          type: string
+          description: The key to be used in the request body's inputs when using the `Run Template` endpoint to complete the template generation.
+          example: productName
+        type:
+          type: string
+          description: The expected type of the input's value
+          enum:
+          - string
+          - boolean
+          - number
+          - string[]
+          - knowledge[]
+          example: string
+        required:
+          type: boolean
+          description: Indicates if an input is required to complete the template.
+          example: true
+        maxLength:
+          type: number
+          description: The maximum character count accepted for this input's value
+          example: '800'
+        label:
+          type: string
+          description: The suggested input label.
+          example: Product Name
+        placeholder:
+          type: string
+          description: An input's placeholder that acts as an example input value.
+          example: Sherlock Holmes Adventure Escape Room
+        tooltip:
+          type: string
+          description: An input's tooltip to add additional context for the user.
+          example: This should match the product name found in our company catalog.
+        options:
+          description: '"options" will only be present when type is "select".'
+          type: array
+          items:
+            $ref: '#/components/schemas/InputItemOption'
   securitySchemes:
     X-API-Key:
       type: apiKey
