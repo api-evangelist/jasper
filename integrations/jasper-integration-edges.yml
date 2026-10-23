@@ -42,9 +42,44 @@ edges:
   detected: '2026-10-18'
   detected_by: mirror-platform-listings.py
   category: Slack app
+- partner_name: Hugging Face (hugging-face-hub)
+  partner: hugging-face
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: hugging-face-hub
+  evidence: https://huggingface.co/jasperai
+  mirror_of: hugging-face/integrations/hugging-face-integration-edges.yml
+  apps:
+  - jasperai/monet
+  - jasperai/controllable-shadow-generation-benchmark
+  - jasperai/style-rank
+  - jasperai/Flux.1-dev-Controlnet-Upscaler
+  - jasperai/Flux.1-dev-Controlnet-Depth
+  - jasperai/flash-sd3
+  - jasperai/flash-sdxl
+  - jasperai/Flux.1-dev-Controlnet-Surface-Normals
+  - jasperai/flash-sd
+  - jasperai/flash-pixart
+  - jasperai/LBM_relighting
+  - jasperai/flash-lora
+  - jasperai/flash-diffusion
+  - jasperai/t2i-technical-interactive-report
+  - jasperai/monet-retrieval
+  - jasperai/inversion-instantstyle
+  listing_count: 3
+  detected: '2026-10-23'
+  detected_by: mirror-platform-listings.py
+  category: Hugging Face Hub datasets
+  badges:
+  - Verified publisher (Hugging Face verified organisation)
 method: searched
 checked:
 - https://zapier.com/api/v4/apps/
 - slack/integrations/slack-integration-edges.yml
+- hugging-face/integrations/hugging-face-integration-edges.yml
 source:
 - https://zapier.com/api/v4/apps/
