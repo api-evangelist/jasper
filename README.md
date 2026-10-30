@@ -64,6 +64,151 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Jasper is a company surfaced as a portfolio company of bessemer-venture-partners, insight-partners, ivp, northzone and added to the API Evangelist network as a stub for enrichment. Sector: ai-ml. This profile is a lead awaiting the enrichment pipeline.
+Jasper is an AI platform purpose-built for marketing teams that orchestrates 100+ specialized AI agents and connected content pipelines to run end-to-end marketing workflows — content creation, campaign execution, personalization, and SEO/GEO optimization — while holding brand consistency at scale. Jasper IQ is the governance layer that embeds brand voice, style guides, and marketing context into every output. The Jasper API (https://api.jasper.ai/v1) exposes commands, agent tasks, documents, projects, tones, audiences, knowledge/retrieval, and a full image-editing suite, secured with workspace API keys (X-API-Key) or OAuth 2.0 (authorization code + PKCE, Dynamic Client Registration). Jasper also ships a hosted, remote Model Context Protocol (MCP) server at https://mcp.jasper.ai so agents in Claude, ChatGPT, Copilot Studio, OpenAI Agent Builder, and n8n can create on-brand content. API access is available on the Jasper Business plan.
 
-Backed by: bessemer-venture-partners, insight-partners, ivp, northzone — https://www.jasper.ai/
+**Areas:** Company · Artificial Intelligence · Content Generation · Marketing · Generative AI · Agents · MCP
+
+## Jasper on APIs.io
+
+Everything profiled for Jasper is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/jasper/](https://apis.io/providers/jasper/)** — or go straight to one of the APIs or properties below.
+
+### APIs (14)
+
+- [Jasper Attachments API](https://apis.io/apis/jasper/jasper-attachments-api/) — The Attachments API from Jasper — 1 operation(s) for attachments.
+- [Jasper Audiences API](https://apis.io/apis/jasper/jasper-audiences-api/) — The Audiences API from Jasper — 2 operation(s) for audiences.
+- [Jasper Command API](https://apis.io/apis/jasper/jasper-command-api/) — The Command API from Jasper — 1 operation(s) for command.
+- [Jasper Documents API](https://apis.io/apis/jasper/jasper-documents-api/) — The Documents API from Jasper — 2 operation(s) for documents.
+- [Jasper Image Templates API](https://apis.io/apis/jasper/jasper-image-templates-api/) — The Image Templates API from Jasper — 3 operation(s) for image templates.
+- [Jasper Images API](https://apis.io/apis/jasper/jasper-images-api/) — The Images API from Jasper — 10 operation(s) for images.
+- [Jasper Knowledge API](https://apis.io/apis/jasper/jasper-knowledge-api/) — The Knowledge API from Jasper — 3 operation(s) for knowledge.
+- [Jasper Projects API](https://apis.io/apis/jasper/jasper-projects-api/) — The Projects API from Jasper — 2 operation(s) for projects.
+- [Jasper Styles API](https://apis.io/apis/jasper/jasper-styles-api/) — The Styles API from Jasper — 2 operation(s) for styles.
+- [Jasper Tasks API](https://apis.io/apis/jasper/jasper-tasks-api/) — The Tasks API from Jasper — 4 operation(s) for tasks.
+- [Jasper Templates API](https://apis.io/apis/jasper/jasper-templates-api/) — The Templates API from Jasper — 3 operation(s) for templates.
+- [Jasper Usage API](https://apis.io/apis/jasper/jasper-usage-api/) — The Usage API from Jasper — 1 operation(s) for usage.
+- [Jasper Users API](https://apis.io/apis/jasper/jasper-users-api/) — The Users API from Jasper — 2 operation(s) for users.
+- [Jasper Voices API](https://apis.io/apis/jasper/jasper-voices-api/) — The Voices API from Jasper — 2 operation(s) for voices.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [jasper](https://apis.io/servers/jasper/jasper/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Jasper Agentic Access](https://apis.io/agentic-access/jasper/jasper-agentic-access/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Jasper Api Overlay](https://apis.io/overlays/jasper/jasper-api-overlay/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Jasper Authentication](https://apis.io/security/jasper/jasper-authentication/)
+- [Jasper Domain Security](https://apis.io/security/jasper/jasper-domain-security/)
+- [Jasper Trust Center](https://apis.io/security/jasper/jasper-trust-center/)
+- [Jasper Vulnerability Disclosure](https://apis.io/security/jasper/jasper-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Jasper Scopes](https://apis.io/scopes/jasper/jasper-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Jasper Plans Pricing](https://apis.io/plans/jasper/jasper-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Jasper Rate Limits](https://apis.io/rate-limits/jasper/jasper-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.jasper.ai/)
+- [Documentation](https://developers.jasper.ai/docs)
+- [Getting started](https://developers.jasper.ai/docs/getting-started-1)
+- [API reference](https://developers.jasper.ai/reference)
+- [Pricing](https://www.jasper.ai/pricing)
+- [Sign up](https://app.jasper.ai/auth/signup)
+- [Support](https://community.jasper.ai/c/help-center/)
+- [Blog](https://www.jasper.ai/blog)
+- [Security](https://www.jasper.ai/security)
+- [Compliance](https://security.jasper.ai/)
+- [Trust centre](https://security.jasper.ai/)
+- [Terms of service](https://www.jasper.ai/legal/terms)
+- [Privacy policy](https://www.jasper.ai/legal/privacy)
+- [GitHub](https://github.com/gojasper)
+- [Status](https://status.jasper.ai/)
+
+## API Evangelist rating
+
+**Kin Score 59.0** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 55.4 |
+| Contract governance | 18.2 |
+| Operational transparency | 52.6 |
+| Developer ergonomics | 47.0 |
+| Access clarity | 81.6 |
+
+**Agent readiness 57.3** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | yes |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 41.8** — AI & Biometrics
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/jasper/](https://apis.io/providers/jasper/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Jasper: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/jasper/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
